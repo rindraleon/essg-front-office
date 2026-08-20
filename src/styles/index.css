@@ -1,0 +1,1048 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   DESIGN SYSTEM ESSG — modernisation UI/UX
+   Chartes : couleurs issues du logo, typographie Poppins,
+   ombres douces, rayons cohérents, animations légères.
+   ============================================================ */
+
+/* ---------- Typographie (self-hosted, aucun CDN) ----------
+   Plus Jakarta Sans : titres et Hero — caractère contemporain, formes
+   géométriques ouvertes qui restent lisibles en très grande taille.
+   Inter : textes courants, formulaires et interface — excellente lisibilité
+   aux petites tailles.
+   Les deux sont des fontes VARIABLES : un seul fichier couvre tous les poids,
+   ce qui évite de charger une variante par graisse (l'ancien Poppins en
+   chargeait quatre en .ttf, format non compressé).
+   ---------------------------------------------------------- */
+@import '@fontsource-variable/plus-jakarta-sans/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+/* Orbitron : accent technologique uniquement (coordonnées, labels
+   géospatiaux, indicateurs du Hero). Jamais pour du texte courant. */
+@import '@fontsource-variable/orbitron/wght.css';
+
+/* ---------- Tokens Tailwind ---------- */
+@theme {
+  /* Typographie */
+  --font-sans:
+    'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Police d'affichage : Hero, titres de sections, chiffres clés. */
+  --font-display:
+    'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter Variable',
+    ui-sans-serif, system-ui, sans-serif;
+
+  /* Accent technologique : coordonnées, labels géospatiaux, indicateurs.
+     Usage strictement ponctuel — quelques éléments par section au plus.
+     Remplace `font-mono`, dont le rendu dépendait de la police monospace
+     installée sur la machine du visiteur et variait donc d'un poste à
+     l'autre. */
+  --font-tech:
+    'Orbitron Variable', 'Orbitron', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* ════════════════════════════════════════════════════════════════
+     ÉCHELLE TYPOGRAPHIQUE UNIQUE
+     Source de vérité pour l'ensemble du frontend : titres, corps de
+     texte, libellés. Chaque niveau embarque sa taille, son
+     interlignage, son interlettrage et sa graisse — les composants
+     n'ont plus à les recomposer classe par classe.
+     Progression ~1,25 (quarte majeure), lisible et régulière.
+     ════════════════════════════════════════════════════════════════ */
+
+  /* Display — Hero uniquement, un seul par page.
+     `clamp()` : la taille suit la largeur du viewport de façon continue,
+     au lieu de sauter d'une valeur à l'autre au franchissement d'un point
+     de rupture. Bornes issues du tableau §5.4 (mobile 40px → desktop 72px). */
+  --text-display: clamp(2.5rem, 1.43rem + 4.46vw, 4.5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 700;
+
+  /* H1 — titre de page (mobile 36px → desktop 56px). */
+  --text-h1: clamp(2.25rem, 1.58rem + 2.79vw, 3.5rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.025em;
+  --text-h1--font-weight: 600;
+
+  /* H2 — titre de section (mobile 30px → desktop 40px). */
+  --text-h2: clamp(1.875rem, 1.54rem + 1.39vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 600;
+
+  /* H3 — titre de carte (mobile 24px → desktop 30px). */
+  --text-h3: clamp(1.5rem, 1.3rem + 0.84vw, 1.875rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3--font-weight: 600;
+
+  /* H4 — intertitre (mobile 20px → desktop 24px). */
+  --text-h4: clamp(1.25rem, 1.12rem + 0.56vw, 1.5rem);
+  --text-h4--line-height: 1.25;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h4--font-weight: 600;
+
+  /* H5 — Inter à partir d'ici (mobile 18px → desktop 20px). */
+  --text-h5: clamp(1.125rem, 1.06rem + 0.28vw, 1.25rem);
+  --text-h5--line-height: 1.3;
+  --text-h5--font-weight: 600;
+
+  /* H6 — (mobile 14px → desktop 16px). */
+  --text-h6: clamp(0.875rem, 0.81rem + 0.28vw, 1rem);
+  --text-h6--line-height: 1.35;
+  --text-h6--font-weight: 600;
+
+  /* Body large — chapô, introduction de section (16px → 18px). */
+  --text-body-lg: clamp(1rem, 0.93rem + 0.28vw, 1.125rem);
+  --text-body-lg--line-height: 1.7;
+
+  /* Body — texte courant (15px → 16px). */
+  --text-body: clamp(0.9375rem, 0.91rem + 0.14vw, 1rem);
+  --text-body--line-height: 1.65;
+
+  /* Small — mentions secondaires, métadonnées (13px → 14px). */
+  --text-small: clamp(0.8125rem, 0.78rem + 0.14vw, 0.875rem);
+  --text-small--line-height: 1.5;
+
+  /* Caption — libellés de champs, légendes. Taille fixe : en dessous de
+     12px la lisibilité se dégrade, quel que soit l'écran. */
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.03em;
+  --text-caption--font-weight: 500;
+
+  /* Label — catégories, tags, statuts, métadonnées (§5.11). */
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.02em;
+  --text-label--font-weight: 600;
+
+  /* Tech — accent Orbitron : coordonnées, indicateurs géospatiaux (§5.12). */
+  --text-tech: 0.75rem;
+  --text-tech--line-height: 1.4;
+  --text-tech--letter-spacing: 0.05em;
+  --text-tech--font-weight: 600;
+
+  /* ══════════════════════════════════════════════════════════════
+     SYSTÈME DE MOUVEMENT (§7.14, §7.15)
+     Une seule échelle de durées et deux courbes pour tout le site :
+     les sections apparaissent au même tempo, d'où une sensation de
+     continuité plutôt qu'un assemblage de pages animées séparément.
+     ══════════════════════════════════════════════════════════════ */
+
+  /* Courbes (§7.15). `--ease-reveal` est une sortie franche puis très
+     amortie : le mouvement paraît « se poser » au lieu de s'arrêter net. */
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.33, 1, 0.68, 1);
+
+  /* Durées (§7.14) */
+  --duration-micro: 180ms; /* micro-interactions : icônes, liens */
+  --duration-quick: 200ms; /* menus, dropdowns */
+  --duration-hover: 280ms; /* survol des cartes et boutons */
+  --duration-reveal: 620ms; /* entrée d'un élément */
+  --duration-section: 780ms; /* entrée d'une grande section */
+  --duration-hero: 1000ms; /* Hero */
+
+  /* Séquencement (§7.2) : ~90 ms entre deux éléments, soit 5 éléments
+     révélés en 360 ms — sous la limite de 400–600 ms recommandée. */
+  --stagger-step: 90ms;
+
+  /* Distances de déplacement (§7.1). Volontairement faibles : au-delà
+     de ~32 px, le mouvement cesse d'être perçu comme un « fondu qui
+     monte » et devient un glissement qui attire l'attention. */
+  --reveal-distance: 24px;
+  --reveal-distance-sm: 12px;
+
+  /* Marquee (§7.14) */
+  --duration-marquee-1: 32s;
+  --duration-marquee-2: 38s;
+
+  /* Couleurs primaires « brand » (vert profond ESSG) */
+  --color-brand-50: #eff7f4;
+  --color-brand-100: #d9ece7;
+  --color-brand-200: #b6d9d0;
+  --color-brand-300: #8abfb3;
+  --color-brand-400: #5ba092;
+  --color-brand-500: #3d8376;
+  --color-brand-600: #2e6a5f;
+  --color-brand-700: #27564e;
+  --color-brand-800: #224640;
+  --color-brand-900: #1e3a35;
+  --color-brand-950: #0f211e;
+
+  /* Couleurs secondaires « sage » (vert sauge du logo) */
+  --color-sage-50: #f7faf1;
+  --color-sage-100: #eef4df;
+  --color-sage-200: #dce9c2;
+  --color-sage-300: #c2d799;
+  --color-sage-400: #98c070;
+  --color-sage-500: #7fa757;
+  --color-sage-600: #648640;
+  --color-sage-700: #4f6834;
+  --color-sage-800: #41542d;
+  --color-sage-900: #374727;
+  --color-sage-950: #1d2712;
+
+  /* Neutres profonds « ink » (grandes surfaces sombres) */
+  --color-ink-50: #f5f7f7;
+  --color-ink-100: #e5eaeb;
+  --color-ink-200: #c8d3d5;
+  --color-ink-300: #9fb1b4;
+  --color-ink-400: #6f888c;
+  --color-ink-500: #546c70;
+  --color-ink-600: #43575b;
+  --color-ink-700: #38474b;
+  --color-ink-800: #303c3f;
+  --color-ink-900: #1e2829;
+  --color-ink-950: #11191a;
+
+  /* Ombres cohérentes */
+  --shadow-card: 0 1px 2px rgb(15 33 30 / 0.04), 0 4px 16px -4px rgb(15 33 30 / 0.08);
+  --shadow-card-hover: 0 2px 4px rgb(15 33 30 / 0.05), 0 16px 40px -12px rgb(15 33 30 / 0.16);
+  --shadow-soft: 0 1px 3px rgb(15 33 30 / 0.05), 0 8px 24px -8px rgb(15 33 30 / 0.1);
+  --shadow-elevated: 0 8px 20px -6px rgb(15 33 30 / 0.12), 0 24px 56px -16px rgb(15 33 30 / 0.2);
+  --shadow-focus: 0 0 0 4px rgb(46 106 95 / 0.18);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.6s ease-out both;
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-scale-in: scale-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-page-in: page-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-ken-burns: ken-burns 22s ease-out both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ken-burns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-item.is-visible,
+.reveal-section.is-visible .reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hover-lift {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.img-reveal {
+  overflow: hidden;
+}
+
+.img-reveal img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.img-reveal:hover img {
+  transform: scale(1.05);
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-ink-50);
+    color: var(--color-ink-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    line-height: 1.6;
+  }
+
+  /*
+    Focus visible (§7.12) : repère unique, jamais supprimé.
+
+    Deux couleurs sont nécessaires. `brand-600` est un vert profond :
+    parfaitement lisible sur fond clair, il devient invisible sur le Hero
+    et le pied de page, tous deux très sombres. Les conteneurs sombres
+    portent `data-surface="dark"` et basculent l'anneau sur `sage-400`,
+    qui y ressort nettement.
+
+    `outline` plutôt que `box-shadow` : l'outline ne participe pas à la
+    mise en page et ne peut donc pas être rognée par un `overflow: hidden`
+    parent — cas fréquent sur les cartes.
+  */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  [data-surface='dark'] :focus-visible {
+    outline-color: var(--color-sage-400);
+  }
+
+  /* Sélection de texte aux couleurs de la marque */
+  ::selection {
+    background-color: var(--color-brand-600);
+    color: #ffffff;
+  }
+
+  /* Barres de défilement discrètes */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-100);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-300);
+    border-radius: 9999px;
+    border: 2px solid var(--color-ink-100);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-500);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* H1–H4 : police d'affichage, de façon centralisée — aucun composant
+     n'a besoin de redéclarer `font-display`.
+     H5–H6 : Inter (§5.4). À ces tailles, la police d'interface est plus
+     lisible que la police d'affichage, dont les formes géométriques
+     ouvertes sont conçues pour les grands corps. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+  }
+
+  /* Chaque niveau reprend l'échelle typographique : un composant qui
+     n'applique aucune classe obtient déjà la bonne taille et la bonne
+     graisse, ce qui évite les écarts entre pages. */
+  h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    letter-spacing: var(--text-h1--letter-spacing);
+    font-weight: var(--text-h1--font-weight);
+  }
+
+  h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--text-h2--letter-spacing);
+    font-weight: var(--text-h2--font-weight);
+  }
+
+  h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    letter-spacing: var(--text-h3--letter-spacing);
+    font-weight: var(--text-h3--font-weight);
+  }
+
+  h4 {
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+    letter-spacing: var(--text-h4--letter-spacing);
+    font-weight: var(--text-h4--font-weight);
+  }
+
+  h5 {
+    font-size: var(--text-h5);
+    line-height: var(--text-h5--line-height);
+    font-weight: var(--text-h5--font-weight);
+  }
+
+  h6 {
+    font-size: var(--text-h6);
+    line-height: var(--text-h6--line-height);
+    font-weight: var(--text-h6--font-weight);
+  }
+
+  /* Formulaires et boutons héritent de la police du document :
+     sans cette règle, le navigateur leur impose sa propre fonte. */
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  /* Chiffres alignés dans les statistiques et tableaux. */
+  [data-numeric],
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Confort de lecture (§5.8) : au-delà d'environ 65 caractères par ligne,
+     l'œil peine à retrouver le début de la ligne suivante. La classe
+     `max-w-*` d'un composant reste prioritaire lorsqu'elle est plus
+     restrictive ; cette règle n'agit que sur les paragraphes libres. */
+  .prose-measure {
+    max-width: 65ch;
+  }
+}
+
+/* ---------- Accessibilité : réduction des animations ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Composants utilitaires ---------- */
+
+/* Cacher la barre de défilement pour le scroll horizontal */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Conteneur de section standardisé */
+.section-shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .section-shell {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-shell {
+    padding-inline: 2rem;
+  }
+}
+
+/* Équilibrage de texte sur les titres longs */
+.text-balance {
+  text-wrap: balance;
+}
+
+
+/* ============================================================
+   SURFACES ET PROFONDEUR (§24)
+   Utilitaires centralisés : ils remplacent les déclarations
+   `bg-white/xx backdrop-blur-xx border-white/xx` répétées dans
+   les composants. La lisibilité prime : la transparence est
+   volontairement limitée et toujours accompagnée d'un contraste
+   suffisant.
+   ============================================================ */
+
+@utility surface-card {
+  /* Carte standard sur fond clair. */
+  background-color: #ffffff;
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-2xl, 1.25rem);
+  box-shadow: var(--shadow-card, 0 1px 2px rgb(15 33 30 / 0.04), 0 4px 16px -4px rgb(15 33 30 / 0.08));
+}
+
+@utility surface-glass {
+  /* Glassmorphism léger sur média/fond sombre — texte clair uniquement. */
+  background-color: rgb(255 255 255 / 0.1);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+@utility surface-glass-light {
+  /* Variante sur fond clair : suffisamment opaque pour rester lisible. */
+  background-color: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(255 255 255 / 0.6);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+}
+
+@utility overlay-hero {
+  /* Voile de lisibilité sous un texte posé sur une image. */
+  background-image: linear-gradient(
+    to bottom,
+    rgb(15 33 30 / 0.35) 0%,
+    rgb(15 33 30 / 0.45) 45%,
+    rgb(15 33 30 / 0.78) 100%
+  );
+}
+
+@utility section-divider {
+  /* Séparation douce entre deux sections. */
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--color-ink-200) 20%,
+    var(--color-ink-200) 80%,
+    transparent
+  );
+  height: 1px;
+}
+
+/* Repli : si le navigateur ne gère pas backdrop-filter, on opacifie
+   les surfaces pour ne jamais dégrader la lisibilité du texte. */
+@supports not (backdrop-filter: blur(1px)) {
+  .surface-glass {
+    background-color: rgb(15 33 30 / 0.72);
+  }
+
+  .surface-glass-light {
+    background-color: rgb(255 255 255 / 0.96);
+  }
+}
+
+/* ============================================================
+   ANIMATIONS D'APPARITION (§25)
+   Courtes (≤ 600 ms), non bloquantes, déclenchées à l'entrée dans
+   le viewport par le hook `useReveal`. Elles n'animent que
+   `opacity` et `transform` (propriétés composées par le GPU),
+   afin de ne provoquer ni reflow ni saut de layout.
+   ============================================================ */
+
+@utility reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+@utility reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   CARTES MÉDIA (§2.2)
+   Le survol n'existe pas sur écran tactile : les informations
+   complémentaires y sont affichées en permanence plutôt que
+   rendues inaccessibles. La carte reste cliquable dans son
+   intégralité, donc le détail est toujours atteignable.
+   ============================================================ */
+@media (hover: none) {
+  .media-card [data-card-details] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .media-card [data-card-veil] {
+    opacity: 1;
+  }
+
+  /* Le bloc est ancré au-dessus du titre et la carte masque son
+     débordement : on limite le texte à deux lignes pour qu'il tienne
+     entièrement dans le cadre, même sur les plus petits écrans. */
+  .media-card [data-card-details] p {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+}
+
+/* ============================================================
+   HERO D'ACCUEIL (§4)
+   Ce bloc vivait dans une balise <style> injectée par
+   `HeroSection.tsx`. Le déplacer ici lui fait profiter du même
+   traitement que le reste : minification, préfixage, et une
+   seule source de vérité pour les couleurs (les valeurs
+   `rgba(152,192,112,…)` codées en dur pointaient sur
+   `--color-sage-400` sans le dire).
+   Les animations n'utilisent que `transform` et `opacity`.
+   ============================================================ */
+
+@keyframes hero-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -100px 100px;
+  }
+}
+
+@keyframes hero-reveal-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes hero-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes hero-float-particle {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+}
+
+/* §7.4 — Arrière-plan : respiration très lente, presque imperceptible.
+   L'amplitude est volontairement faible (4 %) : au-delà, le mouvement
+   devient visible et concurrence le titre posé par-dessus.
+   La dérive horizontale (±8 px) évite l'impression de « zoom sur place ». */
+@keyframes hero-pan {
+  0%,
+  100% {
+    transform: scale(1) translate3d(-8px, 0, 0);
+  }
+  50% {
+    transform: scale(1.04) translate3d(8px, 0, 0);
+  }
+}
+
+/* §7.3 — Révélation de titre par masquage : chaque mot monte depuis
+   sous une ligne invisible. Plus expressif qu'un simple fondu, et
+   réservé au seul titre du Hero. */
+@keyframes hero-text-reveal {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* §7.1 — Entrée nette d'un grand visuel. `filter` est coûteux : cette
+   animation est réservée au Hero, jouée une seule fois. */
+@keyframes hero-scroll-cue {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(5px);
+    opacity: 1;
+  }
+}
+
+@keyframes hero-geo-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hero-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-ring-spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@layer components {
+  /* Voile décoratif : chaque motif hérite de la couleur sauge du thème. */
+  .hero-bg {
+    animation: hero-pan 60s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(to right, rgb(152 192 112 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(152 192 112 / 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .hero-topo {
+    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0 50 Q25 25,50 50 T100 50" stroke="rgba(152,192,112,.15)" fill="none" stroke-width=".5"/></svg>');
+    background-size: 100px 100px;
+    animation: hero-drift 20s linear infinite;
+  }
+
+  /* Cascade d'entrée : même courbe que le reste du site. */
+  .hero-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: hero-reveal-up 0.7s var(--ease-reveal) forwards;
+    animation-delay: calc(var(--hero-step, 0) * var(--stagger-step));
+  }
+
+  /* §7.3 — Titre du Hero : chaque ligne est masquée par son parent et
+     monte depuis le dessous. `overflow: hidden` sur l'enveloppe, le
+     mouvement sur l'enfant : rien ne dépasse pendant la montée. */
+  .hero-title-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero-title-line {
+    display: block;
+    transform: translateY(100%);
+    animation: hero-text-reveal var(--duration-hero) var(--ease-reveal) forwards;
+    animation-delay: calc(var(--hero-step, 0) * var(--stagger-step));
+    will-change: transform;
+  }
+
+  /* §7.1 — Grand visuel du Hero. */
+  .hero-blur-in {
+    opacity: 0;
+    animation: hero-blur-in 900ms var(--ease-reveal) forwards;
+  }
+
+  /* §7.4 — Calques géomatiques : très peu visibles, ils signent
+     l'identité scientifique sans concurrencer le contenu. */
+  .hero-coords {
+    animation: hero-pulse 4s ease-in-out infinite;
+  }
+
+  /* §7.16 — Indice de défilement : glissement doux plutôt que rebond.
+     Le `bounce` de Tailwind est une animation élastique qui capte le
+     regard en permanence ; un aller-retour amorti suffit à signaler
+     « il y a du contenu en dessous ». */
+  .hero-scroll-cue {
+    animation: hero-scroll-cue 2.4s ease-in-out infinite;
+  }
+
+  /* Tracé progressif des lignes de mesure, joué UNE fois puis figé
+     (`forwards`, pas de `infinite`) : une animation permanente en
+     arrière-plan capterait le regard en continu (§7.16). */
+  .hero-geo-line {
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: hero-geo-draw 3.2s var(--ease-reveal) 0.6s forwards;
+  }
+
+  .hero-pulse {
+    animation: hero-pulse 2s ease-in-out infinite;
+  }
+
+  /* Couche de parallaxe : le JS n'écrit qu'un `transform`. */
+  .hero-plx {
+    transition: transform 0.2s ease-out;
+    will-change: transform;
+  }
+
+  .hero-glass {
+    background-color: rgb(15 33 30 / 0.45);
+    border: 1px solid rgb(152 192 112 / 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .hero-star {
+    position: absolute;
+    background: #ffffff;
+    border-radius: 9999px;
+    animation: hero-twinkle var(--hero-duration) ease-in-out infinite;
+    animation-delay: var(--hero-delay);
+  }
+
+  .hero-particle {
+    position: absolute;
+    width: var(--hero-size);
+    height: var(--hero-size);
+    background: radial-gradient(circle, rgb(152 192 112 / 0.6) 0%, transparent 70%);
+    border-radius: 9999px;
+    animation: hero-float-particle var(--hero-duration) linear infinite;
+    animation-delay: var(--hero-delay);
+  }
+
+  .hero-ring {
+    position: absolute;
+    border-radius: 9999px;
+    border: 1px solid rgb(152 192 112 / 0.3);
+    animation: hero-ring-spin var(--hero-duration) linear infinite;
+    will-change: transform;
+  }
+
+  .hero-ring-reverse {
+    animation-direction: reverse;
+  }
+}
+
+/* Accessibilité : plus aucune animation décorative en mouvement réduit.
+   La règle globale plus haut ramène déjà les durées à 0,01 ms ; celle-ci
+   garantit en plus que le contenu révélé reste bien visible. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg,
+  .hero-topo,
+  .hero-star,
+  .hero-particle,
+  .hero-ring,
+  .hero-pulse,
+  .hero-coords,
+  .hero-scroll-cue {
+    animation: none !important;
+  }
+
+  /* Les lignes restent tracées, simplement sans animation de dessin. */
+  .hero-geo-line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .hero-title-line,
+  .hero-blur-in {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .hero-reveal {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .hero-plx {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   MOTION RESPONSIVE (§7.18)
+   Le contenu prime sur l'effet. Sur petit écran, les distances
+   et les durées sont réduites : le doigt fait défiler bien plus
+   vite que la molette, et une animation calibrée pour le desktop
+   y paraît traînante. Redéfinir les variables suffit — aucun
+   composant n'a besoin de connaître la taille de l'écran.
+   ============================================================ */
+@media (max-width: 767px) {
+  :root {
+    --reveal-distance: 14px;
+    --reveal-distance-sm: 8px;
+    --duration-reveal: 480ms;
+    --duration-section: 560ms;
+    --duration-hero: 700ms;
+    --stagger-step: 60ms;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --reveal-distance: 18px;
+    --duration-reveal: 540ms;
+    --duration-section: 660ms;
+    --stagger-step: 75ms;
+  }
+}
+
+/* ============================================================
+   SKELETON — shimmer (§7.13)
+   Un balayage lent traversant la silhouette. Il indique que le
+   chargement progresse, là où une opacité qui pulse ne dit rien
+   du sens de la progression.
+   L'animation porte sur `background-position`, qui ne déclenche
+   ni recalcul de mise en page ni redécoupage : seule la peinture
+   de l'élément est refaite.
+   ============================================================ */
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@utility skeleton-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-ink-100) 40%,
+    var(--color-ink-50) 50%,
+    var(--color-ink-100) 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 2.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+    background-image: none;
+    background-color: var(--color-ink-100);
+  }
+}
