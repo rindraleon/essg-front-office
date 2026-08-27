@@ -1,7 +1,7 @@
-import { apiClient } from '@/api/client/http';
-import { endpoints } from '@/api/endpoints';
-import type { ProjetItem } from '../types/projets.types';
-import { generateSlug } from '../utils/slug.utils';
+import { apiClient , endpoints } from '@/api';
+import type { PaginatedResult } from '@/api';
+import type { ProjetItem } from '@/types';
+import { generateSlug } from '@/utils';
 
 type ApiProjet = Omit<ProjetItem, 'id' | 'annee' | 'location' | 'partenaires'> & {
   id: number | string;
@@ -19,12 +19,6 @@ const transformProjet = (projet: ApiProjet): ProjetItem => ({
   titre: projet.titre,
   slug: projet.slug || generateSlug(projet.titre),
   type: projet.type,
-  /*
-    Repli sur « En cours » uniquement pour les projets enregistrés avant
-    l'ajout de la colonne `statut` en base. Le statut réel provient
-    désormais du back-office : ce repli ne doit plus jamais s'appliquer
-    aux projets créés ou modifiés depuis.
-  */
   statut: projet.statut || 'En cours',
   annee: new Date(projet.date ?? '').getFullYear().toString(),
   description: projet.description,
@@ -50,6 +44,36 @@ const transformProjet = (projet: ApiProjet): ProjetItem => ({
 });
 
 const projetService = {
+  async findPaginated(
+    page = 1,
+    limit = 6,
+    query = '',
+    type = '',
+    statut = '',
+    signal?: AbortSignal
+  ): Promise<PaginatedResult<ProjetItem>> {
+    const endpoint = query.trim() ? endpoints.projectSearch : endpoints.projects;
+    const result = await apiClient.getList<ApiProjet>(
+      endpoint,
+      {
+        page,
+        limit,
+        q: query.trim() || undefined,
+        type: type && type !== 'all' ? type : undefined,
+        statut: statut && statut !== 'all' ? statut : undefined,
+        sortBy: 'creeLe',
+        sortOrder: 'DESC',
+      },
+      signal
+    );
+    return {
+      data: result.data.map(transformProjet),
+      meta: result.meta,
+      message: result.message,
+      statusCode: result.statusCode,
+    };
+  },
+
   async findAll(signal?: AbortSignal): Promise<ProjetItem[]> {
     const result = await apiClient.getList<ApiProjet>(
       endpoints.projects,

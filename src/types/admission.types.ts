@@ -1,46 +1,55 @@
-import type { ReactNode } from 'react';
-
-export type AdmissionStep = {
-  date: string;
-  titre: string;
-  icon: ReactNode;
-};
-
-export type AdmissionTimelineProps = {
-  title?: string;
-  steps?: AdmissionStep[];
-};
-
 export type AdmissionFormData = {
   nom: string;
   prenom: string;
-  email: string;
-  telephone: string;
   dateNaissance: string;
+  lieuNaissance: string;
+  nationalite: string;
+  sexe: string;
+  adresse: string;
+  telephone: string;
+  email: string;
+  bacType: string;
+  bacSerie: string;
+  bacCategorie: string;
+  numeroBaccalaureat: string;
+  bacAnneeObtention: string;
+  bacCentreExamen: string;
   niveau: string;
+  mention: string;
+  parcours: string;
   formation: string;
   diplomePrecedent: string;
-  adresse: string;
-  numeroBaccalaureat: string;
+  ancienEtablissement: string;
+  numeroMatricule: string;
   licenceEtablissement: string;
   licenceMention: string;
   licenceAnneeObtention: string;
   numeroBordereau: string;
-  cv?: File;
-  lettreMotivation?: File;
   releveBac?: File;
-  attestationBac?: File;
-  releveL3?: File;
   bordereau?: File;
+  demandeInscription?: File;
+  photoIdentite?: File;
+  acteEtatCivil?: File;
+  diplomeBac?: File;
+  attestationEtablissement?: File;
   accepteConditions: boolean;
 };
 
 export type AdmissionDocumentKind =
-  'cv' | 'lettreMotivation' | 'releveBac' | 'attestationBac' | 'releveL3' | 'bordereau';
+  | 'releveBac'
+  | 'bordereau'
+  | 'demandeInscription'
+  | 'photoIdentite'
+  | 'acteEtatCivil'
+  | 'diplomeBac'
+  | 'attestationEtablissement';
 
 export type AdmissionDuplicateCheck = {
   numeroBaccalaureatDisponible?: boolean;
   numeroBordereauDisponible?: boolean;
+  emailDisponible?: boolean;
+  telephoneDisponible?: boolean;
+  annee?: number;
 };
 
 export type AdmissionFormProps = {

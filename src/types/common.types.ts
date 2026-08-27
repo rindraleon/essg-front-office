@@ -44,14 +44,3 @@ export type EmptyStateProps = {
   actionLabel?: string;
   onAction?: () => void;
 };
-
-export type CtaSectionProps = {
-  icon?: ReactNode;
-  title: string;
-  description?: string;
-  primaryLabel: string;
-  primaryLink: string;
-  primaryIsMailto?: boolean;
-  secondaryLabel?: string;
-  secondaryLink?: string;
-};

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib';
 
 type CheckboxProps = Omit<React.ComponentProps<'input'>, 'type'> & {
   label?: string;
@@ -25,7 +25,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               'flex size-4 items-center justify-center rounded border border-ink-300 bg-white transition-colors',
               'peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500/30',
               'peer-checked:border-brand-600 peer-checked:bg-brand-600 peer-checked:text-white',
-              className,
+              className
             )}
           >
             {checked ? <Check className="size-3" strokeWidth={3} /> : null}
@@ -34,7 +34,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         {label && <span className="text-ink-700">{label}</span>}
       </label>
     );
-  },
+  }
 );
 Checkbox.displayName = 'Checkbox';
 

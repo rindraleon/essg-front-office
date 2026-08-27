@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib';
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
   ({ className, type = 'text', ...props }, ref) => (
@@ -12,11 +12,11 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
         'focus-visible:border-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/20',
         'disabled:cursor-not-allowed disabled:opacity-50',
         'file:border-0 file:bg-transparent file:text-small file:font-medium',
-        className,
+        className
       )}
       {...props}
     />
-  ),
+  )
 );
 Input.displayName = 'Input';
 

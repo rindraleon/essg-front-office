@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight, Images, X } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { getImageUrl } from '../../utils/image.utils';
-import useGsapReveal from '../../hooks/useGsapReveal';
-import { gsap, prefersReducedMotion, registerGsap } from '../../lib/gsap';
+import { getImageUrl } from '@/utils';
+import useGsapReveal from '@/hooks/useGsapReveal';
+import { gsap, prefersReducedMotion, registerGsap } from '@/lib';
 
 interface ImageGalleryProps {
   images: string[];
@@ -17,7 +17,9 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
 
   const close = useCallback(() => setLightboxIndex(null), []);
   const prev = useCallback(() => {
-    setLightboxIndex((current) => (current === null ? null : (current - 1 + urls.length) % urls.length));
+    setLightboxIndex((current) =>
+      current === null ? null : (current - 1 + urls.length) % urls.length
+    );
   }, [urls.length]);
   const next = useCallback(() => {
     setLightboxIndex((current) => (current === null ? null : (current + 1) % urls.length));
@@ -46,7 +48,7 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
     const tween = gsap.fromTo(
       image,
       { opacity: 0, scale: 0.96 },
-      { opacity: 1, scale: 1, duration: 0.28, ease: 'power2.out' },
+      { opacity: 1, scale: 1, duration: 0.36, ease: 'power2.out' }
     );
     return () => {
       tween.kill();
@@ -56,7 +58,10 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
   if (urls.length === 0) return null;
 
   return (
-    <section ref={gridRef} className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-card">
+    <section
+      ref={gridRef}
+      className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-card"
+    >
       <div className="flex items-center gap-3 border-b border-ink-100 px-5 py-4">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600 ring-1 ring-brand-100">
           <Images className="size-4" />
@@ -77,15 +82,15 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
             data-gsap
             onClick={() => setLightboxIndex(index)}
             aria-label={`Agrandir l'image ${index + 1} sur ${urls.length}`}
-            className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-xl border border-ink-100 bg-ink-50 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
+            className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-xl border border-ink-100 bg-ink-50 transition-all duration-(--duration-hover) hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
           >
             <img
               src={url}
               alt={`${alt} ${index + 1}`}
               loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="h-full w-full object-cover transition-transform duration-(--duration-reveal) group-hover:scale-[1.03]"
             />
-            <span className="pointer-events-none absolute inset-0 flex items-end justify-start bg-gradient-to-t from-ink-950/40 to-transparent p-2.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="pointer-events-none absolute inset-0 flex items-end justify-start bg-gradient-to-t from-ink-950/40 to-transparent p-2.5 opacity-0 transition-opacity duration-(--duration-hover) group-hover:opacity-100">
               <span className="text-caption font-semibold text-white">
                 {index + 1} / {urls.length}
               </span>
@@ -99,8 +104,14 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
           role="dialog"
           aria-modal="true"
           aria-label="Visionneuse d'images"
+          tabIndex={-1}
           className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-950/95 backdrop-blur-sm"
-          onClick={close}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) close();
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') close();
+          }}
         >
           <button
             type="button"
@@ -123,8 +134,10 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
               <ChevronLeft />
             </button>
           )}
-          <figure className="flex max-h-full max-w-full flex-col items-center px-4" onClick={(event) => event.stopPropagation()}>
+          <figure className="flex max-h-full max-w-full flex-col items-center px-4">
             <img
+              loading="lazy"
+              decoding="async"
               data-lightbox-image
               src={urls[lightboxIndex]}
               alt={`${alt} ${lightboxIndex + 1}`}

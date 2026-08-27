@@ -1,5 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { projetService } from '../services';
+import { toErrorMessage } from '@/utils';
+import { projetService } from '@/services';
+
+export function usePaginatedProjets(page = 1, limit = 6, search = '', type = '', statut = '') {
+  const query = useQuery({
+    queryKey: ['projets', 'paginated', page, limit, search, type, statut],
+    queryFn: () => projetService.findPaginated(page, limit, search, type, statut),
+  });
+  return {
+    data: query.data ?? null,
+    loading: query.isLoading,
+    error: toErrorMessage(query.error),
+  };
+}
 
 export default function useProjets() {
   const query = useQuery({
@@ -10,22 +23,8 @@ export default function useProjets() {
   return {
     projets: query.data ?? [],
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
+    error: toErrorMessage(query.error),
     refetch: query.refetch,
-  };
-}
-
-export function useProjetById(id: string) {
-  const query = useQuery({
-    queryKey: ['projets', 'id', id],
-    queryFn: () => projetService.findOne(Number(id)),
-    enabled: Boolean(id),
-  });
-
-  return {
-    projet: query.data ?? null,
-    loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
   };
 }
 
@@ -39,6 +38,6 @@ export function useProjetBySlug(slug: string) {
   return {
     projet: query.data ?? null,
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
+    error: toErrorMessage(query.error),
   };
 }

@@ -1,22 +1,29 @@
-import { cn } from '@/lib/utils';
-import usePagination from '../../hooks/usePagination';
-import Pagination from '../../components/common/Pagination';
-import { FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Skeleton, TextField } from '@/components/compat/mui';
+import { cn } from '@/lib';
+import { useRessourcesHumaines, useTitle } from '@/hooks';
+import {
+  Pagination,
+  EmptyState,
+  FilterToolbar,
+  PageHero,
+  Breadcrumb,
+  RessourceHumaineCard,
+} from '@/components';
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  CompatSelect as Select,
+  CompatSkeleton as Skeleton,
+  TextField,
+  type SelectChangeEvent,
+} from '@/components';
 import { Search, Users, X } from 'lucide-react';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import type { SelectChangeEvent } from '@/components/compat/mui';
-import CtaSection from '../../components/common/CtaSection';
-import EmptyState from '../../components/common/EmptyState';
-import FilterToolbar from '../../components/common/FilterToolbar';
-import PageHero from '../../components/common/PageHero';
-import Breadcrumb from '../../components/common/Breadcrumb';
-import { useRessourcesHumaines } from '../../hooks';
-import { generateSlug } from '../../utils/slug.utils';
-import type { RessourceHumaine } from '../../types/ressource-humaine.types';
-import { RessourceHumaineCard } from '../../components';
-import { SITE_HERO_IMAGE } from '../../constants/media';
-import { useTitle } from '@/hooks/useTitle';
-import { formatFullName } from '../../utils/name.utils';
+import { generateSlug, formatFullName } from '@/utils';
+import type { RessourceHumaine } from '@/types';
+import { SITE_HERO_IMAGE } from '@/constants';
 
 const HERO_IMAGE = SITE_HERO_IMAGE;
 
@@ -32,12 +39,17 @@ const POSTES = [
 const RessourcesHumainesPage: React.FC = () => {
   useTitle('Ressources Humaines | ESSG');
 
-  const { data: rhResult, loading, error } = useRessourcesHumaines(1, 100);
   const [posteFilter, setPosteFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(1);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const {
+    data: rhResult,
+    loading,
+    error,
+  } = useRessourcesHumaines(page, 6, searchTerm, posteFilter);
 
   useEffect(() => {
     if (showSearch && searchInputRef.current) {
@@ -51,26 +63,13 @@ const RessourcesHumainesPage: React.FC = () => {
         ...rh,
         slug: rh.slug || generateSlug(formatFullName(rh)),
       })),
-    [rhResult],
+    [rhResult]
   );
 
   const hasActiveFilters = posteFilter !== 'all' || searchTerm !== '';
   const activeFilterCount = posteFilter !== 'all' ? 1 : 0;
 
-  const filteredRessourcesHumaines = useMemo(() => {
-    const search = searchTerm.toLowerCase();
-    return allRessourcesHumaines.filter((rh) => {
-      const matchesSearch =
-        rh.nom.toLowerCase().includes(search) ||
-        rh.prenom.toLowerCase().includes(search) ||
-        (rh.poste || '').toLowerCase().includes(search) ||
-        (rh.description || '').toLowerCase().includes(search);
-      const matchesPoste = posteFilter === 'all' || rh.poste === posteFilter;
-      return matchesSearch && matchesPoste;
-    });
-  }, [allRessourcesHumaines, posteFilter, searchTerm]);
-
-  const resultCount = filteredRessourcesHumaines.length;
+  const resultCount = rhResult?.meta.total ?? 0;
   const resultText = `${resultCount} membre${resultCount > 1 ? 's' : ''} trouvé${resultCount > 1 ? 's' : ''}`;
 
   const handlePosteChange = (event: SelectChangeEvent) => {
@@ -110,8 +109,9 @@ const RessourcesHumainesPage: React.FC = () => {
       : []),
   ];
 
-  const { pageItems, page, totalPages, goToPage, listRef, isChanging } =
-    usePagination(filteredRessourcesHumaines, { pageSize: 9 });
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, posteFilter]);
 
   return (
     <div className="min-h-screen bg-ink-50">
@@ -120,11 +120,6 @@ const RessourcesHumainesPage: React.FC = () => {
         imageAlt="Équipe ESSG"
         title="Ressources Humaines"
         description="Découvrez les hommes et femmes qui font de l'ESSG une institution d'excellence en sciences géomatiques."
-        stats={[
-          { value: `${allRessourcesHumaines.length}+`, label: 'Membres' },
-          { value: '50+', label: 'Années d\'expérience' },
-          { value: '15+', label: 'Partenaires internationaux' },
-        ]}
       />
 
       <Breadcrumb items={[{ label: 'Ressources Humaines' }]} />
@@ -170,9 +165,7 @@ const RessourcesHumainesPage: React.FC = () => {
       >
         <div className="max-w-xs">
           <FormControl fullWidth size="small">
-            <InputLabel id="poste-label">
-              Poste
-            </InputLabel>
+            <InputLabel id="poste-label">Poste</InputLabel>
             <Select
               labelId="poste-label"
               label="Poste"
@@ -190,9 +183,9 @@ const RessourcesHumainesPage: React.FC = () => {
       </FilterToolbar>
 
       {loading && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="section-y-tight">
+          <div className="section-shell">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card">
                   <div className="mb-4 flex justify-center">
@@ -209,18 +202,18 @@ const RessourcesHumainesPage: React.FC = () => {
       )}
 
       {error && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="section-y-tight">
+          <div className="section-shell">
             <div className="text-center">
-              <p className="text-red-600">{error}</p>
+              <p className="text-danger-600">{error}</p>
             </div>
           </div>
         </section>
       )}
 
       {!loading && !error && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="section-y-tight">
+          <div className="section-shell">
             {resultCount === 0 ? (
               <EmptyState
                 icon={<Users />}
@@ -229,42 +222,33 @@ const RessourcesHumainesPage: React.FC = () => {
                 onAction={handleResetFilters}
               />
             ) : (
-              <div ref={listRef} className="scroll-mt-24">
-              {/* Fondu bref au changement de page (§23). */}
-              <div
-                className={cn(
-                  'grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-                  'transition-opacity duration-[--duration-hover] motion-reduce:transition-none',
-                  isChanging && 'opacity-40',
-                )}
-              >
-                {pageItems.map((rh) => (
-                  <RessourceHumaineCard key={rh.slug || rh.id} ressourceHumaine={rh} />
-                ))}
-              </div>
+              <div className="scroll-mt-24">
+                <div
+                  className={cn(
+                    'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
+                    'transition-opacity duration-(--duration-hover) motion-reduce:transition-none'
+                  )}
+                >
+                  {allRessourcesHumaines.map((rh) => (
+                    <RessourceHumaineCard key={rh.slug || rh.id} ressourceHumaine={rh} />
+                  ))}
+                </div>
 
-              <Pagination
-                page={page}
-                totalPages={totalPages}
-                onChange={goToPage}
-                ariaLabel="Pagination des membres"
-                className="mt-12"
-              />
-            </div>
+                <Pagination
+                  page={page}
+                  totalPages={rhResult?.meta.totalPages ?? 1}
+                  onChange={(nextPage) => {
+                    setPage(nextPage);
+                    window.scrollTo({ top: 420, behavior: 'smooth' });
+                  }}
+                  ariaLabel="Pagination des membres"
+                  className="mt-12"
+                />
+              </div>
             )}
           </div>
         </section>
       )}
-
-      <CtaSection
-        icon={<Users />}
-        title="Rejoignez notre équipe"
-        description="L'ESSG recherche des talents passionnés par les sciences géomatiques. Consultez nos offres d'emploi."
-        primaryLabel="Nous contacter"
-        primaryLink="/contact"
-        secondaryLabel="Voir les formations"
-        secondaryLink="/formations"
-      />
     </div>
   );
 };

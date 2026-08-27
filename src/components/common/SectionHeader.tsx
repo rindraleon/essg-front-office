@@ -1,51 +1,117 @@
 import React from 'react';
-import { cn } from '@/lib/utils';
 
-interface SectionHeaderProps {
+import { Sparkles } from 'lucide-react';
+
+import { cn } from '@/lib';
+import Eyebrow from './Eyebrow';
+
+import { RevealOnScroll } from './RevealOnScroll';
+
+export interface SectionHeaderProps {
   title: string;
-  description: string;
+  /** Accepte du texte enrichi (mises en valeur, liens) et pas seulement une chaîne. */
+  description?: React.ReactNode;
   eyebrow?: string;
-  center?: boolean;
-  /** Largeur maximale du bloc. Par défaut : largeur de lecture confortable. */
-  maxWidth?: string;
+  dark?: boolean;
+  /**
+   * Composition de l'en-tête :
+   *  - `split`  : surtitre à gauche, titre aligné à droite (sections pleine largeur) ;
+   *  - `left`   : tout aligné à gauche (colonne étroite d'une mise en page en deux volets) ;
+   *  - `center` : tout centré (bandeaux d'appel à l'action).
+   */
+  align?: 'split' | 'left' | 'center';
+  /** `lg` réserve un titre plus imposant aux bandeaux de conversion. */
+  size?: 'md' | 'lg';
+  /** Masque l'icône du surtitre lorsque la section en porte déjà une. */
+  eyebrowIcon?: React.ReactNode | false;
+  className?: string;
 }
 
 /**
- * En-tête de section : label facultatif, titre, description (§1).
+ * En-tête de section — composant unique de toutes les sections du site.
  *
- * Rythme vertical fixe — label 12 px, titre, description 12 px — pour que
- * toutes les sections du site présentent le même espacement entre ces trois
- * niveaux, quelle que soit la page.
- *
- * La description est bornée à `65ch` plutôt qu'à une largeur en pixels : la
- * limite suit alors la taille réelle des caractères, donc la ligne conserve
- * le même nombre de mots quelle que soit la taille de police choisie par
- * l'utilisateur dans son navigateur (§1 : 60–75 caractères par ligne).
+ * Il garantit qu'un surtitre, un titre, un filet d'accent et un chapô
+ * conservent partout la même échelle, le même rythme et les mêmes
+ * couleurs, quelle que soit la composition de la section qui l'accueille.
  */
 const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   description,
   eyebrow,
-  center = true,
-  maxWidth = 'max-w-[65ch]',
+  dark = false,
+  align = 'split',
+  size = 'md',
+  eyebrowIcon,
+  className,
 }) => {
+  const isSplit = align === 'split';
+  const isCenter = align === 'center';
+  const icon = eyebrowIcon === false ? undefined : (eyebrowIcon ?? <Sparkles />);
+
   return (
-    <div
-      data-gsap="up"
-      className={cn('mb-12 flex flex-col', center ? 'items-center text-center' : 'items-start')}
+    <RevealOnScroll
+      variant="fade-up"
+      className={cn('mb-12 flex w-full flex-col sm:mb-16', className)}
     >
-      <div className={cn(maxWidth, center && 'text-center')}>
-        {eyebrow && (
-          <span className="mb-3 block text-caption font-semibold uppercase tracking-wider text-brand-700">
-            {eyebrow}
-          </span>
+      <div className="w-full">
+        <div
+          className={cn(
+            'flex w-full flex-col gap-4',
+            isSplit && 'sm:flex-row sm:items-center sm:justify-between',
+            isCenter && 'items-center'
+          )}
+        >
+          {eyebrow && (
+            <Eyebrow variant="pill" dark={dark} icon={icon}>
+              {eyebrow}
+            </Eyebrow>
+          )}
+
+          <div
+            className={cn(
+              'group relative',
+              isSplit && 'text-left sm:text-right',
+              isCenter && 'text-center',
+              align === 'left' && 'text-left'
+            )}
+          >
+            <h2
+              className={cn(
+                'text-balance font-display font-bold tracking-tight',
+                size === 'lg' ? 'text-h1' : 'text-h2',
+                dark ? 'text-white' : 'text-ink-900'
+              )}
+            >
+              {title}
+            </h2>
+
+            {/* Filet d'accent : rappel discret du vert du logo, aligné sur
+                le bord du titre selon la composition retenue. */}
+            <div
+              className={cn(
+                'mt-3 h-1 w-16 rounded-full bg-brand-500 transition-all duration-500 group-hover:w-28',
+                dark && 'bg-brand-400',
+                isSplit && 'sm:ml-auto',
+                isCenter && 'mx-auto'
+              )}
+            />
+          </div>
+        </div>
+
+        {description && (
+          <div
+            className={cn(
+              'mt-4 max-w-2xl text-body-lg leading-relaxed',
+              isCenter && 'mx-auto text-center',
+              !isCenter && 'text-justify',
+              dark ? 'text-white/80' : 'text-ink-600'
+            )}
+          >
+            {typeof description === 'string' ? <p>{description}</p> : description}
+          </div>
         )}
-
-        <h2 className="text-h2 text-ink-900">{title}</h2>
-
-        <p className="mt-3 text-body-lg text-ink-500">{description}</p>
       </div>
-    </div>
+    </RevealOnScroll>
   );
 };
 

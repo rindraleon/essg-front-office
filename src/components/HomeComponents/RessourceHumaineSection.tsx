@@ -1,9 +1,11 @@
 import { Mail, Phone } from 'lucide-react';
-import { useActiveRessourcesHumaines } from '../../hooks';
-import { getImageUrl } from '../../utils/image.utils';
-import { formatFullName } from '../../utils/name.utils';
-import { CARD_WIDTH_CLASS } from '../../constants/layout';
-import { SectionHeader, SectionContent, ScrollableCardGrid, SectionCta } from '../../components';
+import { useActiveRessourcesHumaines } from '@/hooks';
+import { getImageUrl , formatFullName } from '@/utils';
+import { CARD_WIDTH_CLASS } from '@/constants';
+import SectionHeader from '../common/SectionHeader';
+import SectionContent from '../common/SectionContent';
+import ScrollableCardGrid from '../common/ScrollableCardGrid';
+import SectionCta from '../common/SectionCta';
 import MediaCard from '../common/MediaCard';
 import { MediaCardSkeletonGrid } from '../common/MediaCardSkeleton';
 
@@ -23,12 +25,13 @@ const RessourceHumaineSection = () => {
       emptyMessage="Aucun membre de l'équipe disponible pour le moment."
       headerContent={
         <SectionHeader
+          eyebrow="Corps Professoral & Encadrement"
           title="Notre Équipe"
-          description="Des professionnels qualifiés et passionnés au service de votre réussite"
+          description="Des enseignants-chercheurs et experts qualifiés au service de l'excellence académique"
         />
       }
-      loadingSkeletons={<MediaCardSkeletonGrid />}
-      sectionClassName="bg-gradient-to-b from-ink-50 to-white py-20"
+      loadingSkeletons={<MediaCardSkeletonGrid layout="home" />}
+      sectionClassName="bg-gradient-to-br from-brand-50/55 via-white to-brand-50/40 section-y"
       fluid
       containerClassName="max-w-none"
     >
@@ -40,6 +43,7 @@ const RessourceHumaineSection = () => {
             <MediaCard
               key={membre.id}
               className={CARD_WIDTH_CLASS}
+              layout="home"
               to={`/ressources-humaines/${membre.slug}`}
               title={fullName}
               imageUrl={membre.photo ? getImageUrl(membre.photo) : FALLBACK_IMAGE}
@@ -47,7 +51,9 @@ const RessourceHumaineSection = () => {
               subtitle={membre.poste}
               description={membre.description}
               meta={[
-                ...(membre.email ? [{ icon: <Mail className="size-3.5" />, label: membre.email }] : []),
+                ...(membre.email
+                  ? [{ icon: <Mail className="size-3.5" />, label: membre.email }]
+                  : []),
                 ...(membre.telephone
                   ? [{ icon: <Phone className="size-3.5" />, label: membre.telephone }]
                   : []),

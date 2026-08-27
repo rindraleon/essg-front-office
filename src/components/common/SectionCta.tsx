@@ -1,7 +1,7 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { buttonVariants } from '../ui/button';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib';
 import MobileCta from './MobileCta';
 
 interface SectionCtaProps {

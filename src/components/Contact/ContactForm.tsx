@@ -10,10 +10,10 @@ import {
   User,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { toUpperName } from '../../utils/slug.utils';
-import type { ContactFormData, ContactFormProps } from '../../types/contact.types';
-import { useCreateContact } from '../../hooks/mutations';
-import { ApiError } from '@/api/types/api';
+import { toUpperName } from '@/utils';
+import type { ContactFormData, ContactFormProps } from '@/types';
+import { useCreateContact } from '@/hooks';
+import { ApiError } from '@/api';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -44,7 +44,7 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
 
   if (submitted) {
     return (
-      <div className="h-full overflow-hidden rounded-[1.5rem] border border-ink-100 bg-white p-6 shadow-card sm:p-8">
+      <div className="h-full overflow-hidden rounded-2xl border border-ink-100 bg-white p-6 shadow-card sm:p-8">
         <div className="flex flex-col items-center gap-4 py-8 text-center">
           <div className="grid size-16 place-items-center rounded-full bg-brand-100 text-brand-700">
             <CheckCircle2 className="size-9" />
@@ -99,7 +99,7 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
   };
 
   return (
-    <div className="h-full overflow-hidden rounded-[1.5rem] border border-ink-100 bg-white p-4 shadow-card sm:p-6">
+    <div className="h-full overflow-hidden rounded-2xl border border-ink-100 bg-white p-4 shadow-card sm:p-6">
       <div className="mb-4">
         <h2 className="mb-1 text-h4 font-bold text-ink-900">Envoyez-nous un message</h2>
         <p className="text-caption text-ink-500">

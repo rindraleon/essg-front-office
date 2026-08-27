@@ -20,6 +20,5 @@ export type FooterProps = {
   readonly navLinks?: ReadonlyArray<NavLinkItem>;
   readonly contact?: ContactInfo;
   readonly socials?: ReadonlyArray<SocialItem>;
-  // optional callback when newsletter submitted (returns Promise if async)
   readonly onSubscribe?: (email: string) => void | Promise<void>;
 };

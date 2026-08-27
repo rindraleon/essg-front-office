@@ -1,7 +1,6 @@
 const routesStatic = {
   home: '/',
   about: '/about',
-  example: '/example',
   formations: '/formations',
   formationDetail: '/formations/:slug',
   actualites: '/actualites',
@@ -15,6 +14,8 @@ const routesStatic = {
   faq: '/faq',
   admission: '/admission',
   contact: '/contact',
+  mentionsLegales: '/mentions-legales',
+  politiqueConfidentialite: '/politique-confidentialite',
 };
 
 export default routesStatic;

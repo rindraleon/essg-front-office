@@ -1,30 +1,36 @@
-import React from 'react';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
 
-/**
- * Barre de progression de défilement — affichée en haut du header.
- *
- * La largeur suit la progression de la page (useScroll) avec un ressort
- * doux (useSpring). Dégradé aux couleurs de la marque.
- */
 const ScrollProgress: React.FC = () => {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    restDelta: 0.001,
-  });
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let frame: number | null = null;
+
+    const update = () => {
+      if (frame !== null) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = null;
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        setProgress(scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0);
+      });
+    };
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
-    <motion.div
+    <div
       aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-[70] h-1 origin-left"
-      style={{
-        scaleX,
-        background: 'linear-gradient(90deg, #2e6a5f, #5ba092, #98c070, #2e6a5f)',
-        backgroundSize: '200% 100%',
-        boxShadow: '0 1px 6px rgba(46, 106, 95, 0.4)',
-      }}
+      className="scroll-progress fixed inset-x-0 top-0 z-[70] h-1 origin-left"
+      style={{ transform: `scaleX(${progress})` }}
     />
   );
 };

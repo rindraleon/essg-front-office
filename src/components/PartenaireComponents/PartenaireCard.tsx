@@ -1,9 +1,8 @@
 import { Globe, Mail } from 'lucide-react';
 import React from 'react';
-import { getImageUrl } from '../../utils/image.utils';
-import { generateSlug } from '../../utils/slug.utils';
+import { getImageUrl , generateSlug } from '@/utils';
 import MediaCard from '../common/MediaCard';
-import type { PartenaireCardProps } from '../../types';
+import type { PartenaireCardProps } from '@/types';
 
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1521737711867-e3b97375f902?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400';
