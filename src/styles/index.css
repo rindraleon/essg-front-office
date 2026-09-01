@@ -1,0 +1,971 @@
+@import 'tailwindcss';
+
+
+
+
+/* Polices auto-hébergées depuis src/assets/fonts (Manrope, Outfit, Space Mono). */
+@import '../assets/fonts/fonts.css';
+
+/* ---------- Tokens Tailwind ---------- */
+@theme {
+  /* Typographie */
+  --font-sans:
+    'Manrope Variable', 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+
+  /* Police d'affichage : Hero, titres de sections, chiffres clés, identité visuelle */
+  --font-display:
+    'Outfit Variable', 'Outfit', 'Manrope Variable', ui-sans-serif, system-ui,
+    sans-serif;
+
+  /* Accent technologique : coordonnées, indicateurs géospatiaux, télémétrie */
+  --font-tech: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  
+
+  
+  --text-display: clamp(2.5rem, 1.43rem + 4.46vw, 4.5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.03em;
+  --text-display--font-weight: 700;
+
+  /* H1 — titre de page (mobile 36px → desktop 56px). */
+  --text-h1: clamp(2.25rem, 1.58rem + 2.79vw, 3.5rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.025em;
+  --text-h1--font-weight: 600;
+
+  /* H2 — titre de section (mobile 30px → desktop 40px). */
+  --text-h2: clamp(1.875rem, 1.54rem + 1.39vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 600;
+
+  /* H3 — titre de carte (mobile 24px → desktop 30px). */
+  --text-h3: clamp(1.5rem, 1.3rem + 0.84vw, 1.875rem);
+  --text-h3--line-height: 1.2;
+  --text-h3--letter-spacing: -0.015em;
+  --text-h3--font-weight: 600;
+
+  /* H4 — intertitre (mobile 20px → desktop 24px). */
+  --text-h4: clamp(1.25rem, 1.12rem + 0.56vw, 1.5rem);
+  --text-h4--line-height: 1.25;
+  --text-h4--letter-spacing: -0.01em;
+  --text-h4--font-weight: 600;
+
+  /* H5 — Inter à partir d'ici (mobile 18px → desktop 20px). */
+  --text-h5: clamp(1.125rem, 1.06rem + 0.28vw, 1.25rem);
+  --text-h5--line-height: 1.3;
+  --text-h5--font-weight: 600;
+
+  /* H6 — (mobile 14px → desktop 16px). */
+  --text-h6: clamp(0.875rem, 0.81rem + 0.28vw, 1rem);
+  --text-h6--line-height: 1.35;
+  --text-h6--font-weight: 600;
+
+  /* Body large — chapô, introduction de section (16px → 18px). */
+  --text-body-lg: clamp(1rem, 0.93rem + 0.28vw, 1.125rem);
+  --text-body-lg--line-height: 1.7;
+
+  /* Body — texte courant (15px → 16px). */
+  --text-body: clamp(0.9375rem, 0.91rem + 0.14vw, 1rem);
+  --text-body--line-height: 1.65;
+
+  /* Small — mentions secondaires, métadonnées (13px → 14px). */
+  --text-small: clamp(0.8125rem, 0.78rem + 0.14vw, 0.875rem);
+  --text-small--line-height: 1.5;
+
+  /* Caption — libellés de champs, légendes. Taille fixe : en dessous de
+     12px la lisibilité se dégrade, quel que soit l'écran. */
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.03em;
+  --text-caption--font-weight: 500;
+
+  /* Label — catégories, tags, statuts, métadonnées (§5.11). */
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.02em;
+  --text-label--font-weight: 600;
+
+  /* Tech — accent Orbitron : coordonnées, indicateurs géospatiaux (§5.12). */
+  --text-tech: 0.75rem;
+  --text-tech--line-height: 1.4;
+  --text-tech--letter-spacing: 0.05em;
+  --text-tech--font-weight: 600;
+
+  
+
+  /* Courbes (§7.15). `--ease-reveal` est une sortie franche puis très
+     amortie : le mouvement paraît « se poser » au lieu de s'arrêter net. */
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.33, 1, 0.68, 1);
+
+  /* Durées (§7.14) */
+  --default-transition-duration: 240ms;
+
+  --duration-micro: 240ms; /* micro-interactions : icônes, liens */
+  --duration-quick: 260ms; /* menus, dropdowns */
+  --duration-hover: 360ms; /* survol des cartes et boutons */
+  --duration-reveal: 800ms; /* entrée d'un élément */
+  --duration-section: 1000ms; /* entrée d'une grande section */
+  --duration-hero: 1300ms; /* Hero */
+
+  /* Séquencement (§7.2) : ~90 ms entre deux éléments, soit 5 éléments
+     révélés en 360 ms — sous la limite de 400–600 ms recommandée. */
+  --stagger-step: 110ms;
+
+  /* Distances de déplacement (§7.1). Volontairement faibles : au-delà
+     de ~32 px, le mouvement cesse d'être perçu comme un « fondu qui
+     monte » et devient un glissement qui attire l'attention. */
+  --reveal-distance: 24px;
+  --reveal-distance-sm: 12px;
+
+  /* Marquee (§7.14) */
+  --duration-marquee-1: 42s;
+  --duration-marquee-2: 50s;
+
+  /* ============================================================
+     PALETTE — dérivée directement du logo ESSG
+     Le logo ne contient que trois couleurs : un vert feuille
+     (#98c070), un anthracite ardoise (#586068) et un point rouge.
+     Toute la charte est construite sur ces trois ancrages ; aucune
+     teinte « hors logo » n'est introduite.
+     Chaque palier a été vérifié en contraste WCAG 2.2 AA.
+     ============================================================ */
+
+  /* Vert institutionnel — couleur primaire.
+     400 = vert exact du logo. Les paliers 600+ sont les seuls
+     autorisés pour du texte ou un aplat portant du texte blanc :
+       600 sur blanc  → 4.87:1  (AA, remplissage des CTA)
+       700 sur blanc  → 7.05:1  (AAA, liens et eyebrows)
+       300 sur ink-950 → 10.49:1 (AAA, accents sur fond sombre) */
+  --color-brand-50: #f5faef;
+  --color-brand-100: #e8f3db;
+  --color-brand-200: #d3e8bd;
+  --color-brand-300: #b7d897;
+  --color-brand-400: #98c070;
+  --color-brand-500: #78a44e;
+  --color-brand-600: #547c36;
+  --color-brand-700: #42612c;
+  --color-brand-800: #374e27;
+  --color-brand-900: #2f4123;
+  --color-brand-950: #17220f;
+
+  /* Anthracite ardoise — neutres et grandes surfaces sombres.
+     600 = gris exact du logo.
+       800 sur blanc → 10.18:1 (texte courant)
+       600 sur blanc →  6.39:1 (texte secondaire)
+       500 sur blanc →  4.90:1 (texte tertiaire, plancher AA) */
+  --color-ink-50: #f6f7f8;
+  --color-ink-100: #e9ebed;
+  --color-ink-200: #d4d8dc;
+  --color-ink-300: #b0b7bd;
+  --color-ink-400: #848d96;
+  --color-ink-500: #68727c;
+  --color-ink-600: #586068;
+  --color-ink-700: #4a5158;
+  --color-ink-800: #3c4247;
+  --color-ink-900: #2b3034;
+  --color-ink-950: #1b1f22;
+
+  /* Rouge du logo — accent strictement exceptionnel : erreurs de
+     formulaire, alertes critiques, suppression. Jamais un CTA. */
+  --color-danger-50: #fdecea;
+  --color-danger-100: #fbd5d1;
+  --color-danger-500: #e53935;
+  --color-danger-600: #d32f2f;
+  --color-danger-700: #c62828;
+
+  /* ============================================================
+     RAYONS — 5 paliers, aucun rayon arbitraire ailleurs.
+     L'audit relevait 12 rayons différents dont 5 en valeur libre
+     (rounded-[2rem], [1.75rem], [1.5rem], [0.9rem]…) : la hiérarchie
+     des surfaces n'était plus lisible.
+       sm  : puces, tags
+       md  : champs, petits boutons
+       lg  : boutons, inputs
+       xl  : cartes
+       2xl : grands blocs et sections encadrées
+     ============================================================ */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-3xl: 2rem;
+
+  /* ============================================================
+     ESPACEMENT VERTICAL DES SECTIONS
+     Un seul rythme pour tout le site, au lieu des 8 valeurs
+     relevées (py-10/12/14/16/18/20/24/28).
+     ============================================================ */
+  --space-section: 4rem; /* mobile  : 64px */
+  --space-section-md: 5.5rem; /* tablette : 88px */
+  --space-section-lg: 7rem; /* desktop  : 112px */
+  --space-section-tight: 3rem;
+  --space-section-tight-lg: 4.5rem;
+
+  /* Ombres cohérentes */
+  --shadow-card: 0 1px 2px rgb(27 31 34 / 0.04), 0 4px 16px -4px rgb(27 31 34 / 0.08);
+  --shadow-card-hover: 0 2px 4px rgb(27 31 34 / 0.05), 0 16px 40px -12px rgb(27 31 34 / 0.16);
+  --shadow-soft: 0 1px 3px rgb(27 31 34 / 0.05), 0 8px 24px -8px rgb(27 31 34 / 0.1);
+  --shadow-elevated: 0 8px 20px -6px rgb(27 31 34 / 0.12), 0 24px 56px -16px rgb(27 31 34 / 0.2);
+  --shadow-focus: 0 0 0 4px rgb(84 124 54 / 0.22);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.6s ease-out both;
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-scale-in: scale-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-page-in: page-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-ken-burns: ken-burns 22s ease-out both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ken-burns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--duration-reveal) var(--ease-reveal),
+    transform var(--duration-reveal) var(--ease-reveal);
+}
+
+.reveal-item.is-visible,
+.reveal-section.is-visible .reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hover-lift {
+  transition:
+    transform var(--duration-hover) ease,
+    box-shadow var(--duration-hover) ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.img-reveal {
+  overflow: hidden;
+}
+
+.img-reveal img {
+  transition: transform var(--duration-reveal) var(--ease-reveal);
+}
+
+.img-reveal:hover img {
+  transform: scale(1.05);
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-ink-50);
+    color: var(--color-ink-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    line-height: 1.6;
+  }
+
+  
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  [data-surface='dark'] :focus-visible {
+    outline-color: var(--color-brand-400);
+  }
+
+  /* Sélection de texte aux couleurs de la marque */
+  ::selection {
+    background-color: var(--color-brand-600);
+    color: #ffffff;
+  }
+
+  /* Barres de défilement discrètes */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-100);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-300);
+    border-radius: 9999px;
+    border: 2px solid var(--color-ink-100);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-brand-500);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+  }
+
+  /* Un titre n'est pas toujours une balise h1–h4 : certains blocs utilisent
+     un <div>, un <span> ou un <p> porteur d'une classe de l'échelle
+     typographique. On rattache donc la police d'affichage à l'échelle
+     elle-même, pour que TOUTES les pages rendent exactement comme la Home. */
+  .text-display,
+  .text-h1,
+  .text-h2,
+  .text-h3,
+  .text-h4 {
+    font-family: var(--font-display);
+  }
+
+  .text-h5,
+  .text-h6,
+  .text-body-lg,
+  .text-body,
+  .text-small,
+  .text-caption,
+  .text-label {
+    font-family: var(--font-sans);
+  }
+
+  /* Accent technologique : coordonnées, indicateurs géospatiaux, compteurs. */
+  .text-tech,
+  .font-tech {
+    font-family: var(--font-tech);
+  }
+
+  /* Chaque niveau reprend l'échelle typographique : un composant qui
+     n'applique aucune classe obtient déjà la bonne taille et la bonne
+     graisse, ce qui évite les écarts entre pages. */
+  h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    letter-spacing: var(--text-h1--letter-spacing);
+    font-weight: var(--text-h1--font-weight);
+  }
+
+  h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--text-h2--letter-spacing);
+    font-weight: var(--text-h2--font-weight);
+  }
+
+  h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    letter-spacing: var(--text-h3--letter-spacing);
+    font-weight: var(--text-h3--font-weight);
+  }
+
+  h4 {
+    font-size: var(--text-h4);
+    line-height: var(--text-h4--line-height);
+    letter-spacing: var(--text-h4--letter-spacing);
+    font-weight: var(--text-h4--font-weight);
+  }
+
+  h5 {
+    font-size: var(--text-h5);
+    line-height: var(--text-h5--line-height);
+    font-weight: var(--text-h5--font-weight);
+  }
+
+  h6 {
+    font-size: var(--text-h6);
+    line-height: var(--text-h6--line-height);
+    font-weight: var(--text-h6--font-weight);
+  }
+
+  /* Formulaires et boutons héritent de la police du document :
+     sans cette règle, le navigateur leur impose sa propre fonte. */
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    letter-spacing: inherit;
+  }
+
+  /* Chiffres alignés dans les statistiques et tableaux. */
+  [data-numeric],
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  
+  .prose-measure {
+    max-width: 65ch;
+  }
+}
+
+/* ---------- Accessibilité : réduction des animations ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Composants utilitaires ---------- */
+
+/* Cacher la barre de défilement pour le scroll horizontal */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Conteneur et rythme de page ----------
+   `section-shell` est LE conteneur unique du site : toutes les
+   sections s'alignent sur la même grille (max 1280px + gouttières
+   progressives). Il remplace les 46 répétitions de
+   « mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 » relevées à l'audit. */
+.section-shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .section-shell {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-shell {
+    padding-inline: 2rem;
+  }
+}
+
+/* Rythme vertical standard d'une section. */
+.section-y {
+  padding-block: var(--space-section);
+}
+
+.section-y-tight {
+  padding-block: var(--space-section-tight);
+}
+
+@media (min-width: 768px) {
+  .section-y {
+    padding-block: var(--space-section-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-y {
+    padding-block: var(--space-section-lg);
+  }
+
+  .section-y-tight {
+    padding-block: var(--space-section-tight-lg);
+  }
+}
+
+/* Équilibrage de texte sur les titres longs */
+.text-balance {
+  text-wrap: balance;
+}
+
+
+
+@utility surface-card {
+  /* Carte standard sur fond clair. */
+  background-color: #ffffff;
+  border: 1px solid var(--color-ink-100);
+  border-radius: var(--radius-2xl, 1.25rem);
+  box-shadow: var(
+    --shadow-card,
+    0 1px 2px rgb(27 31 34 / 0.04),
+    0 4px 16px -4px rgb(27 31 34 / 0.08)
+  );
+}
+
+@utility surface-glass {
+  /* Glassmorphism léger sur média/fond sombre — texte clair uniquement. */
+  background-color: rgb(255 255 255 / 0.1);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+}
+
+@utility surface-glass-light {
+  /* Variante sur fond clair : suffisamment opaque pour rester lisible. */
+  background-color: rgb(255 255 255 / 0.82);
+  border: 1px solid rgb(255 255 255 / 0.6);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+}
+
+@utility overlay-hero {
+  /* Voile de lisibilité sous un texte posé sur une image. */
+  background-image: linear-gradient(
+    to bottom,
+    rgb(27 31 34 / 0.35) 0%,
+    rgb(27 31 34 / 0.45) 45%,
+    rgb(27 31 34 / 0.78) 100%
+  );
+}
+
+@utility section-divider {
+  /* Séparation douce entre deux sections. */
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--color-ink-200) 20%,
+    var(--color-ink-200) 80%,
+    transparent
+  );
+  height: 1px;
+}
+
+/* Repli : si le navigateur ne gère pas backdrop-filter, on opacifie
+   les surfaces pour ne jamais dégrader la lisibilité du texte. */
+@supports not (backdrop-filter: blur(1px)) {
+  .surface-glass {
+    background-color: rgb(27 31 34 / 0.72);
+  }
+
+  .surface-glass-light {
+    background-color: rgb(255 255 255 / 0.96);
+  }
+}
+
+
+
+@utility reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--duration-reveal) var(--ease-reveal),
+    transform var(--duration-reveal) var(--ease-reveal);
+  will-change: opacity, transform;
+}
+
+@utility reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+@media (hover: none) {
+  .media-card [data-card-details] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .media-card [data-card-veil] {
+    opacity: 1;
+  }
+
+  /* Le bloc est ancré au-dessus du titre et la carte masque son
+     débordement : on limite le texte à deux lignes pour qu'il tienne
+     entièrement dans le cadre, même sur les plus petits écrans. */
+  .media-card [data-card-details] p {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+}
+
+
+
+@keyframes who-we-are-image {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1.01);
+  }
+}
+
+@layer components {
+  .who-we-are-image {
+    animation: who-we-are-image 18s var(--ease-out-soft) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .who-we-are-image {
+    animation: none;
+  }
+}
+
+@keyframes hero-home-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-home-image {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1.01);
+  }
+}
+
+@keyframes hero-home-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hero-home-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes hero-home-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes hero-home-scroll {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@layer components {
+  .hero-home-image {
+    animation: hero-home-image 18s var(--ease-out-soft) both;
+  }
+
+  .hero-home-grid {
+    background-image:
+      linear-gradient(to right, rgb(152 192 112 / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(152 192 112 / 0.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(to right, black, transparent 82%);
+  }
+
+  .hero-home-glow {
+    animation: hero-home-breathe 9s ease-in-out infinite;
+  }
+
+  .hero-home-enter {
+    opacity: 0;
+    animation: hero-home-enter 1s var(--ease-reveal) forwards;
+  }
+
+  .hero-home-visual {
+    --hero-tilt-x: 0deg;
+    --hero-tilt-y: 0deg;
+    transform: perspective(900px) rotateX(var(--hero-tilt-x)) rotateY(var(--hero-tilt-y));
+    transform-style: preserve-3d;
+    transition: transform 500ms var(--ease-out-soft);
+  }
+
+  .hero-home-orbit {
+    animation: hero-home-spin 28s linear infinite;
+  }
+
+  .hero-home-orbit-reverse {
+    animation: hero-home-spin-reverse 20s linear infinite;
+  }
+
+  .hero-home-scan {
+    background: conic-gradient(from 15deg, transparent 0deg, rgb(152 192 112 / 0.2) 34deg, transparent 78deg);
+    animation: hero-home-spin 12s linear infinite;
+  }
+
+  .hero-home-pin {
+    filter: drop-shadow(0 0 12px rgb(152 192 112 / 0.7));
+    animation: hero-home-breathe 3.6s ease-in-out infinite;
+  }
+
+  .hero-home-scroll {
+    animation: hero-home-scroll 2.8s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-home-image,
+  .hero-home-glow,
+  .hero-home-enter,
+  .hero-home-orbit,
+  .hero-home-orbit-reverse,
+  .hero-home-scan,
+  .hero-home-pin,
+  .hero-home-scroll {
+    animation: none !important;
+  }
+
+  .hero-home-enter {
+    opacity: 1;
+  }
+
+  .hero-home-visual {
+    transform: none !important;
+    transition: none;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --reveal-distance: 14px;
+    --reveal-distance-sm: 8px;
+    --duration-reveal: 620ms;
+    --duration-section: 720ms;
+    --duration-hero: 900ms;
+    --stagger-step: 80ms;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --reveal-distance: 18px;
+    --duration-reveal: 700ms;
+    --duration-section: 860ms;
+    --stagger-step: 95ms;
+  }
+}
+
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@utility skeleton-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-ink-100) 40%,
+    var(--color-ink-50) 50%,
+    var(--color-ink-100) 60%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 3.1s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+    background-image: none;
+    background-color: var(--color-ink-100);
+  }
+}
+
+/* ============================================================
+   COMPOSANTS DE TRANSITION GLOBALE
+   ============================================================ */
+
+@keyframes page-transition-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+
+.page-transition {
+  animation: page-transition-in 540ms var(--ease-reveal) both;
+}
+
+.scroll-progress {
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-600),
+    var(--color-brand-400),
+    var(--color-brand-500)
+  );
+  box-shadow: 0 1px 8px rgb(84 124 54 / 0.35);
+  pointer-events: none;
+  transform-origin: left center;
+}
+
+
+
+
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
