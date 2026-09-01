@@ -58,6 +58,11 @@ const DEFAULT_PROPS = {
 const LINK_CLASS =
   'text-ink-300 transition-colors duration-(--duration-quick) hover:text-white focus-visible:outline-none focus-visible:text-white';
 
+const SocialIcon = ({ kind }: { kind: SocialItem['kind'] }) => {
+  const IconComponent = SOCIAL_ICONS[kind as keyof typeof SOCIAL_ICONS] || ExternalLink;
+  return <IconComponent className="size-4" strokeWidth={1.8} />;
+};
+
 const Footer = ({
   companyName = DEFAULT_PROPS.companyName,
   navLinks = DEFAULT_PROPS.navLinks,
@@ -69,11 +74,6 @@ const Footer = ({
   const visibleNavLinks = admissionsOuvertes
     ? navLinks
     : navLinks.filter((item) => item.to !== '/admission');
-
-  const SocialIcon = ({ kind }: { kind: SocialItem['kind'] }) => {
-    const IconComponent = SOCIAL_ICONS[kind as keyof typeof SOCIAL_ICONS] || ExternalLink;
-    return <IconComponent className="size-4" strokeWidth={1.8} />;
-  };
 
   return (
     <footer data-surface="dark" className="relative isolate overflow-hidden bg-ink-950 text-white">
