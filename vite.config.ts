@@ -17,7 +17,8 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id) {
             if (!id.includes('node_modules')) return undefined;
-            if (/node_modules\/(react|react-dom|react-router|react-router-dom)\//.test(id)) return 'vendor-react';
+            if (/node_modules\/(react|react-dom|react-router|react-router-dom)\//.test(id))
+              return 'vendor-react';
             if (id.includes('@tanstack/react-query')) return 'vendor-query';
             if (id.includes('/gsap/')) return 'vendor-motion';
             if (id.includes('/leaflet/')) return 'vendor-map';
