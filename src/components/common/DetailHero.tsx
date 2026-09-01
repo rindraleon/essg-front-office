@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib';
 import RevealOnScroll from './RevealOnScroll';
+import ParticlesBackground from '../animations/ParticlesBackground';
 
 export interface DetailHeroMeta {
   icon?: LucideIcon;
@@ -56,6 +57,7 @@ const DetailHero = ({
       )}
     />
     <div className="absolute inset-0 -z-10 opacity-[0.07] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:56px_56px]" />
+    <ParticlesBackground particleCount={85} />
 
     <div className="section-shell grid min-h-[34rem] items-center gap-10 pb-16 pt-20 sm:pt-24 lg:grid-cols-[1fr_auto]">
       <RevealOnScroll variant="fade-left" className="max-w-4xl">

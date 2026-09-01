@@ -17,7 +17,7 @@ const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
               key={panelId}
               className={cn(
                 'overflow-hidden rounded-[0.9rem] border border-ink-100 transition-all duration-200',
-                isOpen && 'border-brand-200 shadow-[0_12px_32px_-16px_rgba(46,106,95,0.35)]',
+                isOpen && 'border-brand-200 shadow-[0_12px_32px_-16px_rgba(46,106,95,0.35)]'
               )}
             >
               <button
@@ -27,14 +27,14 @@ const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
                 onClick={() => setExpanded(isOpen ? null : panelId)}
                 className={cn(
                   'flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left font-semibold transition-colors',
-                  isOpen ? 'bg-brand-50 text-brand-800' : 'text-ink-900 hover:bg-ink-50',
+                  isOpen ? 'bg-brand-50 text-brand-800' : 'text-ink-900 hover:bg-ink-50'
                 )}
               >
                 <span>{faq.question}</span>
                 <ChevronDown
                   className={cn(
                     'size-5 shrink-0 text-ink-400 transition-transform duration-200',
-                    isOpen && 'rotate-180 text-brand-600',
+                    isOpen && 'rotate-180 text-brand-600'
                   )}
                 />
               </button>

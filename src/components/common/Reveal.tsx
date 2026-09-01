@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib';
 
-export type AnimationType = 'fade-down' | 'fade-right' | 'fade-up' | 'fade-left' | 'fade-in' | 'scale-in';
+export type AnimationType =
+  'fade-down' | 'fade-right' | 'fade-up' | 'fade-left' | 'fade-in' | 'scale-in';
 
 interface RevealProps {
   children: React.ReactNode;

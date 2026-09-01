@@ -8,6 +8,7 @@ import { CARD_WIDTH_CLASS } from '@/constants';
 import SectionHeader from '../common/SectionHeader';
 import SectionCta from '../common/SectionCta';
 import SectionContent from '../common/SectionContent';
+import ParticlesBackground from '../animations/ParticlesBackground';
 import ScrollableCardGrid from '../common/ScrollableCardGrid';
 import MediaCard from '../common/MediaCard';
 import { MediaCardSkeletonGrid } from '../common/MediaCardSkeleton';
@@ -39,11 +40,18 @@ const ProjetsSection = ({
 
   return (
     <SectionContent
+      backgroundContent={<ParticlesBackground />}
       loading={loading}
       error={error}
       isEmpty={!loading && total === 0}
       emptyMessage="Aucun projet disponible pour le moment."
-      headerContent={<SectionHeader eyebrow="Impact & Applications Géomatiques" title={title} description={description} />}
+      headerContent={
+        <SectionHeader
+          eyebrow="Impact & Applications Géomatiques"
+          title={title}
+          description={description}
+        />
+      }
       loadingSkeletons={<MediaCardSkeletonGrid layout="home" />}
       sectionClassName="bg-gradient-to-b from-brand-50/45 via-ink-50 to-white section-y"
       fluid

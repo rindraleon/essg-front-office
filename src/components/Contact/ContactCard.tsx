@@ -18,7 +18,7 @@ const ContactCard: React.FC<ContactCardProps> = (props: Readonly<ContactCardProp
   } = props;
 
   return (
-    <Card className="group transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-card-hover">
+    <Card className="group transition-all duration-300 ease-out hover:border-brand-200 hover:shadow-card-hover">
       <CardContent className="p-6 sm:p-8">
         <div className="flex items-start gap-4">
           <div
@@ -29,7 +29,9 @@ const ContactCard: React.FC<ContactCardProps> = (props: Readonly<ContactCardProp
           </div>
 
           <div className="flex-1">
-            <h3 className="mb-2 text-lg font-bold text-ink-900 group-hover:text-brand-700 transition-colors">{title}</h3>
+            <h3 className="mb-2 text-lg font-bold text-ink-900 group-hover:text-brand-700 transition-colors">
+              {title}
+            </h3>
 
             <p className="mb-5 leading-relaxed text-justify text-ink-600">{description}</p>
 

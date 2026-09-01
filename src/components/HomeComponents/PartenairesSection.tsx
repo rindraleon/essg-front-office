@@ -3,9 +3,10 @@ import SectionCta from '../common/SectionCta';
 import SectionHeader from '../common/SectionHeader';
 import RevealOnScroll from '../common/RevealOnScroll';
 import PartnerChipCard from '../PartenaireComponents/PartnerChipCard';
+import ParticlesBackground from '../animations/ParticlesBackground';
 import { usePartenaires } from '@/hooks';
 import { gsap, prefersReducedMotion, registerGsap } from '@/lib';
-import type { PartenairesSectionProps , PartenaireItem } from '@/types';
+import type { PartenairesSectionProps, PartenaireItem } from '@/types';
 
 const SECTION_CTA = { label: 'Voir tous nos partenaires', link: '/partenaires' } as const;
 
@@ -144,13 +145,10 @@ const PartenairesSection = ({
   };
 
   return (
-    <section className="overflow-hidden bg-gradient-to-br from-ink-50 via-white to-brand-50/55 section-y">
+    <section className="relative overflow-hidden bg-gradient-to-br from-ink-50 via-white to-brand-50/55 section-y">
+      <ParticlesBackground />
       <div className="section-shell">
-        <SectionHeader
-          eyebrow="Réseau & Coopérations"
-          title={title}
-          description={description}
-        />
+        <SectionHeader eyebrow="Réseau & Coopérations" title={title} description={description} />
       </div>
 
       {renderContenu()}

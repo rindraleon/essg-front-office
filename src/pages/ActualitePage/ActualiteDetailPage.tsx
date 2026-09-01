@@ -94,7 +94,7 @@ const ActualiteDetailPage: React.FC = () => {
           <button
             type="button"
             onClick={() => void handleShare()}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-400 px-5 py-2.5 text-small font-bold text-brand-950 transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-brand-300 motion-reduce:transform-none"
+            className="inline-flex items-center gap-2 rounded-full bg-brand-400 px-5 py-2.5 text-small font-bold text-brand-950 transition-[transform,background-color] hover:bg-brand-300 motion-reduce:transform-none"
           >
             <Share2 className="size-4" />
             Partager l’article
@@ -192,7 +192,7 @@ const ActualiteDetailPage: React.FC = () => {
                 <RevealOnScroll key={item.id} delay={index * 80}>
                   <Link
                     to={`/actualites/${item.slug}`}
-                    className="group block h-full rounded-2xl border border-ink-100 bg-ink-50/55 p-5 transition-[transform,border-color,box-shadow] hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover motion-reduce:transform-none"
+                    className="group block h-full rounded-2xl border border-ink-100 bg-ink-50/55 p-5 transition-[transform,border-color,box-shadow] hover:border-brand-200 hover:shadow-card-hover motion-reduce:transform-none"
                   >
                     <span className="text-caption font-semibold uppercase tracking-[0.14em] text-brand-700">
                       {item.categorie}

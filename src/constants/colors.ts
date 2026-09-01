@@ -1,11 +1,3 @@
-/**
- * Palette de marque exposée au JavaScript (canvas, graphiques, cartes).
- *
- * Source unique : les tokens `--color-brand-*` définis dans
- * `src/styles/index.css`, eux-mêmes dérivés du vert du logo ESSG.
- * Toute évolution de la charte se fait dans le CSS puis ici — jamais
- * en écrivant un hexadécimal dans un composant.
- */
 const BRAND = {
   50: '#f5faef',
   100: '#e8f3db',

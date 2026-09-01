@@ -73,7 +73,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
     <article
       data-gsap
       className={cn(
-        'media-card group relative isolate overflow-hidden rounded-2xl shadow-card transition-all duration-300 ease-out hover:-translate-y-2 hover:border-brand-300 hover:shadow-card-hover focus-within:shadow-card-hover',
+        'media-card group relative isolate overflow-hidden rounded-2xl shadow-card transition-all duration-300 ease-out hover:border-brand-300 hover:shadow-card-hover focus-within:shadow-card-hover',
         isHomeLayout ? 'flex h-full flex-col border border-ink-100 bg-white' : surfaceClass,
         HOVER_CARD,
         !isHomeLayout && ratioClass,
@@ -145,7 +145,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
             <p className="mt-1 h-5 truncate text-small text-brand-300">{subtitle || '\u00a0'}</p>
             <span className="mt-2 inline-flex h-4 items-center gap-1.5 text-caption font-semibold text-white/85 transition-colors duration-(--duration-micro) group-hover:text-brand-300 group-focus-within:text-brand-300 motion-reduce:transition-none">
               {actionLabel}
-              <ArrowUpRight className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none" />
+              <ArrowUpRight className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transition-none" />
             </span>
           </div>
         )}
@@ -184,9 +184,9 @@ const MediaCard: React.FC<MediaCardProps> = ({
             <div
               data-card-details
               className={cn(
-                'pointer-events-none absolute inset-x-5 bottom-full mb-3 translate-y-3 opacity-0 transition-[opacity,transform] duration-(--duration-hover) ease-out',
-                'group-hover:translate-y-0 group-hover:opacity-100',
-                'group-focus-within:translate-y-0 group-focus-within:opacity-100',
+                'pointer-events-none absolute inset-x-5 bottom-full mb-3 opacity-0 transition-opacity duration-(--duration-hover) ease-out',
+                'group-hover:opacity-100',
+                'group-focus-within:opacity-100',
                 'motion-reduce:transition-none'
               )}
             >
@@ -229,7 +229,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
 
           <span className="mt-2 inline-flex items-center gap-1.5 text-caption font-semibold uppercase text-white/85 transition-colors duration-(--duration-micro) group-hover:text-brand-300 group-focus-within:text-brand-300 motion-reduce:transition-none">
             {actionLabel}
-            <ArrowUpRight className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1 group-hover:-translate-y-1 motion-reduce:transition-none" />
+            <ArrowUpRight className="size-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1 motion-reduce:transition-none" />
           </span>
         </div>
       )}

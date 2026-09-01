@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import EssG from '../../assets/files/images/logo/EssG.png';
-import { buttonVariants } from '../ui/button';
+import { buttonVariants } from '../ui/button-variants';
 import { cn } from '@/lib';
 import useHeaderScroll from '@/hooks/useHeaderScroll';
 import { useAdmissionsOuvertes } from '@/hooks';

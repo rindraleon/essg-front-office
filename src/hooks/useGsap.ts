@@ -3,7 +3,7 @@ import { gsap, registerGsap } from '../lib/gsap';
 
 export default function useGsap<T extends HTMLElement>(
   animate: (context: typeof gsap, root: T) => void,
-  deps: ReadonlyArray<unknown> = [],
+  deps: ReadonlyArray<unknown> = []
 ) {
   const ref = useRef<T | null>(null);
 

@@ -1,6 +1,5 @@
 import { BRAND } from './colors';
 
-
 /** Bouton « lien » discret (ex: « En savoir plus », « Lire la suite ») */
 export const TEXT_LINK_BUTTON = {
   mt: 3,

@@ -1,17 +1,18 @@
 import { BookOpen, GraduationCap } from 'lucide-react';
 import { useMemo } from 'react';
 import { getImageUrl } from '@/utils';
-import { CARD_WIDTH_CLASS , NIVEAU_ORDER } from '@/constants';
+import { CARD_WIDTH_CLASS, NIVEAU_ORDER } from '@/constants';
 import SectionHeader from '../common/SectionHeader';
 import SectionCta from '../common/SectionCta';
 import SectionContent from '../common/SectionContent';
+import ParticlesBackground from '../animations/ParticlesBackground';
 import ScrollableCardGrid from '../common/ScrollableCardGrid';
 import MediaCard from '../common/MediaCard';
 import FilterButton from '../common/FilterButton';
 import { MediaCardSkeletonGrid } from '../common/MediaCardSkeleton';
 import { useFeaturedFormations } from '@/hooks';
 import useSectionFilters, { type FilterDefinition } from '@/hooks/useSectionFilters';
-import type { FeaturedFormationsSectionProps , Formation } from '@/types';
+import type { FeaturedFormationsSectionProps, Formation } from '@/types';
 
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1523050854058-8df90110a6f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800';
@@ -67,11 +68,14 @@ const FormationsSection = ({
 
   return (
     <SectionContent
+      backgroundContent={<ParticlesBackground />}
       loading={loading}
       error={error}
       isEmpty={!loading && total === 0}
       emptyMessage="Aucune formation disponible pour le moment."
-      headerContent={<SectionHeader eyebrow="Diplômes & Cursus LMD" title={title} description={description} />}
+      headerContent={
+        <SectionHeader eyebrow="Diplômes & Cursus LMD" title={title} description={description} />
+      }
       loadingSkeletons={<MediaCardSkeletonGrid count={3} layout="home" />}
       sectionClassName="bg-gradient-to-b from-brand-50/65 via-white to-white section-y"
       fluid

@@ -7,7 +7,10 @@ import {
   FilterToolbar,
   QueryState,
   Pagination,
- Input, Select, Skeleton } from '@/components';
+  Input,
+  Select,
+  Skeleton,
+} from '@/components';
 import { cn } from '@/lib';
 import { useActualites, useTitle } from '@/hooks';
 import type { Actualite } from '@/types';

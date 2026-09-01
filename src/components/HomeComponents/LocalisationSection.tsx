@@ -8,6 +8,7 @@ import 'leaflet/dist/leaflet.css';
 import useGsapReveal from '@/hooks/useGsapReveal';
 import type { LocalisationSectionProps } from '@/types';
 import SectionHeader from '../common/SectionHeader';
+import ParticlesBackground from '../animations/ParticlesBackground';
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -35,11 +36,12 @@ const LocalisationSection: React.FC<LocalisationSectionProps> = (
       ref={revealRef}
       className="relative overflow-hidden bg-gradient-to-b from-ink-50/50 via-white to-brand-50/30 section-y"
     >
+      <ParticlesBackground />
       <div className="section-shell">
         <SectionHeader
           eyebrow="Contact & Accès"
-          title = 'Restons en contact'
-          description = 'Pour toute information concernant nos formations, les admissions ou la vie académique de l’ESSG, notre équipe reste à votre disposition.'
+          title="Restons en contact"
+          description="Pour toute information concernant nos formations, les admissions ou la vie académique de l’ESSG, notre équipe reste à votre disposition."
         />
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div data-gsap className="space-y-6">
@@ -130,7 +132,9 @@ const LocalisationSection: React.FC<LocalisationSectionProps> = (
               <Marker position={[latitude, longitude]}>
                 <Popup>
                   <div className="text-center p-1 font-sans">
-                    <strong className="block text-brand-900 font-bold">ESSG - École Supérieure de Sciences Géomatiques</strong>
+                    <strong className="block text-brand-900 font-bold">
+                      ESSG - École Supérieure de Sciences Géomatiques
+                    </strong>
                     <span className="text-xs text-ink-600">Université de Fianarantsoa</span>
                     <br />
                     <span className="text-[11px] text-ink-500">Andrainjato, Madagascar</span>

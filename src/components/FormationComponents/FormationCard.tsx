@@ -1,7 +1,7 @@
 import { Briefcase, Clock, GraduationCap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '../ui/badge';
-import { buttonVariants } from '../ui/button';
+import { buttonVariants } from '../ui/button-variants';
 import { cn } from '@/lib';
 import { getImageUrl } from '@/utils';
 import ViewDetailsButton from '../common/ViewDetailsButton';
@@ -17,7 +17,7 @@ const FormationCard = ({
     <article
       data-gsap
       className={cn(
-        'group overflow-hidden rounded-xl border border-ink-100 bg-white shadow-card transition-all duration-300 ease-out hover:-translate-y-2 hover:border-brand-300 hover:shadow-card-hover',
+        'group overflow-hidden rounded-xl border border-ink-100 bg-white shadow-card transition-all duration-300 ease-out hover:border-brand-300 hover:shadow-card-hover',
         HOVER_CARD
       )}
     >
@@ -30,7 +30,10 @@ const FormationCard = ({
                 decoding="async"
                 src={getImageUrl(formation.image)}
                 alt={formation.titre}
-                className={cn('h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105', HOVER_IMAGE_ZOOM)}
+                className={cn(
+                  'h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105',
+                  HOVER_IMAGE_ZOOM
+                )}
               />
             </div>
             <div
@@ -53,7 +56,9 @@ const FormationCard = ({
             </div>
           </div>
 
-          <h3 className="mb-2 text-h4 font-bold text-ink-900 group-hover:text-brand-700 transition-colors">{formation.titre}</h3>
+          <h3 className="mb-2 text-h4 font-bold text-ink-900 group-hover:text-brand-700 transition-colors">
+            {formation.titre}
+          </h3>
           <p className="mb-4 text-small font-medium text-brand-600">
             {formation.domaine.join(', ')}
           </p>

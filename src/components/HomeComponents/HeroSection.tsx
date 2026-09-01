@@ -5,7 +5,7 @@ import { ArrowRight, GraduationCap, Sparkles } from 'lucide-react';
 import Reveal from '../common/Reveal';
 import { SITE_HERO_ALT, SITE_HERO_IMAGE } from '@/constants';
 import { cn } from '@/lib';
-import { buttonVariants } from '../ui/button';
+import { buttonVariants } from '../ui/button-variants';
 import type { HeroSectionProps } from '@/types';
 
 import ParticlesBackground from '../animations/ParticlesBackground';

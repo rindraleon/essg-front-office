@@ -82,7 +82,7 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
             data-gsap
             onClick={() => setLightboxIndex(index)}
             aria-label={`Agrandir l'image ${index + 1} sur ${urls.length}`}
-            className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-xl border border-ink-100 bg-ink-50 transition-all duration-(--duration-hover) hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
+            className="group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-xl border border-ink-100 bg-ink-50 transition-all duration-(--duration-hover) hover:border-brand-200 hover:shadow-card-hover"
           >
             <img
               src={url}
@@ -100,19 +100,24 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
       </div>
 
       {lightboxIndex !== null && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Visionneuse d'images"
-          tabIndex={-1}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink-950/95 backdrop-blur-sm"
+        <dialog
+        open
+        aria-label="Visionneuse d'images"
+        className="fixed inset-0 z-[100] m-0 flex h-full w-full max-w-none items-center justify-center border-0 bg-ink-950/95 p-0 backdrop-blur-sm"
+        onCancel={close}
+      >
+        <img
+          alt=""
+          aria-hidden="true"
+          src={urls[lightboxIndex]}
+          className="fixed inset-0 h-full w-full cursor-default object-cover opacity-0"
           onClick={(event) => {
-            if (event.target === event.currentTarget) close();
+            if (event.target === event.currentTarget) {
+              close();
+            }
           }}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') close();
-          }}
-        >
+        />
+        <div className="flex h-full w-full items-center justify-center">
           <button
             type="button"
             onClick={close}
@@ -160,7 +165,8 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
               <ChevronRight />
             </button>
           )}
-        </div>
+          </div>
+        </dialog>
       )}
     </section>
   );

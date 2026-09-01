@@ -78,11 +78,7 @@ const SOCIAL_ITEMS = [
   },
 ];
 
-const SocialLinks: React.FC<SocialLinksProps> = ({
-  className,
-  size = 22,
-  fixed = false,
-}) => {
+const SocialLinks: React.FC<SocialLinksProps> = ({ className, size = 22, fixed = false }) => {
   const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
@@ -122,10 +118,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
     : 'flex items-center gap-4';
 
   return (
-    <aside
-      aria-label="Réseaux sociaux"
-      className={cn(containerClasses, className)}
-    >
+    <aside aria-label="Réseaux sociaux" className={cn(containerClasses, className)}>
       {SOCIAL_ITEMS.map((item) => (
         <a
           key={item.name}
@@ -136,7 +129,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({
           style={{ color: item.color }}
           className={cn(
             'group relative flex items-center justify-center p-1.5 transition-all duration-300',
-            'hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-full',
+            'hover:border-brand-400/40 hover:bg-brand-400/10 hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-full',
             'drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]'
           )}
         >

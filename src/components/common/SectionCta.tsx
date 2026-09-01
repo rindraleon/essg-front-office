@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { buttonVariants } from '../ui/button';
+import { buttonVariants } from '../ui/button-variants';
 import { cn } from '@/lib';
 import MobileCta from './MobileCta';
 

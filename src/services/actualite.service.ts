@@ -1,4 +1,4 @@
-import { apiClient , endpoints } from '@/api';
+import { apiClient, endpoints } from '@/api';
 import type { PaginatedResult } from '@/api';
 import type { Actualite } from '@/types';
 

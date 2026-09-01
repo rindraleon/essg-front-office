@@ -41,14 +41,14 @@ export const useTyped = (words: readonly string[], options: UseTypedOptions = {}
         }, pauseDuration);
       }
     } else if (text.length > 0) {
-        timer = setTimeout(() => {
-          setText(currentWord.slice(0, text.length - 1));
-        }, deleteSpeed);
-      } else {
-        // Word is fully deleted, move to next
-        setIsDeleting(false);
-        setWordIndex((prev) => (prev + 1) % words.length);
-      }
+      timer = setTimeout(() => {
+        setText(currentWord.slice(0, text.length - 1));
+      }, deleteSpeed);
+    } else {
+      // Word is fully deleted, move to next
+      setIsDeleting(false);
+      setWordIndex((prev) => (prev + 1) % words.length);
+    }
 
     return () => clearTimeout(timer);
   }, [text, isDeleting, wordIndex, words, typeSpeed, deleteSpeed, pauseDuration]);

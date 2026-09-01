@@ -2,7 +2,7 @@ import { ArrowRight, Mail, User } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useActiveRessourcesHumaines } from '@/hooks';
-import { getImageUrl , formatFullName } from '@/utils';
+import { getImageUrl, formatFullName } from '@/utils';
 import type { RessourceHumaine } from '@/types';
 
 interface ResponsableCardProps {

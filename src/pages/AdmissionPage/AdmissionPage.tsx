@@ -60,9 +60,7 @@ const AdmissionPage: React.FC<AdmissionPageProps> = (props: Readonly<AdmissionPa
       <Breadcrumb items={[{ label: 'Admission' }]} />
 
       <section className="section-y-tight">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          {renderAdmissionContent()}
-        </div>
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">{renderAdmissionContent()}</div>
       </section>
     </div>
   );

@@ -3,6 +3,7 @@ import React from 'react';
 import Button from '../compat/button';
 import { Link as RouterLink } from 'react-router-dom';
 import SectionHeader from '../common/SectionHeader';
+import ParticlesBackground from '../animations/ParticlesBackground';
 import useGsapReveal from '@/hooks/useGsapReveal';
 import { useAdmissionsOuvertes } from '@/hooks';
 import type { AdmissionCtaSectionProps } from '@/types';
@@ -30,6 +31,7 @@ const AdmissionSection: React.FC<AdmissionCtaSectionProps> = (
       data-surface="dark"
       className="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800 section-y text-white"
     >
+      <ParticlesBackground particleCount={85} />
       <div className="absolute inset-0 -z-10 opacity-15 [background-image:radial-gradient(circle_at_50%_50%,var(--color-brand-400)_1px,transparent_1px)] [background-size:32px_32px]" />
       <div className="absolute -left-20 top-1/2 -z-10 size-96 -translate-y-1/2 rounded-full bg-brand-400/10 blur-3xl" />
       <div className="absolute -right-20 top-1/2 -z-10 size-96 -translate-y-1/2 rounded-full bg-brand-500/20 blur-3xl" />
@@ -46,7 +48,10 @@ const AdmissionSection: React.FC<AdmissionCtaSectionProps> = (
             className="mb-8 sm:mb-8"
           />
 
-          <div data-gsap className="mb-10 flex flex-wrap items-center justify-center gap-6 text-small text-white/85">
+          <div
+            data-gsap
+            className="mb-10 flex flex-wrap items-center justify-center gap-6 text-small text-white/85"
+          >
             <div className="flex items-center gap-2">
               <CheckCircle2 className="size-4.5 text-brand-400" />
               <span>Dossier 100% en ligne</span>

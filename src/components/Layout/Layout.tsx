@@ -13,9 +13,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip bg-ink-50 text-ink-900">
-      {/* Lien d'évitement : premier élément focusable de la page, il
-          permet d'atteindre le contenu sans parcourir toute la
-          navigation au clavier (WCAG 2.4.1). */}
+      {}
       <a
         href="#contenu"
         className="sr-only z-[60] rounded-lg bg-brand-700 px-4 py-2 text-small font-semibold text-white focus:not-sr-only focus:absolute focus:left-4 focus:top-4"

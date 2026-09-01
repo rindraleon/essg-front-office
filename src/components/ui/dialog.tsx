@@ -35,7 +35,7 @@ function Dialog({ open, onOpenChange, children }: DialogProps) {
       />
       {children}
     </div>,
-    document.body,
+    document.body
   );
 }
 
@@ -46,7 +46,7 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
       aria-modal="true"
       className={cn(
         'relative z-10 w-full max-w-lg rounded-2xl border border-ink-100 bg-white p-6 shadow-elevated animate-scale-in',
-        className,
+        className
       )}
       {...props}
     >
@@ -56,7 +56,9 @@ function DialogContent({ className, children, ...props }: React.HTMLAttributes<H
 }
 
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('mb-4 flex items-start justify-between gap-4', className)} {...props} />;
+  return (
+    <div className={cn('mb-4 flex items-start justify-between gap-4', className)} {...props} />
+  );
 }
 
 function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {

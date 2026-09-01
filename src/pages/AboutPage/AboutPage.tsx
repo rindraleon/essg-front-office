@@ -223,7 +223,7 @@ const AboutPage: React.FC = () => {
             </RevealOnScroll>
             <RevealOnScroll variant="fade-right" delay={100}>
               <article className="group relative min-h-72 overflow-hidden rounded-3xl border border-brand-100 bg-brand-50 p-7 sm:p-9">
-                <ArrowDownRight className="absolute right-7 top-7 size-8 text-brand-300 transition-transform duration-(--duration-hover) group-hover:translate-x-1 group-hover:translate-y-1 motion-reduce:transform-none" />
+                <ArrowDownRight className="absolute right-7 top-7 size-8 text-brand-300 transition-transform duration-(--duration-hover) group-hover:translate-x-1 motion-reduce:transform-none" />
                 <Rocket className="size-8 text-brand-700" />
                 <span className="mt-12 block font-tech text-caption tracking-[0.18em] text-brand-700">
                   MISSION
@@ -253,7 +253,7 @@ const AboutPage: React.FC = () => {
             <div className="absolute left-[16%] right-[16%] top-8 hidden h-px bg-gradient-to-r from-transparent via-brand-300 to-transparent lg:block" />
             {TIMELINE.map((item, index) => (
               <RevealOnScroll key={item.title} delay={index * 100} className="relative">
-                <article className="group h-full rounded-2xl border border-ink-100 bg-white p-6 shadow-card transition-[transform,box-shadow,border-color] duration-(--duration-hover) hover:-translate-y-2 hover:border-brand-200 hover:shadow-card-hover motion-reduce:transform-none">
+                <article className="group h-full rounded-2xl border border-ink-100 bg-white p-6 shadow-card transition-[transform,box-shadow,border-color] duration-(--duration-hover) hover:border-brand-200 hover:shadow-card-hover motion-reduce:transform-none">
                   <div className="relative z-10 grid size-16 place-items-center rounded-full border-[6px] border-[var(--color-ink-50)] bg-brand-700 font-tech text-small font-bold text-white shadow-lg">
                     0{index + 1}
                   </div>
@@ -282,7 +282,7 @@ const AboutPage: React.FC = () => {
           <div className="grid auto-rows-[minmax(14rem,auto)] gap-4 md:grid-cols-4">
             {VALUES.map(({ icon: Icon, number, title, description, className }, index) => (
               <RevealOnScroll key={title} delay={index * 70} className={className}>
-                <article className="group relative h-full overflow-hidden rounded-2xl border border-brand-100 bg-white p-6 transition-[transform,box-shadow,border-color] duration-(--duration-hover) hover:-translate-y-1 hover:border-brand-300 hover:shadow-card-hover motion-reduce:transform-none">
+                <article className="group relative h-full overflow-hidden rounded-2xl border border-brand-100 bg-white p-6 transition-[transform,box-shadow,border-color] duration-(--duration-hover) hover:border-brand-300 hover:shadow-card-hover motion-reduce:transform-none">
                   <span className="absolute right-5 top-3 font-tech text-[4rem] font-bold leading-none text-brand-950/[0.04]">
                     {number}
                   </span>

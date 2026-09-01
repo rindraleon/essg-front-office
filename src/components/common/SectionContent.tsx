@@ -3,6 +3,8 @@ import useReveal from '@/hooks/useReveal';
 
 interface SectionContentProps {
   children: React.ReactNode;
+  /** Élément décoratif absolu (ex. fond de particules), ancré à la section. */
+  backgroundContent?: React.ReactNode;
   loading?: boolean;
   error?: string | null;
   isEmpty?: boolean;
@@ -24,15 +26,12 @@ const SectionContent: React.FC<SectionContentProps> = ({
   errorMessage = 'Une erreur est survenue.',
   headerContent,
   loadingSkeletons,
+  backgroundContent,
   sectionClassName = '',
   containerClassName = '',
   fluid = false,
 }) => {
   const revealRef = useReveal<HTMLElement>();
-  /* `section-shell` est le conteneur unique du site : les sections
-     pilotées par SectionContent s'alignent ainsi exactement sur celles
-     qui l'utilisent en direct. Le mode `fluid` conserve une pleine
-     largeur pour les grilles à défilement horizontal. */
   const wrapperClass = fluid
     ? 'w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12'
     : 'section-shell';
@@ -54,7 +53,11 @@ const SectionContent: React.FC<SectionContentProps> = ({
   }
 
   return (
-    <section ref={revealRef} className={`reveal-section ${sectionClassName}`}>
+    <section
+      ref={revealRef}
+      className={`reveal-section ${backgroundContent ? 'relative overflow-hidden' : ''} ${sectionClassName}`}
+    >
+      {backgroundContent}
       <div className={`${wrapperClass} ${containerClassName}`}>
         {headerContent}
         {content}

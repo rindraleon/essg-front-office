@@ -67,7 +67,7 @@ export const InfoTile: React.FC<InfoTileProps> = ({
         'flex h-full items-start gap-3 rounded-2xl border border-ink-100 bg-ink-50/60 p-4',
         'transition-[transform,background-color,border-color,box-shadow] duration-(--duration-hover) motion-reduce:transition-none',
         href &&
-          'hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50/60 hover:shadow-card motion-reduce:transform-none'
+          'hover:border-brand-200 hover:bg-brand-50/60 hover:shadow-card motion-reduce:transform-none'
       )}
     >
       <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white text-brand-600 ring-1 ring-brand-100">

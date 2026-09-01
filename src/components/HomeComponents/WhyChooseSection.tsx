@@ -1,58 +1,94 @@
 import React from 'react';
-import { 
-  BookMarked, 
-  Building2, 
-  CheckCircle2, 
-  Compass, 
-  Database, 
-  GraduationCap, 
-  Map, 
-  Mountain, 
-  Sprout, 
-  TrendingUp, 
-  Trees, 
-  Users 
+import {
+  BookMarked,
+  Building2,
+  CheckCircle2,
+  Compass,
+  Database,
+  GraduationCap,
+  Map,
+  Mountain,
+  Sprout,
+  TrendingUp,
+  Trees,
+  Users,
 } from 'lucide-react';
 import SectionHeader from '../common/SectionHeader';
+import ParticlesBackground from '../animations/ParticlesBackground';
 import { RevealOnScroll, StaggerReveal } from '../common/RevealOnScroll';
 
 const ADVANTAGES = [
   {
     icon: BookMarked,
     title: 'Des formations spécialisées',
-    description: 'Des parcours dédiés aux sciences géomatiques et à leurs différentes applications pratiques.',
+    description:
+      'Des parcours dédiés aux sciences géomatiques et à leurs différentes applications pratiques.',
     highlight: '100% Spécialisé',
   },
   {
     icon: Users,
     title: 'Un ancrage professionnel',
-    description: 'Des enseignements assurés par des professionnels et des intervenants expérimentés dans leurs domaines.',
+    description:
+      'Des enseignements assurés par des professionnels et des intervenants expérimentés dans leurs domaines.',
     highlight: 'Corps Enseignant Mixte',
   },
   {
     icon: TrendingUp,
     title: 'Des compétences d’avenir',
-    description: 'Des programmes conçus pour développer des compétences techniques, analytiques et opérationnelles adaptées aux évolutions du marché du travail.',
+    description:
+      'Des programmes conçus pour développer des compétences techniques, analytiques et opérationnelles adaptées aux évolutions du marché du travail.',
     highlight: 'Prêt pour l’Emploi',
   },
 ];
 
 const SECTORS = [
-  { name: 'Environnement', icon: Trees, color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
-  { name: 'Agriculture de précision', icon: Sprout, color: 'text-lime-700 bg-lime-50 border-lime-200' },
-  { name: 'Aménagement du territoire', icon: Map, color: 'text-brand-700 bg-brand-50 border-brand-200' },
-  { name: 'Urbanisme & Smart Cities', icon: Building2, color: 'text-blue-700 bg-blue-50 border-blue-200' },
-  { name: 'Gestion des ressources naturelles', icon: Mountain, color: 'text-amber-700 bg-amber-50 border-amber-200' },
-  { name: 'Cartographie & Topographie', icon: Compass, color: 'text-teal-700 bg-teal-50 border-teal-200' },
-  { name: 'Gestion & Analyse de données spatiales', icon: Database, color: 'text-purple-700 bg-purple-50 border-purple-200' },
-  { name: 'Développement territorial durable', icon: GraduationCap, color: 'text-rose-700 bg-rose-50 border-rose-200' },
+  {
+    name: 'Environnement',
+    icon: Trees,
+    color: 'text-emerald-700 bg-emerald-50 border-emerald-200',
+  },
+  {
+    name: 'Agriculture de précision',
+    icon: Sprout,
+    color: 'text-lime-700 bg-lime-50 border-lime-200',
+  },
+  {
+    name: 'Aménagement du territoire',
+    icon: Map,
+    color: 'text-brand-700 bg-brand-50 border-brand-200',
+  },
+  {
+    name: 'Urbanisme & Smart Cities',
+    icon: Building2,
+    color: 'text-blue-700 bg-blue-50 border-blue-200',
+  },
+  {
+    name: 'Gestion des ressources naturelles',
+    icon: Mountain,
+    color: 'text-amber-700 bg-amber-50 border-amber-200',
+  },
+  {
+    name: 'Cartographie & Topographie',
+    icon: Compass,
+    color: 'text-teal-700 bg-teal-50 border-teal-200',
+  },
+  {
+    name: 'Gestion & Analyse de données spatiales',
+    icon: Database,
+    color: 'text-purple-700 bg-purple-50 border-purple-200',
+  },
+  {
+    name: 'Développement territorial durable',
+    icon: GraduationCap,
+    color: 'text-rose-700 bg-rose-50 border-rose-200',
+  },
 ];
 
 const WhyChooseSection: React.FC = () => {
   return (
     <section className="relative overflow-hidden bg-brand-200/80 section-y-tight">
+      <ParticlesBackground />
       <div className="section-shell">
-        
         {/* Animated Section Header */}
         <SectionHeader
           eyebrow="Une formation tournée vers l’avenir"
@@ -67,7 +103,7 @@ const WhyChooseSection: React.FC = () => {
             return (
               <div
                 key={adv.title}
-                className="group relative flex flex-col justify-between rounded-3xl border border-ink-100 bg-white p-8 shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:border-brand-300 hover:shadow-card-hover"
+                className="group relative flex flex-col justify-between rounded-3xl border border-ink-100 bg-white p-8 shadow-sm transition-all duration-300 ease-out hover:border-brand-300 hover:shadow-card-hover"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -108,7 +144,8 @@ const WhyChooseSection: React.FC = () => {
                   Des débouchés variés et porteurs
                 </h3>
                 <p className="mt-1 text-body text-ink-600">
-                  Les compétences acquises à l'ESSG peuvent être directement mobilisées dans de nombreux secteurs stratégiques :
+                  Les compétences acquises à l'ESSG peuvent être directement mobilisées dans de
+                  nombreux secteurs stratégiques :
                 </p>
               </div>
             </div>
@@ -119,9 +156,11 @@ const WhyChooseSection: React.FC = () => {
                 return (
                   <div
                     key={sector.name}
-                    className="group flex items-center gap-3.5 rounded-2xl border border-ink-100 bg-white p-4 shadow-xs transition-all duration-300 ease-out hover:-translate-y-1 hover:border-brand-300 hover:shadow-card"
+                    className="group flex items-center gap-3.5 rounded-2xl border border-ink-100 bg-white p-4 shadow-xs transition-all duration-300 ease-out hover:border-brand-300 hover:shadow-card"
                   >
-                    <div className={`grid size-10 shrink-0 place-items-center rounded-xl border ${sector.color} transition-transform duration-300 group-hover:scale-110`}>
+                    <div
+                      className={`grid size-10 shrink-0 place-items-center rounded-xl border ${sector.color} transition-transform duration-300 group-hover:scale-110`}
+                    >
                       <SectorIcon className="size-5" />
                     </div>
                     <span className="text-small font-bold text-ink-800 leading-snug group-hover:text-brand-700 transition-colors">

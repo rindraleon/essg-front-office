@@ -4,7 +4,7 @@ import { RevealOnScroll } from '../common/RevealOnScroll';
 import SectionHeader from '../common/SectionHeader';
 import ParticlesBackground from '../animations/ParticlesBackground';
 import { cn } from '@/lib';
-import { buttonVariants } from '../ui/button';
+import { buttonVariants } from '../ui/button-variants';
 
 const MISSION_PILLARS = [
   {
@@ -25,7 +25,6 @@ const MISSION_PILLARS = [
 ] as const;
 
 const WhoWeAreSection = () => {
-
   return (
     <section className="relative isolate overflow-hidden bg-brand-950 section-y-tight text-white">
       <ParticlesBackground particleCount={85} />
@@ -85,7 +84,9 @@ const WhoWeAreSection = () => {
                   <span className="font-tech text-[0.65rem] uppercase tracking-[0.2em] text-brand-300 font-bold">
                     Mission Fondamentale
                   </span>
-                  <strong className="mt-1 block font-display text-h5 text-white">Observer · Mesurer · Transformer</strong>
+                  <strong className="mt-1 block font-display text-h5 text-white">
+                    Observer · Mesurer · Transformer
+                  </strong>
                 </div>
                 <div className="rounded-full bg-brand-400/20 px-3 py-1 text-caption font-tech font-bold text-brand-200">
                   ESSG
@@ -102,10 +103,16 @@ const WhoWeAreSection = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-tech text-[0.65rem] text-brand-300/70 font-semibold">0{index + 1}</span>
-                        <h3 className="text-small font-bold text-white group-hover:text-brand-200 transition-colors">{title}</h3>
+                        <span className="font-tech text-[0.65rem] text-brand-300/70 font-semibold">
+                          0{index + 1}
+                        </span>
+                        <h3 className="text-small font-bold text-white group-hover:text-brand-200 transition-colors">
+                          {title}
+                        </h3>
                       </div>
-                      <p className="mt-1.5 text-justify text-caption leading-relaxed text-white/70">{text}</p>
+                      <p className="mt-1.5 text-justify text-caption leading-relaxed text-white/70">
+                        {text}
+                      </p>
                     </div>
                   </article>
                 ))}

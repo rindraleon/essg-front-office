@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Button as UiButton, buttonVariants, type ButtonProps } from '../ui/button';
+import { Button as UiButton, type ButtonProps } from '../ui/button';
+import { buttonVariants } from '../ui/button-variants';
 import { cn } from '@/lib';
 
 type CompatButtonProps = Omit<ButtonProps, 'variant' | 'size'> & {

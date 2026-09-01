@@ -25,10 +25,10 @@ const PartnerChipCard: React.FC<PartnerChipCardProps> = ({ partenaire }) => {
         rounded-2xl border border-ink-100 bg-white px-4 py-3.5 text-left
         shadow-[0_1px_2px_rgb(15_33_30/0.04),0_4px_14px_-6px_rgb(15_33_30/0.10)]
         transition-[transform,box-shadow,border-color] duration-(--duration-hover) ease-out
-        hover:-translate-y-[3px] hover:border-brand-200
+        hover:border-brand-200
         hover:shadow-[0_2px_4px_rgb(15_33_30/0.05),0_14px_30px_-12px_rgb(15_33_30/0.20)]
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2
-        motion-reduce:transition-none motion-reduce:hover:translate-y-0
+        motion-reduce:transition-none
         sm:w-[19rem]
       "
     >

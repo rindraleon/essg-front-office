@@ -1,6 +1,7 @@
 import { SITE_HERO_ALT, SITE_HERO_IMAGE } from '@/constants';
 import useGsapHero from '@/hooks/useGsapHero';
 import AnimatedBackground from '../animations/AnimatedBackground';
+import ParticlesBackground from '../animations/ParticlesBackground';
 import SplitTitle from '../animations/SplitTitle';
 import AnimatedNumber from './AnimatedNumber';
 import type { PageHeroProps } from '@/types';
@@ -44,6 +45,7 @@ const PageHero = ({
         className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/16 to-transparent blur-2xl will-change-transform"
       />
       <AnimatedBackground variant="hero" />
+      <ParticlesBackground particleCount={85} />
 
       <div
         className="section-shell relative flex flex-col items-center justify-center section-y text-center"
@@ -80,7 +82,7 @@ const PageHero = ({
               <div
                 key={stat.label}
                 data-hero="stat"
-                className="rounded-2xl border border-white/18 bg-white/12 p-4 text-center shadow-lg backdrop-blur-md transition-transform duration-(--duration-hover) hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                className="rounded-2xl border border-white/18 bg-white/12 p-4 text-center shadow-lg backdrop-blur-md transition-transform duration-(--duration-hover) hover:border-brand-300/60 hover:bg-white/16 motion-reduce:transition-none"
               >
                 {stat.icon && <div className="mb-2 flex justify-center">{stat.icon}</div>}
                 <AnimatedNumber value={stat.value} className="block text-h3 font-bold text-white" />

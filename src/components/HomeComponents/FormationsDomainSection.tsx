@@ -39,7 +39,7 @@ const DOMAINS: DomainItem[] = [
     subtitle: 'Leadership, Communication & Durabilité',
     description:
       'Une formation associant les sciences géomatiques aux domaines du management, de la communication, de la gestion de projets et du développement durable.',
-    tags: ['Management territorial', 'Développement durable','Gestion de projets spatiaux'],
+    tags: ['Management territorial', 'Développement durable', 'Gestion de projets spatiaux'],
     gradient: 'from-teal-950/90 to-brand-950/90',
   },
 ];
@@ -52,12 +52,9 @@ const FormationsDomainSection: React.FC = () => {
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_30%,rgba(152,192,112,.12),transparent_40%)]" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_80%_70%,rgb(84_124_54_/_.2),transparent_50%)]" />
       <div className="absolute inset-0 -z-10 opacity-[0.05] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:48px_48px]" />
-      
 
       <div className="section-shell">
-        {/* SectionHeader embarque déjà son animation d'apparition :
-            l'envelopper dans un second RevealOnScroll produisait deux
-            transitions superposées sur le même bloc. */}
+        {}
         <SectionHeader
           eyebrow="Des parcours adaptés aux enjeux de demain"
           title="Nos formations"
@@ -69,7 +66,7 @@ const FormationsDomainSection: React.FC = () => {
           {DOMAINS.map((domain, index) => (
             <div
               key={domain.title}
-              className={`group relative flex flex-col justify-between rounded-3xl border border-white/15 bg-gradient-to-b ${domain.gradient} p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-2.5 hover:border-brand-300/50 hover:shadow-[0_24px_60px_rgba(0,0,0,0.6)]`}
+              className={`group relative flex flex-col justify-between rounded-3xl border border-white/15 bg-gradient-to-b ${domain.gradient} p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out hover:border-brand-300/50 hover:shadow-[0_24px_60px_rgba(0,0,0,0.6)]`}
             >
               <div>
                 <div className="flex items-center justify-between">
@@ -121,7 +118,8 @@ const FormationsDomainSection: React.FC = () => {
         {/* Bottom Banner */}
         <RevealOnScroll variant="fade-up" delay={200} className="mt-12 text-center">
           <p className="text-small text-white/60">
-            Toutes nos formations sont habilitées et délivrent des diplômes nationaux reconnus (Licence & Master LMD).
+            Toutes nos formations sont habilitées et délivrent des diplômes nationaux reconnus
+            (Licence & Master LMD).
           </p>
         </RevealOnScroll>
       </div>

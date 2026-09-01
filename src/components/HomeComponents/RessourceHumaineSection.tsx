@@ -1,9 +1,10 @@
 import { Mail, Phone } from 'lucide-react';
 import { useActiveRessourcesHumaines } from '@/hooks';
-import { getImageUrl , formatFullName } from '@/utils';
+import { getImageUrl, formatFullName } from '@/utils';
 import { CARD_WIDTH_CLASS } from '@/constants';
 import SectionHeader from '../common/SectionHeader';
 import SectionContent from '../common/SectionContent';
+import ParticlesBackground from '../animations/ParticlesBackground';
 import ScrollableCardGrid from '../common/ScrollableCardGrid';
 import SectionCta from '../common/SectionCta';
 import MediaCard from '../common/MediaCard';
@@ -19,6 +20,7 @@ const RessourceHumaineSection = () => {
 
   return (
     <SectionContent
+      backgroundContent={<ParticlesBackground />}
       loading={loading}
       error={error}
       isEmpty={!loading && ressourcesHumaines.length === 0}

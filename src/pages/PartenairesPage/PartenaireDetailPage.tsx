@@ -233,7 +233,7 @@ const PartenaireDetailPage: React.FC = () => {
                       >
                         <span className="flex items-start justify-between gap-2">
                           <span className="text-h4 text-ink-900">{projet.titre}</span>
-                          <ArrowUpRight className="size-4 shrink-0 text-ink-400 transition-transform duration-(--duration-quick) group-hover:-translate-y-0.5 group-hover:text-brand-600 motion-reduce:transition-none" />
+                          <ArrowUpRight className="size-4 shrink-0 text-ink-400 transition-transform duration-(--duration-quick) group-hover:text-brand-600 motion-reduce:transition-none" />
                         </span>
                         {projet.type && (
                           <span className="mt-1 text-caption uppercase text-ink-400">

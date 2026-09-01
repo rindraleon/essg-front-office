@@ -21,7 +21,7 @@ const LINK_DISTANCE = 120;
 
 const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
   className,
-  particleCount = 65,
+  particleCount = 85,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -45,9 +45,6 @@ const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
       return window.crypto.getRandomValues(values)[0] / (0xffffffff + 1);
     };
 
-    /* Le coût du rendu est quadratique (chaque particule est reliée aux
-       autres). On réduit donc la densité sur mobile, où la surface est
-       petite et le budget CPU/batterie plus contraint. */
     const effectiveCount = coarseQuery.matches ? Math.round(particleCount * 0.45) : particleCount;
 
     const resize = () => {
@@ -73,41 +70,49 @@ const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
       opacity: random() * 0.5 + 0.2,
     }));
 
-    const paint = (advance: boolean) => {
-      ctx.clearRect(0, 0, width, height);
-
+    const drawLinks = () => {
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.hypot(dx, dy);
 
-          if (dist < LINK_DISTANCE) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(${PARTICLE_RGB}, ${0.15 * (1 - dist / LINK_DISTANCE)})`;
-            ctx.lineWidth = 0.75;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
+          if (dist >= LINK_DISTANCE) continue;
+
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(${PARTICLE_RGB}, ${0.25 * (1 - dist / LINK_DISTANCE)})`;
+          ctx.lineWidth = 0.75;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
         }
       }
+    };
 
-      for (const p of particles) {
-        if (advance) {
-          p.x += p.vx;
-          p.y += p.vy;
+    const updateParticle = (particle: Particle) => {
+      particle.x += particle.vx;
+      particle.y += particle.vy;
 
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
-        }
+      if (particle.x < 0) particle.x = width;
+      if (particle.x > width) particle.x = 0;
+      if (particle.y < 0) particle.y = height;
+      if (particle.y > height) particle.y = 0;
+    };
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${PARTICLE_RGB}, ${p.opacity})`;
-        ctx.fill();
+    const drawParticle = (particle: Particle) => {
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${PARTICLE_RGB}, ${particle.opacity})`;
+      ctx.fill();
+    };
+
+    const paint = (advance: boolean) => {
+      ctx.clearRect(0, 0, width, height);
+      drawLinks();
+
+      for (const particle of particles) {
+        if (advance) updateParticle(particle);
+        drawParticle(particle);
       }
     };
 

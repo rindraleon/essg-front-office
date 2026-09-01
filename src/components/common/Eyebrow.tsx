@@ -3,25 +3,12 @@ import { cn } from '@/lib';
 
 interface EyebrowProps {
   children: React.ReactNode;
-  /** Surface sombre (Hero, bandeaux) : bascule sur la variante claire. */
   dark?: boolean;
-  /** `pill` encadre le libellé, `plain` le laisse nu au-dessus du titre. */
   variant?: 'pill' | 'plain';
   icon?: React.ReactNode;
   className?: string;
 }
 
-/**
- * Surtitre de section.
- *
- * L'audit a relevé 15 déclinaisons manuscrites de ce même motif
- * (`text-caption font-semibold uppercase tracking-[0.14em] text-brand-700`),
- * avec des interlettrages et des couleurs légèrement différents d'une
- * page à l'autre. Ce composant en fixe la seule version autorisée.
- *
- * Il reste volontairement discret : jamais plus gros que le titre qu'il
- * introduit, jamais porteur de l'information principale.
- */
 const Eyebrow: React.FC<EyebrowProps> = ({
   children,
   dark = false,

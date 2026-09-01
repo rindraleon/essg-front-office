@@ -142,7 +142,7 @@ const Footer = ({
                 target="_blank"
                 rel="noreferrer"
                 aria-label={social.ariaLabel}
-                className="flex size-9 items-center justify-center rounded-lg border border-white/[0.08] text-ink-300 transition-[color,border-color,background-color,transform] duration-(--duration-hover) hover:-translate-y-0.5 hover:border-brand-400/30 hover:bg-brand-400/10 hover:text-brand-300 motion-reduce:hover:translate-y-0"
+                className="flex size-9 items-center justify-center rounded-lg border border-white/[0.08] text-ink-300 transition-[color,border-color,background-color,transform] duration-(--duration-hover) hover:border-brand-400/30 hover:bg-brand-400/10 hover:text-brand-300"
               >
                 <SocialIcon kind={social.kind} />
               </a>
@@ -153,7 +153,7 @@ const Footer = ({
               className="group ml-1 inline-flex h-9 items-center gap-1.5 rounded-lg border border-brand-400/25 bg-brand-400/[0.08] px-3 text-caption font-medium text-brand-300 transition-colors duration-(--duration-hover) hover:border-brand-400/40 hover:bg-brand-400/[0.14] hover:text-brand-200"
             >
               Nous contacter
-              <ArrowUpRight className="size-3.5 transition-transform duration-(--duration-hover) group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" />
+              <ArrowUpRight className="size-3.5 transition-transform duration-(--duration-hover) group-hover:translate-x-0.5 motion-reduce:transition-none" />
             </Link>
           </div>
         </div>

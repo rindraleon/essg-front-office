@@ -42,11 +42,14 @@ const StatsRibbon: React.FC = () => {
     <section className="relative z-20 -mt-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <RevealOnScroll variant="scale-in">
         <div className="rounded-3xl border border-ink-100/80 bg-white/95 p-6 shadow-elevated backdrop-blur-xl sm:p-8">
-          <StaggerReveal step={90} className="grid grid-cols-2 gap-6 md:grid-cols-4 md:divide-x md:divide-ink-100">
+          <StaggerReveal
+            step={90}
+            className="grid grid-cols-2 gap-6 md:grid-cols-4 md:divide-x md:divide-ink-100"
+          >
             {STATS.map((stat, index) => (
               <div
                 key={index}
-                className="group flex flex-col items-center text-center transition-transform duration-300 hover:-translate-y-1 sm:px-4"
+                className="group flex flex-col items-center text-center transition-colors duration-300 hover:text-brand-300 sm:px-4"
               >
                 <div className="mb-3 grid size-12 place-items-center rounded-2xl bg-brand-50 text-brand-700 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-600 group-hover:text-white">
                   {stat.icon}
@@ -57,9 +60,7 @@ const StatsRibbon: React.FC = () => {
                 <span className="mt-1 block text-small font-semibold text-ink-800">
                   {stat.label}
                 </span>
-                <span className="mt-0.5 block text-caption text-ink-500">
-                  {stat.sublabel}
-                </span>
+                <span className="mt-0.5 block text-caption text-ink-500">{stat.sublabel}</span>
               </div>
             ))}
           </StaggerReveal>

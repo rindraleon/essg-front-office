@@ -29,7 +29,8 @@ const PolitiqueConfidentialitePage: React.FC = () => {
     {
       icon: <Shield className="size-5 text-brand-600" />,
       title: 'Transparence totale',
-      description: 'Nous vous informons clairement sur la nature des données collectées et leur finalité.',
+      description:
+        'Nous vous informons clairement sur la nature des données collectées et leur finalité.',
     },
     {
       icon: <Lock className="size-5 text-brand-600" />,
@@ -39,7 +40,8 @@ const PolitiqueConfidentialitePage: React.FC = () => {
     {
       icon: <UserCheck className="size-5 text-brand-600" />,
       title: 'Contrôle de vos droits',
-      description: 'Accédez, rectifiez ou demandez la suppression de vos données sur simple demande.',
+      description:
+        'Accédez, rectifiez ou demandez la suppression de vos données sur simple demande.',
     },
   ];
 
@@ -51,13 +53,20 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       content: (
         <div className="space-y-3 text-small text-ink-700">
           <p>
-            Le responsable du traitement des données personnelles collectées sur le site est l’<strong>École Supérieure de Sciences Géomatiques (ESSG)</strong>, située au Campus Universitaire d'Andrainjato, Fianarantsoa, Madagascar.
+            Le responsable du traitement des données personnelles collectées sur le site est l’
+            <strong>École Supérieure de Sciences Géomatiques (ESSG)</strong>, située au Campus
+            Universitaire d'Andrainjato, Fianarantsoa, Madagascar.
           </p>
           <p>
-            Pour toute demande relative à vos données personnelles ou pour exercer vos droits, vous pouvez contacter notre délégué à la protection des données par email à :{' '}
-            <a href="mailto:contact@essg.sn" className="font-semibold text-brand-700 underline underline-offset-4 hover:text-brand-800">
+            Pour toute demande relative à vos données personnelles ou pour exercer vos droits, vous
+            pouvez contacter notre délégué à la protection des données par email à :{' '}
+            <a
+              href="mailto:contact@essg.sn"
+              className="font-semibold text-brand-700 underline underline-offset-4 hover:text-brand-800"
+            >
               contact@essg.sn
-            </a>.
+            </a>
+            .
           </p>
         </div>
       ),
@@ -68,7 +77,10 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       title: '2. Données Personnelles Collectées',
       content: (
         <div className="space-y-3 text-small text-ink-700">
-          <p>Dans le cadre de l'utilisation de nos services en ligne, nous collectons les données suivantes :</p>
+          <p>
+            Dans le cadre de l'utilisation de nos services en ligne, nous collectons les données
+            suivantes :
+          </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl border border-ink-100 bg-ink-50/70 p-4">
               <strong className="block text-ink-900 mb-1.5 flex items-center gap-1.5">
@@ -79,7 +91,10 @@ const PolitiqueConfidentialitePage: React.FC = () => {
                 <li>Email et numéro de téléphone portable</li>
                 <li>Parcours scolaire (type, série, numéro d'inscription et année du Bac)</li>
                 <li>Antécédents universitaires pour le Master (établissement, matricule)</li>
-                <li>Pièces justificatives scannées (relevé de notes, diplôme, acte d'état civil, photo, reçu de versement)</li>
+                <li>
+                  Pièces justificatives scannées (relevé de notes, diplôme, acte d'état civil,
+                  photo, reçu de versement)
+                </li>
               </ul>
             </div>
             <div className="rounded-xl border border-ink-100 bg-ink-50/70 p-4">
@@ -107,19 +122,31 @@ const PolitiqueConfidentialitePage: React.FC = () => {
           <ul className="space-y-2">
             <li className="flex items-start gap-2">
               <CheckCircle2 className="size-4 shrink-0 text-emerald-600 mt-0.5" />
-              <span><strong>Instruction des candidatures :</strong> Analyse de l'éligibilité académique, détection des doublons annuels et convocation aux sessions de sélection.</span>
+              <span>
+                <strong>Instruction des candidatures :</strong> Analyse de l'éligibilité académique,
+                détection des doublons annuels et convocation aux sessions de sélection.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="size-4 shrink-0 text-emerald-600 mt-0.5" />
-              <span><strong>Communication administrative :</strong> Envoi des accusés de réception, convocations et décisions de la commission d'admission.</span>
+              <span>
+                <strong>Communication administrative :</strong> Envoi des accusés de réception,
+                convocations et décisions de la commission d'admission.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="size-4 shrink-0 text-emerald-600 mt-0.5" />
-              <span><strong>Réponse aux demandes d'information :</strong> Prise en charge des messages soumis via le formulaire de contact.</span>
+              <span>
+                <strong>Réponse aux demandes d'information :</strong> Prise en charge des messages
+                soumis via le formulaire de contact.
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="size-4 shrink-0 text-emerald-600 mt-0.5" />
-              <span><strong>Sécurité & Traçabilité :</strong> Prévention des soumissions abusives et sécurisation du back-office via les journaux d'activité.</span>
+              <span>
+                <strong>Sécurité & Traçabilité :</strong> Prévention des soumissions abusives et
+                sécurisation du back-office via les journaux d'activité.
+              </span>
             </li>
           </ul>
         </div>
@@ -131,7 +158,10 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       title: '4. Durée de Conservation des Données',
       content: (
         <div className="space-y-3 text-small text-ink-700">
-          <p>L’ESSG conserve les données personnelles pour les durées strictement nécessaires aux finalités poursuivies :</p>
+          <p>
+            L’ESSG conserve les données personnelles pour les durées strictement nécessaires aux
+            finalités poursuivies :
+          </p>
           <div className="overflow-hidden rounded-xl border border-ink-100 bg-white">
             <table className="w-full text-left text-caption">
               <thead className="bg-ink-50 font-semibold text-ink-800">
@@ -175,24 +205,37 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       content: (
         <div className="space-y-3 text-small text-ink-700">
           <p>
-            Nous mettons en œuvre un ensemble rigoureux de mesures techniques et organisationnelles pour protéger vos données contre toute destruction, perte, altération ou accès non autorisé :
+            Nous mettons en œuvre un ensemble rigoureux de mesures techniques et organisationnelles
+            pour protéger vos données contre toute destruction, perte, altération ou accès non
+            autorisé :
           </p>
           <ul className="grid gap-2 sm:grid-cols-2">
             <li className="rounded-lg border border-ink-100 bg-ink-50/50 p-3">
               <strong className="block text-ink-900">Chiffrement TLS/HTTPS</strong>
-              <span className="text-caption text-ink-500">Chiffrement systématique de toutes les communications entre votre navigateur et nos serveurs.</span>
+              <span className="text-caption text-ink-500">
+                Chiffrement systématique de toutes les communications entre votre navigateur et nos
+                serveurs.
+              </span>
             </li>
             <li className="rounded-lg border border-ink-100 bg-ink-50/50 p-3">
               <strong className="block text-ink-900">Stockage Privé Dédié</strong>
-              <span className="text-caption text-ink-500">Les pièces jointes des candidats sont isolées dans un bucket privé avec contrôle d'accès strict.</span>
+              <span className="text-caption text-ink-500">
+                Les pièces jointes des candidats sont isolées dans un bucket privé avec contrôle
+                d'accès strict.
+              </span>
             </li>
             <li className="rounded-lg border border-ink-100 bg-ink-50/50 p-3">
               <strong className="block text-ink-900">Contrôle d'Accès RBAC</strong>
-              <span className="text-caption text-ink-500">Seul le personnel administratif habilité et authentifié par jeton JWT peut consulter les dossiers.</span>
+              <span className="text-caption text-ink-500">
+                Seul le personnel administratif habilité et authentifié par jeton JWT peut consulter
+                les dossiers.
+              </span>
             </li>
             <li className="rounded-lg border border-ink-100 bg-ink-50/50 p-3">
               <strong className="block text-ink-900">Limitation de Débit (Rate Limiting)</strong>
-              <span className="text-caption text-ink-500">Protection active contre le brute-force et le spam de soumissions automatisées.</span>
+              <span className="text-caption text-ink-500">
+                Protection active contre le brute-force et le spam de soumissions automatisées.
+              </span>
             </li>
           </ul>
         </div>
@@ -204,19 +247,39 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       title: '6. Vos Droits & Modalités d’Exercice',
       content: (
         <div className="space-y-3 text-small text-ink-700">
-          <p>Conformément à la réglementation sur la protection des données, vous disposez des droits suivants :</p>
+          <p>
+            Conformément à la réglementation sur la protection des données, vous disposez des droits
+            suivants :
+          </p>
           <ul className="space-y-1.5 list-disc pl-5">
-            <li><strong>Droit d’accès :</strong> Obtenir la confirmation que vos données sont traitées et en recevoir une copie.</li>
-            <li><strong>Droit de rectification :</strong> Demander la modification d'informations inexactes ou incomplètes.</li>
-            <li><strong>Droit à l’effacement :</strong> Obtenir la suppression de vos données lorsqu’elles ne sont plus nécessaires.</li>
-            <li><strong>Droit d’opposition :</strong> Vous opposer à tout moment au traitement de vos données pour motifs légitimes.</li>
+            <li>
+              <strong>Droit d’accès :</strong> Obtenir la confirmation que vos données sont traitées
+              et en recevoir une copie.
+            </li>
+            <li>
+              <strong>Droit de rectification :</strong> Demander la modification d'informations
+              inexactes ou incomplètes.
+            </li>
+            <li>
+              <strong>Droit à l’effacement :</strong> Obtenir la suppression de vos données
+              lorsqu’elles ne sont plus nécessaires.
+            </li>
+            <li>
+              <strong>Droit d’opposition :</strong> Vous opposer à tout moment au traitement de vos
+              données pour motifs légitimes.
+            </li>
           </ul>
           <div className="mt-3 rounded-xl border border-brand-200 bg-brand-50/80 p-4">
             <p className="text-caption text-brand-900 font-medium">
-              Pour exercer l'un de ces droits, adressez votre demande accompagnée d'un justificatif d'identité à :{' '}
-              <a href="mailto:contact@essg.sn" className="font-bold underline underline-offset-4 hover:text-brand-700">
+              Pour exercer l'un de ces droits, adressez votre demande accompagnée d'un justificatif
+              d'identité à :{' '}
+              <a
+                href="mailto:contact@essg.sn"
+                className="font-bold underline underline-offset-4 hover:text-brand-700"
+              >
                 contact@essg.sn
-              </a>. Nous nous engageons à répondre dans un délai maximal de 30 jours.
+              </a>
+              . Nous nous engageons à répondre dans un délai maximal de 30 jours.
             </p>
           </div>
         </div>
@@ -229,10 +292,13 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       content: (
         <div className="space-y-3 text-small text-ink-700">
           <p>
-            Le site de l’ESSG utilise uniquement des cookies et traceurs strictement techniques nécessaires au bon fonctionnement de la plateforme (gestion de session d’authentification pour le back-office, préférences d'affichage et sécurité anti-CSRF).
+            Le site de l’ESSG utilise uniquement des cookies et traceurs strictement techniques
+            nécessaires au bon fonctionnement de la plateforme (gestion de session
+            d’authentification pour le back-office, préférences d'affichage et sécurité anti-CSRF).
           </p>
           <p>
-            Aucun cookie publicitaire tiers ou de traçage commercial n’est déposé sur votre terminal à des fins de profilage.
+            Aucun cookie publicitaire tiers ou de traçage commercial n’est déposé sur votre terminal
+            à des fins de profilage.
           </p>
         </div>
       ),
@@ -258,13 +324,15 @@ const PolitiqueConfidentialitePage: React.FC = () => {
               {principles.map((item, index) => (
                 <div
                   key={index}
-                  className="rounded-2xl border border-brand-100 bg-white p-5 shadow-card transition-transform duration-200 hover:-translate-y-1"
+                  className="rounded-2xl border border-brand-100 bg-white p-5 shadow-card transition-[box-shadow,border-color] duration-200 hover:border-brand-300 hover:shadow-card-hover"
                 >
                   <div className="mb-3 grid size-10 place-items-center rounded-xl bg-brand-50">
                     {item.icon}
                   </div>
                   <h3 className="text-small font-bold text-ink-900">{item.title}</h3>
-                  <p className="mt-1 text-caption text-ink-600 leading-relaxed">{item.description}</p>
+                  <p className="mt-1 text-caption text-ink-600 leading-relaxed">
+                    {item.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -295,7 +363,9 @@ const PolitiqueConfidentialitePage: React.FC = () => {
           <RevealOnScroll variant="scale-in" delay={150} className="mt-12">
             <div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-brand-200 bg-gradient-to-r from-brand-900 via-brand-800 to-ink-900 p-8 text-white shadow-elevated sm:flex-row">
               <div className="space-y-1 text-center sm:text-left">
-                <h3 className="text-h4 font-bold text-white">Besoin d'une précision sur vos données ?</h3>
+                <h3 className="text-h4 font-bold text-white">
+                  Besoin d'une précision sur vos données ?
+                </h3>
                 <p className="text-small text-ink-200">
                   Notre équipe est à votre écoute pour toute demande d'accès ou de rectification.
                 </p>
