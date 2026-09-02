@@ -94,14 +94,14 @@ export function PersonalInformation({
           required
         />
         <Field
-          label="Prénom(s) *"
+          label="Prénom(s)"
           name="prenom"
           value={data.prenom}
           onChange={onChange}
           errors={errors}
           autoComplete="given-name"
           placeholder="Ex : Jean Pierre"
-          required
+          
         />
         <Field
           label="Date de naissance *"

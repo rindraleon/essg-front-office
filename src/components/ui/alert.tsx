@@ -23,11 +23,11 @@ function Alert({
   return <div role="alert" className={cn(alertVariants({ variant }), className)} {...props} />;
 }
 
-function AlertTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h5 className={cn('mb-1 font-semibold leading-none', className)} {...props} />;
+function AlertTitle({ className, ...props }: Readonly<React.HTMLAttributes<HTMLHeadingElement>>) {
+  return <h5 className={cn('mb-1 font-semibold leading-none', className)} {...props}>{props.children}</h5>;
 }
 
-function AlertDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+function AlertDescription({ className, ...props }: Readonly<React.HTMLAttributes<HTMLParagraphElement>>) {
   return <p className={cn('text-small leading-relaxed opacity-90', className)} {...props} />;
 }
 

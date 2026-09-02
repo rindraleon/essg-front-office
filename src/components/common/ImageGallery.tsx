@@ -101,70 +101,70 @@ const ImageGallery = ({ images, alt = 'Image', title = "Galerie d'images" }: Ima
 
       {lightboxIndex !== null && (
         <dialog
-        open
-        aria-label="Visionneuse d'images"
-        className="fixed inset-0 z-[100] m-0 flex h-full w-full max-w-none items-center justify-center border-0 bg-ink-950/95 p-0 backdrop-blur-sm"
-        onCancel={close}
-      >
-        <img
-          alt=""
-          aria-hidden="true"
-          src={urls[lightboxIndex]}
-          className="fixed inset-0 h-full w-full cursor-default object-cover opacity-0"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) {
-              close();
-            }
-          }}
-        />
-        <div className="flex h-full w-full items-center justify-center">
-          <button
-            type="button"
-            onClick={close}
-            aria-label="Fermer la visionneuse"
-            className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
-          >
-            <X className="size-4" />
-          </button>
-          {urls.length > 1 && (
+          open
+          aria-label="Visionneuse d'images"
+          className="fixed inset-0 z-[100] m-0 flex h-full w-full max-w-none items-center justify-center border-0 bg-ink-950/95 p-0 backdrop-blur-sm"
+          onCancel={close}
+        >
+          <img
+            alt=""
+            aria-hidden="true"
+            src={urls[lightboxIndex]}
+            className="fixed inset-0 h-full w-full cursor-default object-cover opacity-0"
+            onClick={(event) => {
+              if (event.target === event.currentTarget) {
+                close();
+              }
+            }}
+          />
+          <div className="flex h-full w-full items-center justify-center">
             <button
               type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                prev();
-              }}
-              aria-label="Image précédente"
-              className="absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:left-6"
+              onClick={close}
+              aria-label="Fermer la visionneuse"
+              className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
             >
-              <ChevronLeft />
+              <X className="size-4" />
             </button>
-          )}
-          <figure className="flex max-h-full max-w-full flex-col items-center px-4">
-            <img
-              loading="lazy"
-              decoding="async"
-              data-lightbox-image
-              src={urls[lightboxIndex]}
-              alt={`${alt} ${lightboxIndex + 1}`}
-              className="max-h-[80vh] max-w-full rounded-xl object-contain shadow-elevated"
-            />
-            <figcaption className="mt-4 text-small font-medium text-white/80">
-              {lightboxIndex + 1} / {urls.length}
-            </figcaption>
-          </figure>
-          {urls.length > 1 && (
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
-                next();
-              }}
-              aria-label="Image suivante"
-              className="absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-6"
-            >
-              <ChevronRight />
-            </button>
-          )}
+            {urls.length > 1 && (
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  prev();
+                }}
+                aria-label="Image précédente"
+                className="absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:left-6"
+              >
+                <ChevronLeft />
+              </button>
+            )}
+            <figure className="flex max-h-full max-w-full flex-col items-center px-4">
+              <img
+                loading="lazy"
+                decoding="async"
+                data-lightbox-image
+                src={urls[lightboxIndex]}
+                alt={`${alt} ${lightboxIndex + 1}`}
+                className="max-h-[80vh] max-w-full rounded-xl object-contain shadow-elevated"
+              />
+              <figcaption className="mt-4 text-small font-medium text-white/80">
+                {lightboxIndex + 1} / {urls.length}
+              </figcaption>
+            </figure>
+            {urls.length > 1 && (
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  next();
+                }}
+                aria-label="Image suivante"
+                className="absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 sm:right-6"
+              >
+                <ChevronRight />
+              </button>
+            )}
           </div>
         </dialog>
       )}

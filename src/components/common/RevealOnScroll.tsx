@@ -200,6 +200,8 @@ export const StaggerReveal: React.FC<StaggerProps> = ({
   className,
 }) => {
   const items = React.Children.toArray(children);
+  const uid = React.useId();
+  let itemCounter = 0;
 
   const compact = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
 
@@ -209,16 +211,23 @@ export const StaggerReveal: React.FC<StaggerProps> = ({
 
   return (
     <Tag className={className}>
-      {items.map((child, index) => (
-        <RevealOnScroll
-          key={index}
-          variant={variant ?? direction}
-          distance={distance}
-          delay={initialDelay + Math.min(index * effectiveStep, MAX_TOTAL)}
-        >
-          {child}
-        </RevealOnScroll>
-      ))}
+      {items.map((child) => {
+        const itemKey =
+          React.isValidElement(child) && child.key ? String(child.key) : `${uid}-item-${itemCounter++}`;
+
+        const index = itemCounter - 1;
+
+        return (
+          <RevealOnScroll
+            key={itemKey}
+            variant={variant ?? direction}
+            distance={distance}
+            delay={initialDelay + Math.min(index * effectiveStep, MAX_TOTAL)}
+          >
+            {child}
+          </RevealOnScroll>
+        );
+      })}
     </Tag>
   );
 };
