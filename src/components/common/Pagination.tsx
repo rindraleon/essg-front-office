@@ -71,9 +71,11 @@ const Pagination: React.FC<PaginationProps> = ({
 
         {entries.map((entry, index) => {
           if (entry === GAP) {
+            const gapKey = `${entries[index - 1]}-${entries[index + 1]}`;
+
             return (
               <li
-                key={`gap-${index}`}
+                key={`gap-${gapKey}`}
                 aria-hidden="true"
                 className="grid size-10 place-items-center text-small text-ink-400"
               >

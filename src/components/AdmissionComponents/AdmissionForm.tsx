@@ -196,42 +196,47 @@ function documentStepErrors(
   return errors;
 }
 
+const HINT_PDF_IMG = 'PDF, JPG ou PNG — 10 Mo max';
+const HINT_IMG = 'JPG ou PNG — 10 Mo max';
+const ACCEPT_PDF_IMG = '.pdf,.jpg,.jpeg,.png';
+const ACCEPT_IMG = '.jpg,.jpeg,.png';
+
 const FILE_CONFIG: Record<AdmissionDocumentKind, { label: string; hint: string; accept: string }> =
   {
     demandeInscription: {
       label: "Demande d'inscription",
-      hint: 'PDF, JPG ou PNG — 10 Mo max',
-      accept: '.pdf,.jpg,.jpeg,.png',
+      hint: HINT_PDF_IMG,
+      accept: ACCEPT_PDF_IMG,
     },
     bordereau: {
       label: "Reçu de versement des droits d'inscription (60 000 Ar)",
-      hint: 'PDF, JPG ou PNG — 10 Mo max',
-      accept: '.pdf,.jpg,.jpeg,.png',
+      hint: HINT_PDF_IMG,
+      accept: ACCEPT_PDF_IMG,
     },
     photoIdentite: {
       label: "Photo d'identité récente",
-      hint: 'JPG ou PNG — 10 Mo max',
-      accept: '.jpg,.jpeg,.png',
+      hint: HINT_IMG,
+      accept: ACCEPT_IMG,
     },
     acteEtatCivil: {
       label: "Acte d'état civil",
-      hint: 'PDF, JPG ou PNG — 10 Mo max',
-      accept: '.pdf,.jpg,.jpeg,.png',
+      hint: HINT_PDF_IMG,
+      accept: ACCEPT_PDF_IMG,
     },
     releveBac: {
       label: 'Relevé de notes du baccalauréat ou extrait de liste',
-      hint: 'PDF, JPG ou PNG — 10 Mo max',
-      accept: '.pdf,.jpg,.jpeg,.png',
+      hint: HINT_PDF_IMG,
+      accept: ACCEPT_PDF_IMG,
     },
     diplomeBac: {
       label: 'Photocopie du diplôme du baccalauréat',
-      hint: 'PDF, JPG ou PNG — 10 Mo max',
-      accept: '.pdf,.jpg,.jpeg,.png',
+      hint: HINT_PDF_IMG,
+      accept: ACCEPT_PDF_IMG,
     },
     attestationEtablissement: {
       label: "Attestation provenant de l'ancien établissement",
-      hint: 'PDF, JPG ou PNG — 10 Mo max',
-      accept: '.pdf,.jpg,.jpeg,.png',
+      hint: HINT_PDF_IMG,
+      accept: ACCEPT_PDF_IMG,
     },
   };
 
@@ -241,13 +246,13 @@ function FilePicker({
   required,
   error,
   onChange,
-}: {
+}: Readonly<{
   kind: AdmissionDocumentKind;
   file: File | null;
   required?: boolean;
   error?: string;
   onChange: (file: File | null) => void;
-}) {
+}>) {
   const inputRef = useRef<HTMLInputElement>(null);
   const config = FILE_CONFIG[kind];
   const handleChange = (next: File | null) => {
@@ -491,7 +496,6 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       return;
     }
     if (currentStep === 1) {
-      // Une seule candidature par an : email et téléphone vérifiés indépendamment.
       if (!(await checkDuplicate('email'))) return;
       if (!(await checkDuplicate('telephone'))) return;
     }
@@ -511,7 +515,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     return valid;
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (currentStep < 4) {
       await handleNext();

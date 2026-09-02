@@ -92,10 +92,11 @@ const PartenairesSection = ({
   maxItems = 12,
   partenaires: propPartenaires,
 }: PartenairesSectionProps) => {
-  const { partenaires: fetched, loading: queryLoading } = usePartenaires();
+  const { partenaires: fetched, loading: queryLoading, error: queryError } = usePartenaires();
 
   const partenaires = propPartenaires && propPartenaires.length > 0 ? propPartenaires : fetched;
   const loading = propPartenaires && propPartenaires.length > 0 ? false : queryLoading;
+  const error = propPartenaires && propPartenaires.length > 0 ? null : queryError;
 
   const visibles = useMemo(() => partenaires.slice(0, maxItems), [partenaires, maxItems]);
 
@@ -106,6 +107,11 @@ const PartenairesSection = ({
       ligne2: visibles.filter((_, index) => index % 2 === 1),
     };
   }, [visibles]);
+
+  // Pas de chargement, pas d'erreur, aucun partenaire : masquer la section.
+  if (!loading && !error && visibles.length === 0) {
+    return null;
+  }
 
   const renderContenu = () => {
     if (loading) {
@@ -123,11 +129,13 @@ const PartenairesSection = ({
       );
     }
 
-    if (visibles.length === 0) {
+    if (error) {
       return (
-        <p className="px-4 text-center text-body text-ink-400">
-          Aucun partenaire à afficher pour le moment.
-        </p>
+        <div className="section-shell">
+          <p className="py-10 text-center text-body text-ink-500">
+            Impossible de charger les partenaires pour le moment.
+          </p>
+        </div>
       );
     }
 

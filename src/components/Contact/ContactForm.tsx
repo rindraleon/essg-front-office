@@ -79,7 +79,7 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await createContact.mutateAsync(formData);

@@ -51,7 +51,6 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
   const [page, setPage] = useState(1);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { data, loading, error } = usePaginatedPartenaires(page, 6, searchTerm, typeFilter);
-  const partenaires = data?.data ?? [];
 
   useEffect(() => {
     if (showSearch && searchInputRef.current) {
@@ -61,11 +60,11 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
 
   const allPartenaires = useMemo<PartenaireItem[]>(
     () =>
-      partenaires.map((partenaire) => ({
+      (data?.data ?? []).map((partenaire) => ({
         ...partenaire,
         slug: partenaire.slug || generateSlug(partenaire.nom),
       })),
-    [partenaires]
+    [data]
   );
 
   const hasActiveFilters = typeFilter !== 'all' || searchTerm !== '';

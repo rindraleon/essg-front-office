@@ -9,11 +9,17 @@ export function Card({
   children,
   elevation: _e,
   sx: _sx,
+  hover,
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { elevation?: number; sx?: unknown }) {
+}: React.HTMLAttributes<HTMLDivElement> & { elevation?: number; sx?: unknown; hover?: boolean }) {
   return (
     <div
-      className={cn('rounded-2xl border border-ink-100 bg-white shadow-card', className)}
+      className={cn(
+        'rounded-2xl border border-ink-100 bg-white shadow-card',
+        'transition-[border-color,box-shadow] duration-(--duration-hover) ease-out',
+        hover && 'hover:border-brand-200 hover:shadow-card-hover',
+        className
+      )}
       {...props}
     >
       {children}

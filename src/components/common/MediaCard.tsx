@@ -63,7 +63,7 @@ const MediaCard: React.FC<MediaCardProps> = ({
   const isHomeLayout = layout === 'home';
   const visibleMeta = dedupeMeta(meta, title, badge, subtitle);
   const showSubtitlePill = Boolean(subtitle) && !isHomeLayout;
-  const hasDetails = Boolean(description || visibleMeta.length);
+  const hasDetails = Boolean(description) || visibleMeta.length > 0;
   const surfaceClass = imageFit === 'contain' ? 'bg-white' : 'bg-ink-900';
   const ratioClass = ratio === 'portrait' ? 'aspect-[4/5]' : 'aspect-[16/10]';
   const titleLinkClass =
