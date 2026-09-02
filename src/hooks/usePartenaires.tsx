@@ -1,5 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import partenaireService from '../services/partenaire.service';
+import { toErrorMessage } from '@/utils';
+import { partenaireService } from '@/services';
+
+export function usePaginatedPartenaires(page = 1, limit = 6, search = '', type = '') {
+  const query = useQuery({
+    queryKey: ['partenaires', 'paginated', page, limit, search, type],
+    queryFn: () => partenaireService.findPaginated(page, limit, search, type),
+  });
+  return {
+    data: query.data ?? null,
+    loading: query.isLoading,
+    error: toErrorMessage(query.error),
+  };
+}
 
 export default function usePartenaires() {
   const query = useQuery({
@@ -10,7 +23,7 @@ export default function usePartenaires() {
   return {
     partenaires: query.data ?? [],
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
+    error: toErrorMessage(query.error),
     refetch: query.refetch,
   };
 }
@@ -30,6 +43,6 @@ export function usePartenaireBySlug(slug: string) {
   return {
     partenaire: query.data ?? null,
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
+    error: toErrorMessage(query.error),
   };
 }

@@ -1,4 +1,4 @@
-import { gsap, isCompactViewport, motion, prefersReducedMotion } from '../lib/gsap';
+import { gsap, isCompactViewport, motion, prefersReducedMotion } from '@/lib';
 
 export function revealFrom(kind: string | null | undefined) {
   const compact = isCompactViewport();
@@ -16,35 +16,6 @@ export function revealFrom(kind: string | null | undefined) {
   }
 }
 
-export function playIntro(targets: {
-  header?: Element | null;
-  logo?: Element | null;
-  nav?: Element[];
-  actions?: Element | null;
-}): gsap.core.Timeline | null {
-  if (prefersReducedMotion()) return null;
-
-  const timeline = gsap.timeline({ defaults: { ease: motion.easeSoft } });
-  if (targets.header) {
-    timeline.fromTo(targets.header, { y: -16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45 }, 0);
-  }
-  if (targets.logo) {
-    timeline.fromTo(targets.logo, { opacity: 0, y: -8 }, { opacity: 1, y: 0, duration: 0.4 }, 0.08);
-  }
-  if (targets.nav && targets.nav.length > 0) {
-    timeline.fromTo(
-      targets.nav,
-      { opacity: 0, y: -8 },
-      { opacity: 1, y: 0, duration: 0.35, stagger: 0.04 },
-      0.16,
-    );
-  }
-  if (targets.actions) {
-    timeline.fromTo(targets.actions, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.35 }, 0.24);
-  }
-  return timeline;
-}
-
 export function floatOrbs(orbs: Element[]): void {
   if (prefersReducedMotion() || orbs.length === 0) return;
   const amplitude = isCompactViewport() ? 10 : 18;
@@ -52,7 +23,7 @@ export function floatOrbs(orbs: Element[]): void {
     gsap.to(orb, {
       y: index % 2 === 0 ? -amplitude : amplitude,
       x: index % 2 === 0 ? amplitude * 0.5 : -amplitude * 0.45,
-      duration: 7 + index * 1.4,
+      duration: 9 + index * 1.8,
       ease: 'sine.inOut',
       yoyo: true,
       repeat: -1,
@@ -65,7 +36,7 @@ export function kenBurns(media: Element | null): void {
   gsap.fromTo(
     media,
     { scale: 1.02, x: 0 },
-    { scale: 1.08, x: 12, duration: 28, ease: 'sine.inOut', yoyo: true, repeat: -1 },
+    { scale: 1.08, x: 12, duration: 36, ease: 'sine.inOut', yoyo: true, repeat: -1 }
   );
 }
 

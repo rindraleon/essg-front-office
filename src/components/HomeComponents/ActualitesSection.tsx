@@ -1,12 +1,15 @@
 import { Calendar } from 'lucide-react';
-import { useRecentActualites } from '../../hooks';
-import useSectionFilters, { type FilterDefinition } from '../../hooks/useSectionFilters';
+import { useRecentActualites } from '@/hooks';
+import useSectionFilters, { type FilterDefinition } from '@/hooks/useSectionFilters';
 import FilterButton from '../common/FilterButton';
-import type { Actualite } from '../../types/actualite.types';
-import { getImageUrl } from '../../utils/image.utils';
-import { formatDate } from '../../utils/date.utils';
-import { CARD_WIDTH_CLASS } from '../../constants/layout';
-import { SectionHeader, SectionCta, SectionContent, ScrollableCardGrid } from '../../components';
+import type { Actualite } from '@/types';
+import { getImageUrl, formatDate } from '@/utils';
+import { CARD_WIDTH_CLASS } from '@/constants';
+import SectionHeader from '../common/SectionHeader';
+import SectionCta from '../common/SectionCta';
+import SectionContent from '../common/SectionContent';
+import ParticlesBackground from '../animations/ParticlesBackground';
+import ScrollableCardGrid from '../common/ScrollableCardGrid';
 import MediaCard from '../common/MediaCard';
 import { MediaCardSkeletonGrid } from '../common/MediaCardSkeleton';
 
@@ -15,12 +18,6 @@ const FALLBACK_IMAGE =
 
 const SECTION_CTA = { label: 'Toutes les actualités', link: '/actualites' } as const;
 
-/**
- * Critères de filtrage (§5). Les options sont dérivées des actualités
- * réellement reçues : une catégorie sans article ne s'affiche pas.
- * L'année est extraite de la date — c'est le second axe de recherche
- * naturel pour une actualité, après la catégorie.
- */
 const FILTERS: FilterDefinition<Actualite>[] = [
   {
     key: 'categorie',
@@ -46,44 +43,41 @@ const ActualitesSection = () => {
   const count = filtered.length;
   const total = actualites.length;
 
-  /** « 4 actualités » ou « 2 sur 4 actualités » lorsqu'un filtre est posé. */
   const suffix = total > 1 ? 's' : '';
   const countLabel =
     count === total ? `${total} actualité${suffix}` : `${count} sur ${total} actualité${suffix}`;
 
   return (
     <SectionContent
+      backgroundContent={<ParticlesBackground />}
       loading={loading}
       error={error}
       isEmpty={!loading && total === 0}
       emptyMessage="Aucune actualité disponible pour le moment."
       headerContent={
         <SectionHeader
+          eyebrow="Vie de l'école & Recherche"
           title="Dernières Actualités"
-          description="Restez informé de la vie de l'ESSG"
+          description="Restez informé des innovations, conférences et événements marquants de l'ESSG"
         />
       }
-      loadingSkeletons={<MediaCardSkeletonGrid />}
-      sectionClassName="bg-gradient-to-b from-white to-ink-50 py-20"
+      loadingSkeletons={<MediaCardSkeletonGrid layout="home" />}
+      sectionClassName="bg-gradient-to-br from-white via-brand-50/55 to-brand-50/45 section-y"
       fluid
       containerClassName="max-w-none"
     >
       <ScrollableCardGrid
         className="w-full"
         ariaLabel="Dernières actualités"
-        toolbarStart={
-          <span aria-live="polite">{countLabel}</span>
-        }
-        controls={
-          groups.length > 0 && (
-            <FilterButton groups={groups} onChange={setFilter} onReset={reset} revealOnHover />
-          )
-        }
+        resetKey={groups.map((group) => `${group.key}:${group.value}`).join('|')}
+        toolbarStart={<span aria-live="polite">{countLabel}</span>}
+        controls={<FilterButton groups={groups} onChange={setFilter} onReset={reset} />}
       >
         {filtered.map((actu) => (
           <MediaCard
             key={actu.id}
             className={CARD_WIDTH_CLASS}
+            layout="home"
             to={`/actualites/${actu.slug}`}
             title={actu.titre}
             imageUrl={actu.image ? getImageUrl(actu.image) : FALLBACK_IMAGE}

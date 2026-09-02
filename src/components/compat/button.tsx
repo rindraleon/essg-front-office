@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Button as UiButton, buttonVariants, type ButtonProps } from '../ui/button';
-import { cn } from '@/lib/utils';
+import { Button as UiButton, type ButtonProps } from '../ui/button';
+import { buttonVariants } from '../ui/button-variants';
+import { cn } from '@/lib';
 
 type CompatButtonProps = Omit<ButtonProps, 'variant' | 'size'> & {
   component?: 'a' | 'button' | typeof Link | React.ElementType;
@@ -11,8 +12,8 @@ type CompatButtonProps = Omit<ButtonProps, 'variant' | 'size'> & {
   endIcon?: React.ReactNode;
   startIcon?: React.ReactNode;
   fullWidth?: boolean;
-  variant?: 'contained' | 'outlined' | 'text' | ButtonProps['variant'];
-  size?: 'small' | 'medium' | 'large' | ButtonProps['size'];
+  variant?: 'contained' | 'outlined' | 'text' | NonNullable<ButtonProps['variant']>;
+  size?: 'small' | 'medium' | 'large' | NonNullable<ButtonProps['size']>;
   sx?: unknown;
 };
 
@@ -46,7 +47,11 @@ export default function Button({
 }: CompatButtonProps) {
   const mappedVariant = variantMap[String(variant)] ?? (variant as ButtonProps['variant']);
   const mappedSize = sizeMap[String(size)] ?? (size as ButtonProps['size']);
-  const classes = cn(buttonVariants({ variant: mappedVariant, size: mappedSize }), fullWidth && 'w-full', className);
+  const classes = cn(
+    buttonVariants({ variant: mappedVariant, size: mappedSize }),
+    fullWidth && 'w-full',
+    className
+  );
 
   if (component === Link || to) {
     return (

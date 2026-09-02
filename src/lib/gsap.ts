@@ -8,7 +8,7 @@ export function registerGsap(): void {
   gsap.registerPlugin(ScrollTrigger);
   gsap.defaults({
     ease: 'power3.out',
-    duration: 0.7,
+    duration: 0.9,
   });
   ScrollTrigger.config({ ignoreMobileResize: true });
   registered = true;
@@ -27,10 +27,10 @@ export function isCompactViewport(): boolean {
 export const motion = {
   ease: 'power3.out',
   easeSoft: 'power2.out',
-  duration: 0.7,
-  durationFast: 0.45,
-  durationSlow: 0.95,
-  stagger: 0.08,
+  duration: 0.9,
+  durationFast: 0.6,
+  durationSlow: 1.25,
+  stagger: 0.11,
   offset: () => (isCompactViewport() ? 16 : 28),
   offsetSmall: () => (isCompactViewport() ? 10 : 18),
 };

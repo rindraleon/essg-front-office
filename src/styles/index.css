@@ -1,59 +1,29 @@
 @import 'tailwindcss';
 
-/* ============================================================
-   DESIGN SYSTEM ESSG — modernisation UI/UX
-   Chartes : couleurs issues du logo, typographie Poppins,
-   ombres douces, rayons cohérents, animations légères.
-   ============================================================ */
 
-/* ---------- Typographie (self-hosted, aucun CDN) ----------
-   Plus Jakarta Sans : titres et Hero — caractère contemporain, formes
-   géométriques ouvertes qui restent lisibles en très grande taille.
-   Inter : textes courants, formulaires et interface — excellente lisibilité
-   aux petites tailles.
-   Les deux sont des fontes VARIABLES : un seul fichier couvre tous les poids,
-   ce qui évite de charger une variante par graisse (l'ancien Poppins en
-   chargeait quatre en .ttf, format non compressé).
-   ---------------------------------------------------------- */
-@import '@fontsource-variable/plus-jakarta-sans/wght.css';
-@import '@fontsource-variable/inter/wght.css';
-/* Orbitron : accent technologique uniquement (coordonnées, labels
-   géospatiaux, indicateurs du Hero). Jamais pour du texte courant. */
-@import '@fontsource-variable/orbitron/wght.css';
+
+
+/* Polices auto-hébergées depuis src/assets/fonts (Manrope, Outfit, Space Mono). */
+@import '../assets/fonts/fonts.css';
 
 /* ---------- Tokens Tailwind ---------- */
 @theme {
   /* Typographie */
   --font-sans:
-    'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
+    'Manrope Variable', 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
 
-  /* Police d'affichage : Hero, titres de sections, chiffres clés. */
+  /* Police d'affichage : Hero, titres de sections, chiffres clés, identité visuelle */
   --font-display:
-    'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter Variable',
-    ui-sans-serif, system-ui, sans-serif;
+    'Outfit Variable', 'Outfit', 'Manrope Variable', ui-sans-serif, system-ui,
+    sans-serif;
 
-  /* Accent technologique : coordonnées, labels géospatiaux, indicateurs.
-     Usage strictement ponctuel — quelques éléments par section au plus.
-     Remplace `font-mono`, dont le rendu dépendait de la police monospace
-     installée sur la machine du visiteur et variait donc d'un poste à
-     l'autre. */
-  --font-tech:
-    'Orbitron Variable', 'Orbitron', ui-monospace, 'SFMono-Regular', monospace;
+  /* Accent technologique : coordonnées, indicateurs géospatiaux, télémétrie */
+  --font-tech: 'Space Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* ════════════════════════════════════════════════════════════════
-     ÉCHELLE TYPOGRAPHIQUE UNIQUE
-     Source de vérité pour l'ensemble du frontend : titres, corps de
-     texte, libellés. Chaque niveau embarque sa taille, son
-     interlignage, son interlettrage et sa graisse — les composants
-     n'ont plus à les recomposer classe par classe.
-     Progression ~1,25 (quarte majeure), lisible et régulière.
-     ════════════════════════════════════════════════════════════════ */
+  
 
-  /* Display — Hero uniquement, un seul par page.
-     `clamp()` : la taille suit la largeur du viewport de façon continue,
-     au lieu de sauter d'une valeur à l'autre au franchissement d'un point
-     de rupture. Bornes issues du tableau §5.4 (mobile 40px → desktop 72px). */
+  
   --text-display: clamp(2.5rem, 1.43rem + 4.46vw, 4.5rem);
   --text-display--line-height: 1.05;
   --text-display--letter-spacing: -0.03em;
@@ -124,12 +94,7 @@
   --text-tech--letter-spacing: 0.05em;
   --text-tech--font-weight: 600;
 
-  /* ══════════════════════════════════════════════════════════════
-     SYSTÈME DE MOUVEMENT (§7.14, §7.15)
-     Une seule échelle de durées et deux courbes pour tout le site :
-     les sections apparaissent au même tempo, d'où une sensation de
-     continuité plutôt qu'un assemblage de pages animées séparément.
-     ══════════════════════════════════════════════════════════════ */
+  
 
   /* Courbes (§7.15). `--ease-reveal` est une sortie franche puis très
      amortie : le mouvement paraît « se poser » au lieu de s'arrêter net. */
@@ -137,16 +102,18 @@
   --ease-out-soft: cubic-bezier(0.33, 1, 0.68, 1);
 
   /* Durées (§7.14) */
-  --duration-micro: 180ms; /* micro-interactions : icônes, liens */
-  --duration-quick: 200ms; /* menus, dropdowns */
-  --duration-hover: 280ms; /* survol des cartes et boutons */
-  --duration-reveal: 620ms; /* entrée d'un élément */
-  --duration-section: 780ms; /* entrée d'une grande section */
-  --duration-hero: 1000ms; /* Hero */
+  --default-transition-duration: 240ms;
+
+  --duration-micro: 240ms; /* micro-interactions : icônes, liens */
+  --duration-quick: 260ms; /* menus, dropdowns */
+  --duration-hover: 360ms; /* survol des cartes et boutons */
+  --duration-reveal: 800ms; /* entrée d'un élément */
+  --duration-section: 1000ms; /* entrée d'une grande section */
+  --duration-hero: 1300ms; /* Hero */
 
   /* Séquencement (§7.2) : ~90 ms entre deux éléments, soit 5 éléments
      révélés en 360 ms — sous la limite de 400–600 ms recommandée. */
-  --stagger-step: 90ms;
+  --stagger-step: 110ms;
 
   /* Distances de déplacement (§7.1). Volontairement faibles : au-delà
      de ~32 px, le mouvement cesse d'être perçu comme un « fondu qui
@@ -155,54 +122,96 @@
   --reveal-distance-sm: 12px;
 
   /* Marquee (§7.14) */
-  --duration-marquee-1: 32s;
-  --duration-marquee-2: 38s;
+  --duration-marquee-1: 42s;
+  --duration-marquee-2: 50s;
 
-  /* Couleurs primaires « brand » (vert profond ESSG) */
-  --color-brand-50: #eff7f4;
-  --color-brand-100: #d9ece7;
-  --color-brand-200: #b6d9d0;
-  --color-brand-300: #8abfb3;
-  --color-brand-400: #5ba092;
-  --color-brand-500: #3d8376;
-  --color-brand-600: #2e6a5f;
-  --color-brand-700: #27564e;
-  --color-brand-800: #224640;
-  --color-brand-900: #1e3a35;
-  --color-brand-950: #0f211e;
+  /* ============================================================
+     PALETTE — dérivée directement du logo ESSG
+     Le logo ne contient que trois couleurs : un vert feuille
+     (#98c070), un anthracite ardoise (#586068) et un point rouge.
+     Toute la charte est construite sur ces trois ancrages ; aucune
+     teinte « hors logo » n'est introduite.
+     Chaque palier a été vérifié en contraste WCAG 2.2 AA.
+     ============================================================ */
 
-  /* Couleurs secondaires « sage » (vert sauge du logo) */
-  --color-sage-50: #f7faf1;
-  --color-sage-100: #eef4df;
-  --color-sage-200: #dce9c2;
-  --color-sage-300: #c2d799;
-  --color-sage-400: #98c070;
-  --color-sage-500: #7fa757;
-  --color-sage-600: #648640;
-  --color-sage-700: #4f6834;
-  --color-sage-800: #41542d;
-  --color-sage-900: #374727;
-  --color-sage-950: #1d2712;
+  /* Vert institutionnel — couleur primaire.
+     400 = vert exact du logo. Les paliers 600+ sont les seuls
+     autorisés pour du texte ou un aplat portant du texte blanc :
+       600 sur blanc  → 4.87:1  (AA, remplissage des CTA)
+       700 sur blanc  → 7.05:1  (AAA, liens et eyebrows)
+       300 sur ink-950 → 10.49:1 (AAA, accents sur fond sombre) */
+  --color-brand-50: #f5faef;
+  --color-brand-100: #e8f3db;
+  --color-brand-200: #d3e8bd;
+  --color-brand-300: #b7d897;
+  --color-brand-400: #98c070;
+  --color-brand-500: #78a44e;
+  --color-brand-600: #547c36;
+  --color-brand-700: #42612c;
+  --color-brand-800: #374e27;
+  --color-brand-900: #2f4123;
+  --color-brand-950: #17220f;
 
-  /* Neutres profonds « ink » (grandes surfaces sombres) */
-  --color-ink-50: #f5f7f7;
-  --color-ink-100: #e5eaeb;
-  --color-ink-200: #c8d3d5;
-  --color-ink-300: #9fb1b4;
-  --color-ink-400: #6f888c;
-  --color-ink-500: #546c70;
-  --color-ink-600: #43575b;
-  --color-ink-700: #38474b;
-  --color-ink-800: #303c3f;
-  --color-ink-900: #1e2829;
-  --color-ink-950: #11191a;
+  /* Anthracite ardoise — neutres et grandes surfaces sombres.
+     600 = gris exact du logo.
+       800 sur blanc → 10.18:1 (texte courant)
+       600 sur blanc →  6.39:1 (texte secondaire)
+       500 sur blanc →  4.90:1 (texte tertiaire, plancher AA) */
+  --color-ink-50: #f6f7f8;
+  --color-ink-100: #e9ebed;
+  --color-ink-200: #d4d8dc;
+  --color-ink-300: #b0b7bd;
+  --color-ink-400: #848d96;
+  --color-ink-500: #68727c;
+  --color-ink-600: #586068;
+  --color-ink-700: #4a5158;
+  --color-ink-800: #3c4247;
+  --color-ink-900: #2b3034;
+  --color-ink-950: #1b1f22;
+
+  /* Rouge du logo — accent strictement exceptionnel : erreurs de
+     formulaire, alertes critiques, suppression. Jamais un CTA. */
+  --color-danger-50: #fdecea;
+  --color-danger-100: #fbd5d1;
+  --color-danger-500: #e53935;
+  --color-danger-600: #d32f2f;
+  --color-danger-700: #c62828;
+
+  /* ============================================================
+     RAYONS — 5 paliers, aucun rayon arbitraire ailleurs.
+     L'audit relevait 12 rayons différents dont 5 en valeur libre
+     (rounded-[2rem], [1.75rem], [1.5rem], [0.9rem]…) : la hiérarchie
+     des surfaces n'était plus lisible.
+       sm  : puces, tags
+       md  : champs, petits boutons
+       lg  : boutons, inputs
+       xl  : cartes
+       2xl : grands blocs et sections encadrées
+     ============================================================ */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-3xl: 2rem;
+
+  /* ============================================================
+     ESPACEMENT VERTICAL DES SECTIONS
+     Un seul rythme pour tout le site, au lieu des 8 valeurs
+     relevées (py-10/12/14/16/18/20/24/28).
+     ============================================================ */
+  --space-section: 4rem; /* mobile  : 64px */
+  --space-section-md: 5.5rem; /* tablette : 88px */
+  --space-section-lg: 7rem; /* desktop  : 112px */
+  --space-section-tight: 3rem;
+  --space-section-tight-lg: 4.5rem;
 
   /* Ombres cohérentes */
-  --shadow-card: 0 1px 2px rgb(15 33 30 / 0.04), 0 4px 16px -4px rgb(15 33 30 / 0.08);
-  --shadow-card-hover: 0 2px 4px rgb(15 33 30 / 0.05), 0 16px 40px -12px rgb(15 33 30 / 0.16);
-  --shadow-soft: 0 1px 3px rgb(15 33 30 / 0.05), 0 8px 24px -8px rgb(15 33 30 / 0.1);
-  --shadow-elevated: 0 8px 20px -6px rgb(15 33 30 / 0.12), 0 24px 56px -16px rgb(15 33 30 / 0.2);
-  --shadow-focus: 0 0 0 4px rgb(46 106 95 / 0.18);
+  --shadow-card: 0 1px 2px rgb(27 31 34 / 0.04), 0 4px 16px -4px rgb(27 31 34 / 0.08);
+  --shadow-card-hover: 0 2px 4px rgb(27 31 34 / 0.05), 0 16px 40px -12px rgb(27 31 34 / 0.16);
+  --shadow-soft: 0 1px 3px rgb(27 31 34 / 0.05), 0 8px 24px -8px rgb(27 31 34 / 0.1);
+  --shadow-elevated: 0 8px 20px -6px rgb(27 31 34 / 0.12), 0 24px 56px -16px rgb(27 31 34 / 0.2);
+  --shadow-focus: 0 0 0 4px rgb(84 124 54 / 0.22);
 
   /* Animations */
   --animate-fade-in: fade-in 0.6s ease-out both;
@@ -318,8 +327,8 @@
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--duration-reveal) var(--ease-reveal),
+    transform var(--duration-reveal) var(--ease-reveal);
 }
 
 .reveal-item.is-visible,
@@ -330,8 +339,8 @@
 
 .hover-lift {
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
+    transform var(--duration-hover) ease,
+    box-shadow var(--duration-hover) ease;
 }
 
 .hover-lift:hover {
@@ -343,7 +352,7 @@
 }
 
 .img-reveal img {
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--duration-reveal) var(--ease-reveal);
 }
 
 .img-reveal:hover img {
@@ -367,19 +376,7 @@
     line-height: 1.6;
   }
 
-  /*
-    Focus visible (§7.12) : repère unique, jamais supprimé.
-
-    Deux couleurs sont nécessaires. `brand-600` est un vert profond :
-    parfaitement lisible sur fond clair, il devient invisible sur le Hero
-    et le pied de page, tous deux très sombres. Les conteneurs sombres
-    portent `data-surface="dark"` et basculent l'anneau sur `sage-400`,
-    qui y ressort nettement.
-
-    `outline` plutôt que `box-shadow` : l'outline ne participe pas à la
-    mise en page et ne peut donc pas être rognée par un `overflow: hidden`
-    parent — cas fréquent sur les cartes.
-  */
+  
   :focus-visible {
     outline: 2px solid var(--color-brand-600);
     outline-offset: 2px;
@@ -387,7 +384,7 @@
   }
 
   [data-surface='dark'] :focus-visible {
-    outline-color: var(--color-sage-400);
+    outline-color: var(--color-brand-400);
   }
 
   /* Sélection de texte aux couleurs de la marque */
@@ -421,11 +418,7 @@
     height: auto;
   }
 
-  /* H1–H4 : police d'affichage, de façon centralisée — aucun composant
-     n'a besoin de redéclarer `font-display`.
-     H5–H6 : Inter (§5.4). À ces tailles, la police d'interface est plus
-     lisible que la police d'affichage, dont les formes géométriques
-     ouvertes sont conçues pour les grands corps. */
+  
   h1,
   h2,
   h3,
@@ -445,6 +438,34 @@
   h5,
   h6 {
     font-family: var(--font-sans);
+  }
+
+  /* Un titre n'est pas toujours une balise h1–h4 : certains blocs utilisent
+     un <div>, un <span> ou un <p> porteur d'une classe de l'échelle
+     typographique. On rattache donc la police d'affichage à l'échelle
+     elle-même, pour que TOUTES les pages rendent exactement comme la Home. */
+  .text-display,
+  .text-h1,
+  .text-h2,
+  .text-h3,
+  .text-h4 {
+    font-family: var(--font-display);
+  }
+
+  .text-h5,
+  .text-h6,
+  .text-body-lg,
+  .text-body,
+  .text-small,
+  .text-caption,
+  .text-label {
+    font-family: var(--font-sans);
+  }
+
+  /* Accent technologique : coordonnées, indicateurs géospatiaux, compteurs. */
+  .text-tech,
+  .font-tech {
+    font-family: var(--font-tech);
   }
 
   /* Chaque niveau reprend l'échelle typographique : un composant qui
@@ -510,10 +531,7 @@
     text-wrap: pretty;
   }
 
-  /* Confort de lecture (§5.8) : au-delà d'environ 65 caractères par ligne,
-     l'œil peine à retrouver le début de la ligne suivante. La classe
-     `max-w-*` d'un composant reste prioritaire lorsqu'elle est plus
-     restrictive ; cette règle n'agit que sur les paragraphes libres. */
+  
   .prose-measure {
     max-width: 65ch;
   }
@@ -543,7 +561,11 @@
   display: none;
 }
 
-/* Conteneur de section standardisé */
+/* ---------- Conteneur et rythme de page ----------
+   `section-shell` est LE conteneur unique du site : toutes les
+   sections s'alignent sur la même grille (max 1280px + gouttières
+   progressives). Il remplace les 46 répétitions de
+   « mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 » relevées à l'audit. */
 .section-shell {
   margin-inline: auto;
   width: 100%;
@@ -563,27 +585,48 @@
   }
 }
 
+/* Rythme vertical standard d'une section. */
+.section-y {
+  padding-block: var(--space-section);
+}
+
+.section-y-tight {
+  padding-block: var(--space-section-tight);
+}
+
+@media (min-width: 768px) {
+  .section-y {
+    padding-block: var(--space-section-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-y {
+    padding-block: var(--space-section-lg);
+  }
+
+  .section-y-tight {
+    padding-block: var(--space-section-tight-lg);
+  }
+}
+
 /* Équilibrage de texte sur les titres longs */
 .text-balance {
   text-wrap: balance;
 }
 
 
-/* ============================================================
-   SURFACES ET PROFONDEUR (§24)
-   Utilitaires centralisés : ils remplacent les déclarations
-   `bg-white/xx backdrop-blur-xx border-white/xx` répétées dans
-   les composants. La lisibilité prime : la transparence est
-   volontairement limitée et toujours accompagnée d'un contraste
-   suffisant.
-   ============================================================ */
 
 @utility surface-card {
   /* Carte standard sur fond clair. */
   background-color: #ffffff;
   border: 1px solid var(--color-ink-100);
   border-radius: var(--radius-2xl, 1.25rem);
-  box-shadow: var(--shadow-card, 0 1px 2px rgb(15 33 30 / 0.04), 0 4px 16px -4px rgb(15 33 30 / 0.08));
+  box-shadow: var(
+    --shadow-card,
+    0 1px 2px rgb(27 31 34 / 0.04),
+    0 4px 16px -4px rgb(27 31 34 / 0.08)
+  );
 }
 
 @utility surface-glass {
@@ -606,9 +649,9 @@
   /* Voile de lisibilité sous un texte posé sur une image. */
   background-image: linear-gradient(
     to bottom,
-    rgb(15 33 30 / 0.35) 0%,
-    rgb(15 33 30 / 0.45) 45%,
-    rgb(15 33 30 / 0.78) 100%
+    rgb(27 31 34 / 0.35) 0%,
+    rgb(27 31 34 / 0.45) 45%,
+    rgb(27 31 34 / 0.78) 100%
   );
 }
 
@@ -628,7 +671,7 @@
    les surfaces pour ne jamais dégrader la lisibilité du texte. */
 @supports not (backdrop-filter: blur(1px)) {
   .surface-glass {
-    background-color: rgb(15 33 30 / 0.72);
+    background-color: rgb(27 31 34 / 0.72);
   }
 
   .surface-glass-light {
@@ -636,20 +679,14 @@
   }
 }
 
-/* ============================================================
-   ANIMATIONS D'APPARITION (§25)
-   Courtes (≤ 600 ms), non bloquantes, déclenchées à l'entrée dans
-   le viewport par le hook `useReveal`. Elles n'animent que
-   `opacity` et `transform` (propriétés composées par le GPU),
-   afin de ne provoquer ni reflow ni saut de layout.
-   ============================================================ */
+
 
 @utility reveal {
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--duration-reveal) var(--ease-reveal),
+    transform var(--duration-reveal) var(--ease-reveal);
   will-change: opacity, transform;
 }
 
@@ -666,13 +703,7 @@
   }
 }
 
-/* ============================================================
-   CARTES MÉDIA (§2.2)
-   Le survol n'existe pas sur écran tactile : les informations
-   complémentaires y sont affichées en permanence plutôt que
-   rendues inaccessibles. La carte reste cliquable dans son
-   intégralité, donc le détail est toujours atteignable.
-   ============================================================ */
+
 @media (hover: none) {
   .media-card [data-card-details] {
     opacity: 1;
@@ -692,333 +723,179 @@
   }
 }
 
-/* ============================================================
-   HERO D'ACCUEIL (§4)
-   Ce bloc vivait dans une balise <style> injectée par
-   `HeroSection.tsx`. Le déplacer ici lui fait profiter du même
-   traitement que le reste : minification, préfixage, et une
-   seule source de vérité pour les couleurs (les valeurs
-   `rgba(152,192,112,…)` codées en dur pointaient sur
-   `--color-sage-400` sans le dire).
-   Les animations n'utilisent que `transform` et `opacity`.
-   ============================================================ */
 
-@keyframes hero-drift {
+
+@keyframes who-we-are-image {
   from {
-    background-position: 0 0;
+    transform: scale(1.08);
   }
   to {
-    background-position: -100px 100px;
+    transform: scale(1.01);
   }
 }
 
-@keyframes hero-reveal-up {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@layer components {
+  .who-we-are-image {
+    animation: who-we-are-image 18s var(--ease-out-soft) both;
   }
 }
 
-@keyframes hero-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 1;
+@media (prefers-reduced-motion: reduce) {
+  .who-we-are-image {
+    animation: none;
   }
 }
 
-@keyframes hero-twinkle {
-  0%,
-  100% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes hero-float-particle {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  10%,
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100vh);
-    opacity: 0;
-  }
-}
-
-/* §7.4 — Arrière-plan : respiration très lente, presque imperceptible.
-   L'amplitude est volontairement faible (4 %) : au-delà, le mouvement
-   devient visible et concurrence le titre posé par-dessus.
-   La dérive horizontale (±8 px) évite l'impression de « zoom sur place ». */
-@keyframes hero-pan {
-  0%,
-  100% {
-    transform: scale(1) translate3d(-8px, 0, 0);
-  }
-  50% {
-    transform: scale(1.04) translate3d(8px, 0, 0);
-  }
-}
-
-/* §7.3 — Révélation de titre par masquage : chaque mot monte depuis
-   sous une ligne invisible. Plus expressif qu'un simple fondu, et
-   réservé au seul titre du Hero. */
-@keyframes hero-text-reveal {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-/* §7.1 — Entrée nette d'un grand visuel. `filter` est coûteux : cette
-   animation est réservée au Hero, jouée une seule fois. */
-@keyframes hero-scroll-cue {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(5px);
-    opacity: 1;
-  }
-}
-
-@keyframes hero-geo-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes hero-blur-in {
+@keyframes hero-home-enter {
   from {
     opacity: 0;
-    filter: blur(8px);
+    transform: translate3d(0, 24px, 0);
   }
   to {
     opacity: 1;
-    filter: blur(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes hero-ring-spin {
+@keyframes hero-home-image {
   from {
-    transform: rotate(0);
+    transform: scale(1.08);
   }
+  to {
+    transform: scale(1.01);
+  }
+}
+
+@keyframes hero-home-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@layer components {
-  /* Voile décoratif : chaque motif hérite de la couleur sauge du thème. */
-  .hero-bg {
-    animation: hero-pan 60s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  .hero-grid {
-    background-image:
-      linear-gradient(to right, rgb(152 192 112 / 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(152 192 112 / 0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  .hero-topo {
-    background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0 50 Q25 25,50 50 T100 50" stroke="rgba(152,192,112,.15)" fill="none" stroke-width=".5"/></svg>');
-    background-size: 100px 100px;
-    animation: hero-drift 20s linear infinite;
-  }
-
-  /* Cascade d'entrée : même courbe que le reste du site. */
-  .hero-reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: hero-reveal-up 0.7s var(--ease-reveal) forwards;
-    animation-delay: calc(var(--hero-step, 0) * var(--stagger-step));
-  }
-
-  /* §7.3 — Titre du Hero : chaque ligne est masquée par son parent et
-     monte depuis le dessous. `overflow: hidden` sur l'enveloppe, le
-     mouvement sur l'enfant : rien ne dépasse pendant la montée. */
-  .hero-title-mask {
-    display: block;
-    overflow: hidden;
-  }
-
-  .hero-title-line {
-    display: block;
-    transform: translateY(100%);
-    animation: hero-text-reveal var(--duration-hero) var(--ease-reveal) forwards;
-    animation-delay: calc(var(--hero-step, 0) * var(--stagger-step));
-    will-change: transform;
-  }
-
-  /* §7.1 — Grand visuel du Hero. */
-  .hero-blur-in {
-    opacity: 0;
-    animation: hero-blur-in 900ms var(--ease-reveal) forwards;
-  }
-
-  /* §7.4 — Calques géomatiques : très peu visibles, ils signent
-     l'identité scientifique sans concurrencer le contenu. */
-  .hero-coords {
-    animation: hero-pulse 4s ease-in-out infinite;
-  }
-
-  /* §7.16 — Indice de défilement : glissement doux plutôt que rebond.
-     Le `bounce` de Tailwind est une animation élastique qui capte le
-     regard en permanence ; un aller-retour amorti suffit à signaler
-     « il y a du contenu en dessous ». */
-  .hero-scroll-cue {
-    animation: hero-scroll-cue 2.4s ease-in-out infinite;
-  }
-
-  /* Tracé progressif des lignes de mesure, joué UNE fois puis figé
-     (`forwards`, pas de `infinite`) : une animation permanente en
-     arrière-plan capterait le regard en continu (§7.16). */
-  .hero-geo-line {
-    stroke-dasharray: 1400;
-    stroke-dashoffset: 1400;
-    animation: hero-geo-draw 3.2s var(--ease-reveal) 0.6s forwards;
-  }
-
-  .hero-pulse {
-    animation: hero-pulse 2s ease-in-out infinite;
-  }
-
-  /* Couche de parallaxe : le JS n'écrit qu'un `transform`. */
-  .hero-plx {
-    transition: transform 0.2s ease-out;
-    will-change: transform;
-  }
-
-  .hero-glass {
-    background-color: rgb(15 33 30 / 0.45);
-    border: 1px solid rgb(152 192 112 / 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .hero-star {
-    position: absolute;
-    background: #ffffff;
-    border-radius: 9999px;
-    animation: hero-twinkle var(--hero-duration) ease-in-out infinite;
-    animation-delay: var(--hero-delay);
-  }
-
-  .hero-particle {
-    position: absolute;
-    width: var(--hero-size);
-    height: var(--hero-size);
-    background: radial-gradient(circle, rgb(152 192 112 / 0.6) 0%, transparent 70%);
-    border-radius: 9999px;
-    animation: hero-float-particle var(--hero-duration) linear infinite;
-    animation-delay: var(--hero-delay);
-  }
-
-  .hero-ring {
-    position: absolute;
-    border-radius: 9999px;
-    border: 1px solid rgb(152 192 112 / 0.3);
-    animation: hero-ring-spin var(--hero-duration) linear infinite;
-    will-change: transform;
-  }
-
-  .hero-ring-reverse {
-    animation-direction: reverse;
+@keyframes hero-home-spin-reverse {
+  to {
+    transform: rotate(-360deg);
   }
 }
 
-/* Accessibilité : plus aucune animation décorative en mouvement réduit.
-   La règle globale plus haut ramène déjà les durées à 0,01 ms ; celle-ci
-   garantit en plus que le contenu révélé reste bien visible. */
+@keyframes hero-home-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes hero-home-scroll {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@layer components {
+  .hero-home-image {
+    animation: hero-home-image 18s var(--ease-out-soft) both;
+  }
+
+  .hero-home-grid {
+    background-image:
+      linear-gradient(to right, rgb(152 192 112 / 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(152 192 112 / 0.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(to right, black, transparent 82%);
+  }
+
+  .hero-home-glow {
+    animation: hero-home-breathe 9s ease-in-out infinite;
+  }
+
+  .hero-home-enter {
+    opacity: 0;
+    animation: hero-home-enter 1s var(--ease-reveal) forwards;
+  }
+
+  .hero-home-visual {
+    --hero-tilt-x: 0deg;
+    --hero-tilt-y: 0deg;
+    transform: perspective(900px) rotateX(var(--hero-tilt-x)) rotateY(var(--hero-tilt-y));
+    transform-style: preserve-3d;
+    transition: transform 500ms var(--ease-out-soft);
+  }
+
+  .hero-home-orbit {
+    animation: hero-home-spin 28s linear infinite;
+  }
+
+  .hero-home-orbit-reverse {
+    animation: hero-home-spin-reverse 20s linear infinite;
+  }
+
+  .hero-home-scan {
+    background: conic-gradient(from 15deg, transparent 0deg, rgb(152 192 112 / 0.2) 34deg, transparent 78deg);
+    animation: hero-home-spin 12s linear infinite;
+  }
+
+  .hero-home-pin {
+    filter: drop-shadow(0 0 12px rgb(152 192 112 / 0.7));
+    animation: hero-home-breathe 3.6s ease-in-out infinite;
+  }
+
+  .hero-home-scroll {
+    animation: hero-home-scroll 2.8s ease-in-out infinite;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .hero-bg,
-  .hero-topo,
-  .hero-star,
-  .hero-particle,
-  .hero-ring,
-  .hero-pulse,
-  .hero-coords,
-  .hero-scroll-cue {
+  .hero-home-image,
+  .hero-home-glow,
+  .hero-home-enter,
+  .hero-home-orbit,
+  .hero-home-orbit-reverse,
+  .hero-home-scan,
+  .hero-home-pin,
+  .hero-home-scroll {
     animation: none !important;
   }
 
-  /* Les lignes restent tracées, simplement sans animation de dessin. */
-  .hero-geo-line {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-
-  .hero-title-line,
-  .hero-blur-in {
+  .hero-home-enter {
     opacity: 1;
-    transform: none;
-    animation: none;
   }
 
-  .hero-reveal {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
-
-  .hero-plx {
+  .hero-home-visual {
+    transform: none !important;
     transition: none;
   }
 }
 
-/* ============================================================
-   MOTION RESPONSIVE (§7.18)
-   Le contenu prime sur l'effet. Sur petit écran, les distances
-   et les durées sont réduites : le doigt fait défiler bien plus
-   vite que la molette, et une animation calibrée pour le desktop
-   y paraît traînante. Redéfinir les variables suffit — aucun
-   composant n'a besoin de connaître la taille de l'écran.
-   ============================================================ */
 @media (max-width: 767px) {
   :root {
     --reveal-distance: 14px;
     --reveal-distance-sm: 8px;
-    --duration-reveal: 480ms;
-    --duration-section: 560ms;
-    --duration-hero: 700ms;
-    --stagger-step: 60ms;
+    --duration-reveal: 620ms;
+    --duration-section: 720ms;
+    --duration-hero: 900ms;
+    --stagger-step: 80ms;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
   :root {
     --reveal-distance: 18px;
-    --duration-reveal: 540ms;
-    --duration-section: 660ms;
-    --stagger-step: 75ms;
+    --duration-reveal: 700ms;
+    --duration-section: 860ms;
+    --stagger-step: 95ms;
   }
 }
 
-/* ============================================================
-   SKELETON — shimmer (§7.13)
-   Un balayage lent traversant la silhouette. Il indique que le
-   chargement progresse, là où une opacité qui pulse ne dit rien
-   du sens de la progression.
-   L'animation porte sur `background-position`, qui ne déclenche
-   ni recalcul de mise en page ni redécoupage : seule la peinture
-   de l'élément est refaite.
-   ============================================================ */
+
 @keyframes skeleton-shimmer {
   from {
     background-position: 200% 0;
@@ -1036,7 +913,7 @@
     var(--color-ink-100) 60%
   );
   background-size: 200% 100%;
-  animation: skeleton-shimmer 2.4s linear infinite;
+  animation: skeleton-shimmer 3.1s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1044,5 +921,51 @@
     animation: none;
     background-image: none;
     background-color: var(--color-ink-100);
+  }
+}
+
+/* ============================================================
+   COMPOSANTS DE TRANSITION GLOBALE
+   ============================================================ */
+
+@keyframes page-transition-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+
+.page-transition {
+  animation: page-transition-in 540ms var(--ease-reveal) both;
+}
+
+.scroll-progress {
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-600),
+    var(--color-brand-400),
+    var(--color-brand-500)
+  );
+  box-shadow: 0 1px 8px rgb(84 124 54 / 0.35);
+  pointer-events: none;
+  transform-origin: left center;
+}
+
+
+
+
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
   }
 }

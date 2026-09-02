@@ -28,10 +28,6 @@ export interface ChipProps extends VariantProps<typeof chipVariants> {
   style?: React.CSSProperties;
 }
 
-/**
- * Composant « chip » shadcn/ui — remplace le Chip MUI.
- * Accepte `onDelete` (affiche une croix), `icon` et les variantes de couleur.
- */
 const Chip: React.FC<ChipProps> = ({
   label,
   icon,
@@ -43,7 +39,11 @@ const Chip: React.FC<ChipProps> = ({
 }) => {
   return (
     <span
-      className={cn(chipVariants({ variant }), size === 'small' ? 'text-caption' : 'text-small', className)}
+      className={cn(
+        chipVariants({ variant }),
+        size === 'small' ? 'text-caption' : 'text-small',
+        className
+      )}
       style={style}
     >
       {icon && <span className="shrink-0 [&>svg]:size-3.5">{icon}</span>}
@@ -62,4 +62,4 @@ const Chip: React.FC<ChipProps> = ({
   );
 };
 
-export { Chip, chipVariants };
+export { Chip };

@@ -1,8 +1,8 @@
-import { Fade, IconButton, Tooltip } from '@/components/compat/mui';
+import { Fade, IconButton, Tooltip } from '../compat/mui';
 import { ExternalLink, MapPin } from 'lucide-react';
 import React, { useState } from 'react';
-import { GREEN } from '../../constants/colors';
-import type { MapEmbedProps } from '../../types/projets.types';
+import { GREEN } from '@/constants';
+import type { MapEmbedProps } from '@/types';
 
 const ZOOM_DELTAS: Record<string, number> = {
   close: 0.01,
@@ -22,19 +22,11 @@ const MapEmbed: React.FC<MapEmbedProps> = (props: Readonly<MapEmbedProps>) => {
 
   return (
     <div className="w-full">
-      {/* {adresse && (
-                <p className="mb-3 flex items-center justify-center gap-1.5 text-center text-caption text-ink-500">
-                    <MapPin />
-                    {adresse}
-                </p>
-            )} */}
-
       <div
         className="relative overflow-hidden rounded-2xl border border-ink-100 shadow-card"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Barre d'en-tête */}
         <div className="flex items-center gap-2 border-b border-ink-100 bg-ink-50/60 px-3 py-2.5">
           <MapPin />
           <span className="truncate text-caption font-medium text-ink-700">{label}</span>
@@ -52,7 +44,6 @@ const MapEmbed: React.FC<MapEmbedProps> = (props: Readonly<MapEmbedProps>) => {
           </Tooltip>
         </div>
 
-        {/* Carte */}
         <div className="relative">
           <iframe
             title={label}
@@ -64,8 +55,7 @@ const MapEmbed: React.FC<MapEmbedProps> = (props: Readonly<MapEmbedProps>) => {
             referrerPolicy="no-referrer"
           />
 
-          {/* Tooltip au survol */}
-          <Fade in={isHovered} timeout={300}>
+          <Fade in={isHovered}>
             <div
               className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-start gap-3 rounded-xl p-4 text-center shadow-lg backdrop-blur-sm"
               style={{

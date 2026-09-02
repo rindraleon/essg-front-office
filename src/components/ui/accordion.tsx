@@ -2,7 +2,6 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '../../utils/utils';
 
-
 export interface AccordionItemProps {
   value: string;
   trigger: React.ReactNode;

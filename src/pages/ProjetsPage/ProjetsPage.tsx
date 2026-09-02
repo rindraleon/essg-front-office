@@ -1,29 +1,37 @@
-import { cn } from '@/lib/utils';
-import usePagination from '../../hooks/usePagination';
-import Pagination from '../../components/common/Pagination';
-import { FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Skeleton, TextField } from '@/components/compat/mui';
-import { GraduationCap, Rocket, Search, X } from 'lucide-react';
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import type { SelectChangeEvent } from '@/components/compat/mui';
-import CtaSection from '../../components/common/CtaSection';
-import EmptyState from '../../components/common/EmptyState';
-import FilterToolbar from '../../components/common/FilterToolbar';
-import PageHero from '../../components/common/PageHero';
-import Breadcrumb from '../../components/common/Breadcrumb';
-import ProjetCard from '../../components/ProjetComponents/ProjetCard';
-import { useProjets } from '../../hooks';
-import type { ProjetsPageProps } from '../../types/projets.types';
-import { generateSlug } from '../../utils/slug.utils';
+import { cn } from '@/lib';
+import { usePaginatedProjets, useTitle } from '@/hooks';
+import {
+  Pagination,
+  EmptyState,
+  FilterToolbar,
+  PageHero,
+  Breadcrumb,
+  ProjetCard,
+} from '@/components';
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  CompatSelect as Select,
+  CompatSkeleton as Skeleton,
+  TextField,
+  type SelectChangeEvent,
+} from '@/components';
+import { Rocket, Search, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import type { ProjetsPageProps } from '@/types';
+import { generateSlug } from '@/utils';
 
-import { SITE_HERO_IMAGE } from '../../constants/media';
-import { useTitle } from '@/hooks/useTitle';
+import { SITE_HERO_IMAGE } from '@/constants';
 
 const HERO_IMAGE = SITE_HERO_IMAGE;
 
 const TYPES = [
   { value: 'all', label: 'Tous les types' },
   { value: 'International', label: 'International' },
-  { value: 'Service Public', label: 'Service Public' },
+  { value: 'Service public', label: 'Service public' },
   { value: 'Recherche', label: 'Recherche' },
   { value: 'Innovation', label: 'Innovation' },
 ];
@@ -42,13 +50,21 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
     pageDescription = "L'ESSG s'engage dans des projets innovants au service du développement durable et de la recherche.",
   } = props;
 
-  const { projets: allProjets, loading, error } = useProjets();
   const [typeFilter, setTypeFilter] = useState('all');
   const [statutFilter, setStatutFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(1);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const { data, loading, error } = usePaginatedProjets(
+    page,
+    6,
+    searchTerm,
+    typeFilter,
+    statutFilter
+  );
+  const projets = data?.data ?? [];
 
   useEffect(() => {
     if (showSearch && searchInputRef.current) {
@@ -56,22 +72,14 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
     }
   }, [showSearch]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, typeFilter, statutFilter]);
+
   const hasActiveFilters = typeFilter !== 'all' || statutFilter !== 'all' || searchTerm !== '';
   const activeFilterCount = (typeFilter !== 'all' ? 1 : 0) + (statutFilter !== 'all' ? 1 : 0);
 
-  const filteredProjets = useMemo(() => {
-    const search = searchTerm.toLowerCase();
-    return allProjets.filter((projet) => {
-      const matchesSearch =
-        projet.titre.toLowerCase().includes(search) ||
-        (projet.description || '').toLowerCase().includes(search);
-      const matchesType = typeFilter === 'all' || projet.type === typeFilter;
-      const matchesStatut = statutFilter === 'all' || projet.statut === statutFilter;
-      return matchesSearch && matchesType && matchesStatut;
-    });
-  }, [allProjets, typeFilter, statutFilter, searchTerm]);
-
-  const resultCount = filteredProjets.length;
+  const resultCount = data?.meta.total ?? 0;
   const resultText = `${resultCount} projet${resultCount > 1 ? 's' : ''}`;
 
   const handleTypeChange = (event: SelectChangeEvent) => {
@@ -125,8 +133,9 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
       : []),
   ];
 
-  const { pageItems, page, totalPages, goToPage, listRef, isChanging } =
-    usePagination(filteredProjets, { pageSize: 9 });
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, typeFilter, statutFilter]);
 
   return (
     <div className="min-h-screen bg-ink-50">
@@ -135,11 +144,6 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
         imageAlt="Projets ESSG"
         title={pageTitle}
         description={pageDescription}
-        stats={[
-          { value: `${allProjets.length}+`, label: 'Projets' },
-          { value: '10+', label: 'Pays' },
-          { value: '50+', label: 'Partenaires' },
-        ]}
       />
 
       <Breadcrumb items={[{ label: 'Projets' }]} />
@@ -183,9 +187,7 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
       >
         <div className="grid gap-4 sm:grid-cols-2">
           <FormControl fullWidth size="small">
-            <InputLabel id="type-label">
-              Type de projet
-            </InputLabel>
+            <InputLabel id="type-label">Type de projet</InputLabel>
             <Select
               labelId="type-label"
               label="Type de projet"
@@ -201,9 +203,7 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
           </FormControl>
 
           <FormControl fullWidth size="small">
-            <InputLabel id="statut-label">
-              Statut
-            </InputLabel>
+            <InputLabel id="statut-label">Statut</InputLabel>
             <Select
               labelId="statut-label"
               label="Statut"
@@ -221,8 +221,8 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
       </FilterToolbar>
 
       {loading && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="section-y-tight">
+          <div className="section-shell">
             <div className="grid gap-8 md:grid-cols-2">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
@@ -243,18 +243,18 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
       )}
 
       {error && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="section-y-tight">
+          <div className="section-shell">
             <div className="text-center">
-              <p className="text-red-600">{error}</p>
+              <p className="text-danger-600">{error}</p>
             </div>
           </div>
         </section>
       )}
 
       {!loading && !error && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="section-y-tight">
+          <div className="section-shell">
             {resultCount === 0 ? (
               <EmptyState
                 icon={<Rocket />}
@@ -263,48 +263,39 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
                 onAction={handleResetFilters}
               />
             ) : (
-              <div ref={listRef} className="scroll-mt-24">
-              {/* Fondu bref au changement de page (§23). */}
-              <div
-                className={cn(
-                  'grid gap-8 md:grid-cols-3',
-                  'transition-opacity duration-[--duration-hover] motion-reduce:transition-none',
-                  isChanging && 'opacity-40',
-                )}
-              >
-                {pageItems.map((projet) => (
-                  <ProjetCard 
-                    key={projet.id} 
-                    projet={{
-                      ...projet,
-                      slug: projet.slug || generateSlug(projet.titre)
-                    }} 
-                  />
-                ))}
-              </div>
+              <div className="scroll-mt-24">
+                <div
+                  className={cn(
+                    'grid gap-8 md:grid-cols-3',
+                    'transition-opacity duration-(--duration-hover) motion-reduce:transition-none'
+                  )}
+                >
+                  {projets.map((projet) => (
+                    <ProjetCard
+                      key={projet.id}
+                      projet={{
+                        ...projet,
+                        slug: projet.slug || generateSlug(projet.titre),
+                      }}
+                    />
+                  ))}
+                </div>
 
-              <Pagination
-                page={page}
-                totalPages={totalPages}
-                onChange={goToPage}
-                ariaLabel="Pagination des projets"
-                className="mt-12"
-              />
-            </div>
+                <Pagination
+                  page={page}
+                  totalPages={data?.meta.totalPages ?? 1}
+                  onChange={(nextPage) => {
+                    setPage(nextPage);
+                    window.scrollTo({ top: 420, behavior: 'smooth' });
+                  }}
+                  ariaLabel="Pagination des projets"
+                  className="mt-12"
+                />
+              </div>
             )}
           </div>
         </section>
       )}
-
-      <CtaSection
-        icon={<GraduationCap />}
-        title="Vous avez un projet de recherche ?"
-        description="Collaborez avec l'ESSG pour vos projets de recherche, d'innovation ou de développement en sciences géomatiques."
-        primaryLabel="Nous contacter"
-        primaryLink="/contact"
-        secondaryLabel="Voir nos formations"
-        secondaryLink="/formations"
-      />
     </div>
   );
 };

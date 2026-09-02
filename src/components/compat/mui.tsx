@@ -1,18 +1,37 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib';
 import { Input } from '../ui/input';
 import { Skeleton as UiSkeleton } from '../ui/skeleton';
 import { Textarea } from '../ui/textarea';
 
-export function Card({ className, children, elevation: _e, sx: _sx, ...props }: React.HTMLAttributes<HTMLDivElement> & { elevation?: number; sx?: unknown }) {
+export function Card({
+  className,
+  children,
+  elevation: _e,
+  sx: _sx,
+  hover,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { elevation?: number; sx?: unknown; hover?: boolean }) {
   return (
-    <div className={cn('rounded-2xl border border-ink-100 bg-white shadow-card', className)} {...props}>
+    <div
+      className={cn(
+        'rounded-2xl border border-ink-100 bg-white shadow-card',
+        'transition-[border-color,box-shadow] duration-(--duration-hover) ease-out',
+        hover && 'hover:border-brand-200 hover:shadow-card-hover',
+        className
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
 }
 
-export function CardContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function CardContent({
+  className,
+  children,
+  ...props
+}: Readonly<React.HTMLAttributes<HTMLDivElement>>) {
   return (
     <div className={cn('p-6', className)} {...props}>
       {children}
@@ -34,7 +53,7 @@ export function IconButton({
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   sx?: unknown;
   size?: string;
-  component?: React.ElementType | string;
+  component?: React.ElementType;
   href?: string;
   to?: string;
   target?: string;
@@ -42,11 +61,11 @@ export function IconButton({
 }) {
   const classes = cn(
     'inline-flex size-9 items-center justify-center rounded-lg text-ink-600 transition-colors hover:bg-ink-50',
-    className,
+    className
   );
-  if (component === 'a' || href) {
+  if (component === 'a' || href || to) {
     return (
-      <a href={href} target={target} rel={rel} className={classes}>
+      <a href={href ?? to} target={target} rel={rel} className={classes}>
         {children}
       </a>
     );
@@ -66,7 +85,7 @@ export function Chip({
   variant: _variant,
   sx: _sx,
   onDelete,
-}: {
+}: Readonly<{
   label?: React.ReactNode;
   className?: string;
   icon?: React.ReactNode;
@@ -74,9 +93,14 @@ export function Chip({
   variant?: string;
   sx?: unknown;
   onDelete?: () => void;
-}) {
+}>) {
   return (
-    <span className={cn('inline-flex items-center gap-1 rounded-full border border-brand-100 bg-brand-50 px-2.5 py-0.5 text-caption font-medium text-brand-800', className)}>
+    <span
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full border border-brand-100 bg-brand-50 px-2.5 py-0.5 text-caption font-medium text-brand-800',
+        className
+      )}
+    >
       {icon}
       {label}
       {onDelete && (
@@ -88,7 +112,7 @@ export function Chip({
   );
 }
 
-export function Divider({ className }: { className?: string }) {
+export function Divider({ className }: Readonly<{ className?: string }>) {
   return <div className={cn('h-px w-full bg-ink-100', className)} />;
 }
 
@@ -98,13 +122,13 @@ export function Skeleton({
   width,
   height,
   sx: _sx,
-}: {
+}: Readonly<{
   className?: string;
   variant?: string;
   width?: string | number;
   height?: string | number;
   sx?: unknown;
-}) {
+}>) {
   return (
     <UiSkeleton
       className={cn(variant === 'text' ? 'h-4' : 'rounded-md', className)}
@@ -113,7 +137,10 @@ export function Skeleton({
   );
 }
 
-export function Tooltip({ children, title }: { children: React.ReactElement; title?: React.ReactNode }) {
+export function Tooltip({
+  children,
+  title,
+}: Readonly<{ children: React.ReactElement; title?: React.ReactNode }>) {
   return (
     <span className="inline-flex" title={typeof title === 'string' ? title : undefined}>
       {children}
@@ -126,17 +153,29 @@ export function Fade({
   children,
 }: {
   in?: boolean;
-  timeout?: number;
   children: React.ReactElement;
 }) {
   return visible ? children : null;
 }
 
-export function FormControl({ children, className, fullWidth, size: _size, required: _required }: React.HTMLAttributes<HTMLDivElement> & { fullWidth?: boolean; size?: string; required?: boolean }) {
+export function FormControl({
+  children,
+  className,
+  fullWidth,
+  size: _size,
+  required: _required,
+}: React.HTMLAttributes<HTMLDivElement> & {
+  fullWidth?: boolean;
+  size?: string;
+  required?: boolean;
+}) {
   return <div className={cn(fullWidth && 'w-full', className)}>{children}</div>;
 }
 
-export function InputLabel({ children, htmlFor }: { children?: React.ReactNode; htmlFor?: string; id?: string; sx?: unknown }) {
+export function InputLabel({
+  children,
+  htmlFor,
+}: Readonly<{ children?: React.ReactNode; htmlFor?: string; id?: string; sx?: unknown }>) {
   return (
     <label htmlFor={htmlFor} className="mb-1.5 block text-small font-medium text-ink-700">
       {children}
@@ -144,7 +183,9 @@ export function InputLabel({ children, htmlFor }: { children?: React.ReactNode; 
   );
 }
 
-export function InputAdornment({ children }: { children?: React.ReactNode; position?: string; sx?: unknown }) {
+export function InputAdornment({
+  children,
+}: Readonly<{ children?: React.ReactNode; position?: string; sx?: unknown }>) {
   return <span className="inline-flex items-center text-ink-400">{children}</span>;
 }
 
@@ -171,7 +212,12 @@ export function TextField({
   size?: string;
   sx?: unknown;
 }) {
-  const inputClass = cn('w-full', fullWidth && 'w-full', InputProps?.startAdornment && 'pl-9', className);
+  const inputClass = cn(
+    'w-full',
+    fullWidth && 'w-full',
+    InputProps?.startAdornment && 'pl-9',
+    className
+  );
   return (
     <div className={cn('space-y-1.5', fullWidth && 'w-full')}>
       {label && <label className="text-small font-medium text-ink-700">{label}</label>}
@@ -182,12 +228,18 @@ export function TextField({
           </span>
         )}
         {multiline ? (
-          <Textarea rows={rows} className={inputClass} {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
+          <Textarea
+            rows={rows}
+            className={inputClass}
+            {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          />
         ) : (
           <Input ref={inputRef} className={inputClass} {...props} />
         )}
         {InputProps?.endAdornment && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2">{InputProps.endAdornment}</span>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2">
+            {InputProps.endAdornment}
+          </span>
         )}
       </div>
     </div>
@@ -203,7 +255,7 @@ export function Select({
   fullWidth,
   name,
   required,
-}: {
+}: Readonly<{
   children?: React.ReactNode;
   value?: string;
   onChange?: (event: { target: { value: string } }) => void;
@@ -215,7 +267,7 @@ export function Select({
   labelId?: string;
   name?: string;
   required?: boolean;
-}) {
+}>) {
   return (
     <label className={cn('block w-full', !fullWidth && className)}>
       {label && <span className="mb-1.5 block text-small font-medium text-ink-700">{label}</span>}
@@ -225,7 +277,7 @@ export function Select({
         value={value ?? ''}
         className={cn(
           'flex h-10 w-full rounded-xl border border-ink-200 bg-white px-3 py-2 text-small text-ink-900',
-          className,
+          className
         )}
         onChange={(event) => onChange?.({ target: { value: event.target.value } })}
       >
@@ -235,7 +287,10 @@ export function Select({
   );
 }
 
-export function MenuItem({ children, value }: { children?: React.ReactNode; value?: string }) {
+export function MenuItem({
+  children,
+  value,
+}: Readonly<{ children?: React.ReactNode; value?: string }>) {
   return <option value={value}>{children}</option>;
 }
 

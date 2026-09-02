@@ -35,7 +35,6 @@ export type ApiErrorKind =
   | 'unauthorized'
   | 'forbidden'
   | 'not_found'
-  /** 409 : la ressource entre en conflit avec une existante (email en double). */
   | 'conflict'
   | 'server'
   | 'unknown';
@@ -47,7 +46,7 @@ export class ApiError extends Error {
 
   constructor(
     message: string,
-    options: { statusCode?: number; kind?: ApiErrorKind; details?: unknown } = {},
+    options: { statusCode?: number; kind?: ApiErrorKind; details?: unknown } = {}
   ) {
     super(message);
     this.name = 'ApiError';

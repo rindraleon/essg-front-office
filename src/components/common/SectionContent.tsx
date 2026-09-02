@@ -1,11 +1,19 @@
 import React from 'react';
-import useReveal from '../../hooks/useReveal';
+import useReveal from '@/hooks/useReveal';
 
 interface SectionContentProps {
   children: React.ReactNode;
+  /** Élément décoratif absolu (ex. fond de particules), ancré à la section. */
+  backgroundContent?: React.ReactNode;
   loading?: boolean;
   error?: string | null;
   isEmpty?: boolean;
+  /**
+   * Si true et que la section n'a aucune donnée à afficher (après chargement
+   * et sans erreur), la section n'est pas rendue du tout (return null).
+   * Permet de ne laisser aucun espace/titre/séparateur dans la page.
+   */
+  hideWhenEmpty?: boolean;
   emptyMessage?: string;
   errorMessage?: string;
   headerContent?: React.ReactNode;
@@ -20,10 +28,12 @@ const SectionContent: React.FC<SectionContentProps> = ({
   loading = false,
   error = null,
   isEmpty = false,
+  hideWhenEmpty = true,
   emptyMessage = 'Aucune donnée disponible.',
   errorMessage = 'Une erreur est survenue.',
   headerContent,
   loadingSkeletons,
+  backgroundContent,
   sectionClassName = '',
   containerClassName = '',
   fluid = false,
@@ -31,24 +41,40 @@ const SectionContent: React.FC<SectionContentProps> = ({
   const revealRef = useReveal<HTMLElement>();
   const wrapperClass = fluid
     ? 'w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12'
-    : 'container mx-auto px-4 sm:px-6 lg:px-8';
+    : 'section-shell';
+
+  // Pas de chargement, pas d'erreur, ET aucune donnée : masquer complètement
+  // la section (aucun DOM, aucun titre, aucun espace résiduel).
+  if (!loading && !error && isEmpty && hideWhenEmpty) {
+    return null;
+  }
+
+  let content: React.ReactNode;
+
+  if (loading) {
+    content = loadingSkeletons;
+  } else if (error) {
+    content = (
+      <div className="section-y-tight text-center">
+        <p className="text-ink-500">{errorMessage}</p>
+      </div>
+    );
+  } else if (isEmpty) {
+    // Fallback : si hideWhenEmpty=false, afficher le message vide existant.
+    content = <div className="section-y-tight text-center text-ink-500">{emptyMessage}</div>;
+  } else {
+    content = children;
+  }
 
   return (
-    <section ref={revealRef} className={`reveal-section ${sectionClassName}`}>
+    <section
+      ref={revealRef}
+      className={`reveal-section ${backgroundContent ? 'relative overflow-hidden' : ''} ${sectionClassName}`}
+    >
+      {backgroundContent}
       <div className={`${wrapperClass} ${containerClassName}`}>
         {headerContent}
-
-        {loading ? (
-          loadingSkeletons
-        ) : error ? (
-          <div className="py-14 text-center">
-            <p className="text-ink-500">{errorMessage}</p>
-          </div>
-        ) : isEmpty ? (
-          <div className="py-14 text-center text-ink-500">{emptyMessage}</div>
-        ) : (
-          children
-        )}
+        {content}
       </div>
     </section>
   );

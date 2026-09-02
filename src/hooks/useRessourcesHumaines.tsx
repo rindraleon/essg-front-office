@@ -1,16 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { ressourceHumaineService } from '../services';
+import { toErrorMessage } from '@/utils';
+import { ressourceHumaineService } from '@/services';
 
-export default function useRessourcesHumaines(page = 1, limit = 10) {
+export default function useRessourcesHumaines(page = 1, limit = 6, search = '', poste = '') {
   const query = useQuery({
-    queryKey: ['ressources-humaines', 'list', page, limit],
-    queryFn: () => ressourceHumaineService.findAll(page, limit),
+    queryKey: ['ressources-humaines', 'list', page, limit, search, poste],
+    queryFn: () => ressourceHumaineService.findAll(page, limit, search, poste),
   });
 
   return {
     data: query.data ?? null,
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
+    error: toErrorMessage(query.error),
     refetch: query.refetch,
   };
 }
@@ -24,7 +25,7 @@ export function useActiveRessourcesHumaines(limit = 100) {
   return {
     ressourcesHumaines: query.data ?? [],
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
+    error: toErrorMessage(query.error),
   };
 }
 
@@ -38,6 +39,6 @@ export function useRessourceHumaineBySlug(slug: string) {
   return {
     ressourceHumaine: query.data ?? null,
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error.message : query.error ? 'Erreur inconnue' : null,
+    error: toErrorMessage(query.error),
   };
 }

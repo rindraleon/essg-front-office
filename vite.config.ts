@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react-swc';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 
-// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
@@ -11,9 +10,21 @@ export default defineConfig(({ mode }) => {
     server: {
       port: Number(env.VITE_PORT),
       host: true,
-      // Autorise les hôtes de prévisualisation distants (environnements de
-      // développement conteneurisés / tunnels), en plus de localhost.
       allowedHosts: true,
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return undefined;
+            if (/node_modules\/(react|react-dom|react-router|react-router-dom)\//.test(id)) return 'vendor-react';
+            if (id.includes('@tanstack/react-query')) return 'vendor-query';
+            if (id.includes('/gsap/')) return 'vendor-motion';
+            if (id.includes('/leaflet/')) return 'vendor-map';
+            return undefined;
+          },
+        },
+      },
     },
     resolve: {
       alias: {

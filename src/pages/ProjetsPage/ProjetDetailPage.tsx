@@ -1,378 +1,269 @@
-import { Card, CardContent } from '@/components/compat/mui';
 import {
   ArrowLeft,
   ArrowUpRight,
+  Banknote,
   Calendar,
+  CheckCircle2,
   Database,
   Flag,
-  GraduationCap,
-  Map,
+  Handshake,
   MapPin,
   Rocket,
-  Banknote,
 } from 'lucide-react';
-import React, { useEffect } from 'react';
-import Button from '@/components/compat/button';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import React, { useEffect, useMemo } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import {
-  CtaSection,
-  EmptyState,
-  PageHero,
   Breadcrumb,
+  DetailHero,
+  EmptyState,
   MapEmbed,
   ProjetGallery,
-} from '../../components';
-import { GREEN } from '../../constants/colors';
-import { useProjetBySlug } from '../../hooks/useProjets';
-import { useTitle } from '../../hooks/useTitle';
-import { getImageUrl } from '../../utils/image.utils';
-import DetailPageSkeleton from '../../components/common/DetailPageSkeleton';
+  DetailPageSkeleton,
+  RevealOnScroll,
+} from '@/components';
+import { useProjetBySlug, useTitle } from '@/hooks';
+import { getImageUrl } from '@/utils';
 
-const getProjetImage = (image: string | undefined, slug: string): string => {
-  if (image) {
-    return getImageUrl(image);
-  }
-  // Images par défaut selon le slug
-  const defaultImages: Record<string, string> = {
+function getProjetImage(image: string | undefined, slug: string): string {
+  if (image) return getImageUrl(image);
+  const defaults: Record<string, string> = {
     international: '1453732638553-7c9b5c6c5c0a',
     'service-public': '1586773867938-d2e2e7e7e7e7',
     recherche: '1532094348800-1c5e8e7e7e7e7',
     innovation: '1518770660439-4636190af475',
   };
-
-  const hash = defaultImages[slug] || '1451187580459-43490279c0fa';
+  const hash = defaults[slug] ?? '1451187580459-43490279c0fa';
   return `https://images.unsplash.com/photo-${hash}?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920`;
-};
+}
 
 const ProjetDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { projet, loading, error } = useProjetBySlug(slug || '');
   const { setTitle } = useTitle();
-  useTitle(projet ? projet.titre : 'Projet | ESSG');
 
   useEffect(() => {
-    if (projet) {
-      setTitle(projet.titre);
-    }
+    if (projet) setTitle(projet.titre);
   }, [projet, setTitle]);
 
-  if (loading) {
-    return <DetailPageSkeleton label="Chargement du projet…" layout="split" />;
-  }
+  const galleryImages = useMemo(() => {
+    if (!projet?.galerie) return [];
+    return projet.galerie.filter((image) => image && image !== projet.image);
+  }, [projet]);
+
+  if (loading) return <DetailPageSkeleton label="Chargement du projet…" layout="split" />;
 
   if (error || !projet) {
     return (
-      <div className="min-h-screen bg-ink-50">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <EmptyState
-            icon={<Rocket />}
-            title="Projet introuvable"
-            description="Le projet que vous recherchez n'existe pas ou a été supprimé."
-            actionLabel="Retour aux projets"
-            onAction={() => window.history.back()}
-          />
-
-          <div className="mt-8 text-center">
-            <Button
-              component={RouterLink}
-              to="/projets"
-              variant="outlined"
-              startIcon={<ArrowLeft className="size-4" />}
-            >
-              Tous les projets
-            </Button>
-          </div>
-        </div>
+      <div className="min-h-screen bg-ink-50 px-5 section-y">
+        <EmptyState
+          icon={<Rocket />}
+          title="Projet introuvable"
+          description="Le projet que vous recherchez n'existe pas ou a été supprimé."
+          actionLabel="Retour aux projets"
+          onAction={() => window.history.back()}
+        />
       </div>
     );
   }
 
-  const imageUrl = getProjetImage(projet.image, projet.slug);
-  const isFinished =
-    projet.statut.toLowerCase() === 'terminé' || projet.statut.toLowerCase() === 'terminee';
+  const coverImage = getProjetImage(projet.image, projet.slug);
+  const locationLabel = projet.location
+    ? `${projet.location.ville}, ${projet.location.pays}`
+    : 'Madagascar';
 
   return (
-    <div className="min-h-screen bg-ink-50">
-      <PageHero
-        image={imageUrl}
-        imageAlt={projet.titre}
+    <div className="min-h-screen bg-gradient-to-b from-ink-50 via-white to-brand-50/30">
+      <DetailHero
+        eyebrow={projet.type || 'Projet ESSG'}
         title={projet.titre}
         description={projet.description}
-        minHeight="50vh"
+        image={coverImage}
+        imageAlt={projet.titre}
+        backTo="/projets"
+        backLabel="Tous les projets"
+        meta={[
+          { icon: Calendar, label: projet.annee },
+          { icon: Flag, label: projet.statut },
+          { icon: MapPin, label: locationLabel },
+        ]}
       />
 
-      {/* Fil d'Ariane */}
       <Breadcrumb items={[{ label: 'Projets', to: '/projets' }, { label: projet.titre }]} />
 
-      {/* Contenu principal */}
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* En-tête avec badges et titre */}
-        <div className="mb-8">
-          <div className="mb-4 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center rounded-full bg-brand-600 px-4 py-2 text-small font-medium text-white shadow-card">
-              {projet.type}
-            </span>
+      <main className="section-shell section-y-tight">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
+          <div className="space-y-7">
+            <RevealOnScroll>
+              <section className="rounded-3xl border border-ink-100 bg-white p-6 shadow-card sm:p-9">
+                <span className="text-caption font-semibold uppercase tracking-[0.14em] text-brand-700">
+                  Le projet
+                </span>
+                <h2 className="mt-3 text-h2 text-ink-950">Contexte et ambition</h2>
+                <p className="mt-5 whitespace-pre-wrap text-body-lg leading-8 text-ink-600">
+                  {projet.description}
+                </p>
+              </section>
+            </RevealOnScroll>
 
-            <span className="inline-flex items-center gap-2 rounded-full border border-ink-100 bg-white px-4 py-2 text-small text-ink-700">
-              <Calendar />
-              {projet.annee}
-            </span>
-
-            <span
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-small font-medium text-white"
-              style={{
-                backgroundColor: isFinished ? '#059669' : '#f59e0b',
-              }}
-            >
-              <Flag />
-              {projet.statut}
-            </span>
-          </div>
-
-          <h1 className="text-h2 text-ink-900">{projet.titre}</h1>
-          <p className="mt-2 text-body text-ink-600">{projet.description}</p>
-        </div>
-
-        {/* Grille principale : sidebar gauche + contenu droit */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Colonne gauche - Sidebar */}
-          <div className="space-y-6 lg:col-span-1">
-            {/* Carte Informations clés */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="mb-5 text-caption font-semibold uppercase tracking-wider text-ink-500">
-                  Informations clés
-                </h3>
-
-                <div className="space-y-5">
-                  {/* Statut */}
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
-                      style={{
-                        backgroundColor: isFinished ? '#d1fae5' : '#fef3c7',
-                      }}
-                    >
-                      <Flag />
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-small text-ink-500">Statut</div>
-                      <span
-                        className="mt-1 inline-block rounded-md px-2 py-0.5 text-caption font-semibold uppercase"
-                        style={{
-                          color: isFinished ? '#059669' : '#d97706',
-                          backgroundColor: isFinished ? '#d1fae5' : '#fef3c7',
-                        }}
+            {projet.objectifs && projet.objectifs.length > 0 && (
+              <RevealOnScroll delay={80}>
+                <section className="rounded-3xl border border-brand-100 bg-brand-50/60 p-6 sm:p-9">
+                  <span className="text-caption font-semibold uppercase tracking-[0.14em] text-brand-700">
+                    Résultats attendus
+                  </span>
+                  <h2 className="mt-3 text-h3 text-ink-950">Objectifs du projet</h2>
+                  <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+                    {projet.objectifs.map((objectif, index) => (
+                      <li
+                        key={objectif}
+                        className="flex items-start gap-3 rounded-2xl border border-brand-100 bg-white p-4"
                       >
-                        {projet.statut}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Année */}
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100">
-                      <Calendar />
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-small text-ink-500">Année de livraison</div>
-                      <div className="mt-0.5 text-body font-semibold text-ink-900">
-                        {projet.annee}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Localisation */}
-                  {projet.location && (
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50">
-                        <MapPin />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-small text-ink-500">Localisation</div>
-                        <div className="mt-0.5 text-body font-semibold text-ink-900">
-                          {projet.location.ville}, {projet.location.pays}
-                        </div>
-                        {projet.location.adresse && (
-                          <div className="mt-0.5 text-small text-ink-500">
-                            {projet.location.adresse}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Budget (optionnel) */}
-                  {projet.budget && (
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-brand-100">
-                        <Banknote />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-small text-ink-500">Budget</div>
-                        <div className="mt-0.5 text-body font-semibold text-ink-900">
-                          {projet.budget}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Sources de données */}
-                  {projet.sources && projet.sources.length > 0 && (
-                    <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-sage-100">
-                        <Database />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-small text-ink-500">Sources de données</div>
-                        <ul className="mt-1.5 space-y-1.5">
-                          {projet.sources.map((source) => (
-                            <li key={`${source.title}-${source.url}`}>
-                              <a
-                                href={source.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group inline-flex max-w-full items-center gap-1.5 rounded-lg border border-ink-100 bg-white px-3 py-2 text-small font-medium text-brand-700 transition-colors hover:border-brand-300 hover:bg-brand-50"
-                              >
-                                <span className="truncate">{source.title}</span>
-                                <ArrowUpRight className="size-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Carte Partenaires */}
-            {projet.partenaires && projet.partenaires.length > 0 && (
-              <Card>
-                <CardContent className="p-6">
-                  <div className="mb-5 flex items-center gap-3">
-                    <div className="h-6 w-1 rounded-full" style={{ backgroundColor: GREEN[600] }} />
-                    <h3 className="text-h5 font-semibold text-ink-900">Partenaires</h3>
-                  </div>
-
-                  <div className="space-y-3">
-                    {projet.partenaires.map((partenaire: string, index: number) => {
-                      // Support des partenaires en string ou objet {nom, type}
-                      const nom = partenaire;
-
-                      return (
-                        <div
-                          key={nom + index}
-                          className="flex items-center gap-3 rounded-xl bg-brand-50/60 ring-1 ring-brand-100/60 p-3"
-                        >
-                          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white shadow-sm">
-                            <GraduationCap />
-                          </div>
-                          <div className="flex-1">
-                            <div className="text-small font-semibold text-ink-900">{nom}</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
+                        <span className="grid size-7 shrink-0 place-items-center rounded-full bg-brand-700 font-tech text-caption text-white">
+                          {index + 1}
+                        </span>
+                        <span className="text-small leading-6 text-ink-700">{objectif}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </RevealOnScroll>
             )}
-          </div>
 
-          {/* Colonne droite - Contenu principal */}
-          <div className="space-y-6 lg:col-span-2">
             {projet.location && (
-              <Card>
-                <CardContent className="p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-100">
-                      <Map />
+              <RevealOnScroll delay={120}>
+                <section className="overflow-hidden rounded-3xl border border-ink-100 bg-white shadow-card">
+                  <div className="flex items-center justify-between gap-4 p-6 sm:p-7">
+                    <div>
+                      <span className="text-caption font-semibold uppercase tracking-[0.14em] text-brand-700">
+                        Implantation
+                      </span>
+                      <h2 className="mt-2 text-h3 text-ink-950">Localisation du projet</h2>
                     </div>
-                    <h3 className="text-h5 font-semibold text-ink-900">Localisation du projet</h3>
+                    <MapPin className="size-7 text-brand-600" />
                   </div>
-
-                  <div className="overflow-hidden rounded-xl border border-ink-100 bg-ink-100 shadow-card">
+                  <div className="border-t border-ink-100">
                     <MapEmbed
                       lat={projet.location.lat}
                       lng={projet.location.lng}
-                      label={`${projet.location.ville}, ${projet.location.pays}`}
+                      label={locationLabel}
                       adresse={projet.location.adresse}
                       zoom="city"
                     />
+                  </div>
+                </section>
+              </RevealOnScroll>
+            )}
+          </div>
 
-                    {/* Étiquette overlay en bas */}
-                    <div className="flex items-center justify-center gap-2 border-t border-ink-100 bg-white px-4 py-3 text-center">
-                      <span
-                        className="h-2 w-2 rounded-full"
-                        style={{ backgroundColor: GREEN[600] }}
-                      />
-                      <span className="text-small font-medium text-ink-900">
-                        {projet.location.adresse ||
-                          `${projet.location.ville}, ${projet.location.pays}`}
-                      </span>
+          <aside className="space-y-5 lg:sticky lg:top-28">
+            <RevealOnScroll variant="fade-right">
+              <section className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card">
+                <h2 className="text-h5 text-ink-950">Informations clés</h2>
+                <dl className="mt-6 space-y-5">
+                  <div className="flex gap-3">
+                    <Flag className="mt-0.5 size-5 text-brand-600" />
+                    <div>
+                      <dt className="text-caption text-ink-400">Statut</dt>
+                      <dd className="font-semibold text-ink-900">{projet.statut}</dd>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Objectifs (si présents) */}
-            {projet.objectifs && projet.objectifs.length > 0 && (
-              <Card>
-                <CardContent className="p-6">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="h-6 w-1 rounded-full" style={{ backgroundColor: GREEN[600] }} />
-                    <h3 className="text-h5 font-semibold text-ink-900">Objectifs du projet</h3>
+                  <div className="flex gap-3">
+                    <Calendar className="mt-0.5 size-5 text-brand-600" />
+                    <div>
+                      <dt className="text-caption text-ink-400">Année</dt>
+                      <dd className="font-semibold text-ink-900">{projet.annee}</dd>
+                    </div>
                   </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {projet.objectifs.map((objectif: string, index: number) => (
-                      <div
-                        key={objectif + index}
-                        className="flex items-start gap-3 rounded-xl border border-ink-100 bg-ink-50/60 p-4"
-                      >
-                        <span
-                          className="mt-1.5 h-2.5 w-2.5 flex-shrink-0 rounded-full"
-                          style={{ backgroundColor: GREEN[600] }}
-                        />
-                        <span className="text-small leading-6 text-ink-700">{objectif}</span>
+                  {projet.budget && (
+                    <div className="flex gap-3">
+                      <Banknote className="mt-0.5 size-5 text-brand-600" />
+                      <div>
+                        <dt className="text-caption text-ink-400">Budget</dt>
+                        <dd className="font-semibold text-ink-900">{projet.budget}</dd>
                       </div>
+                    </div>
+                  )}
+                </dl>
+              </section>
+            </RevealOnScroll>
+
+            {projet.partenaires && projet.partenaires.length > 0 && (
+              <RevealOnScroll variant="fade-right" delay={80}>
+                <section className="rounded-2xl border border-brand-100 bg-brand-50/70 p-6">
+                  <h2 className="flex items-center gap-2 text-h5 text-ink-950">
+                    <Handshake className="size-5 text-brand-700" />
+                    Partenaires
+                  </h2>
+                  <ul className="mt-4 space-y-2">
+                    {projet.partenaires.map((partenaire) => (
+                      <li
+                        key={partenaire}
+                        className="flex items-start gap-2 text-small text-ink-700"
+                      >
+                        <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-brand-600" />
+                        {partenaire}
+                      </li>
                     ))}
-                  </div>
-                </CardContent>
-              </Card>
+                  </ul>
+                </section>
+              </RevealOnScroll>
             )}
 
-            {/* Galerie d'images */}
-            {projet.galerie && projet.galerie.length > 0 && (
-              <ProjetGallery images={projet.galerie} alt={projet.titre} />
+            {projet.sources && projet.sources.length > 0 && (
+              <RevealOnScroll variant="fade-right" delay={140}>
+                <section className="rounded-2xl border border-ink-100 bg-ink-950 p-6 text-white">
+                  <h2 className="flex items-center gap-2 text-h5">
+                    <Database className="size-5 text-brand-300" />
+                    Sources
+                  </h2>
+                  <ul className="mt-4 space-y-2">
+                    {projet.sources.map((source) => (
+                      <li key={`${source.title}-${source.url}`}>
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2.5 text-small text-white/75 hover:bg-white/10 hover:text-white"
+                        >
+                          <span className="truncate">{source.title}</span>
+                          <ArrowUpRight className="size-4 shrink-0 text-brand-300" />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </RevealOnScroll>
             )}
-
-            {/* Bouton retour */}
-            <Button
-              component={RouterLink}
-              to="/projets"
-              variant="outlined"
-              fullWidth
-              startIcon={<ArrowLeft className="size-4" />}
-            >
-              Tous les projets
-            </Button>
-          </div>
+          </aside>
         </div>
-      </div>
+      </main>
 
-      <CtaSection
-        icon={<Rocket />}
-        title="Vous avez un projet de recherche ?"
-        description="Collaborez avec l'ESSG pour vos projets de recherche, d'innovation ou de développement en sciences géomatiques."
-        primaryLabel="Nous contacter"
-        primaryLink="/contact"
-        secondaryLabel="Voir nos formations"
-        secondaryLink="/formations"
-      />
+      {galleryImages.length > 0 && (
+        <section className="border-y border-ink-100 bg-brand-50/55 section-y-tight">
+          <div className="section-shell">
+            <RevealOnScroll className="mb-9 max-w-2xl">
+              <span className="text-caption font-semibold uppercase tracking-[0.14em] text-brand-700">
+                Documentation visuelle
+              </span>
+              <h2 className="mt-3 text-h2 text-ink-950">Galerie du projet</h2>
+              <p className="mt-3 text-ink-500">
+                Les images de la galerie restent distinctes de l’image de couverture.
+              </p>
+            </RevealOnScroll>
+            <ProjetGallery images={galleryImages} alt={projet.titre} />
+          </div>
+        </section>
+      )}
+
+      <div className="section-shell py-10">
+        <Link
+          to="/projets"
+          className="inline-flex items-center gap-2 text-small font-semibold text-brand-700 hover:text-brand-800"
+        >
+          <ArrowLeft className="size-4" />
+          Tous les projets
+        </Link>
+      </div>
     </div>
   );
 };

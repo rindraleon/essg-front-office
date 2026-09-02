@@ -63,19 +63,18 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
   fontSize?: 'small' | 'medium' | 'large' | 'inherit' | number;
 }
 
+const resolveIconSize = (fontSize: IconProps['fontSize'], sx?: IconSx): number => {
+  if (typeof fontSize === 'number') return fontSize;
+  if (fontSize === 'small') return 16;
+  if (fontSize === 'large') return 28;
+  if (typeof sx?.fontSize === 'number') return sx.fontSize;
+  return 20;
+};
+
 const makeIcon =
   (LucideIcon: LucideIcon): React.FC<IconProps> =>
   ({ sx, fontSize, className, style, ...props }) => {
-    const size =
-      typeof fontSize === 'number'
-        ? fontSize
-        : fontSize === 'small'
-          ? 16
-          : fontSize === 'large'
-            ? 28
-            : typeof sx?.fontSize === 'number'
-              ? sx.fontSize
-              : 20;
+    const size = resolveIconSize(fontSize, sx);
 
     return (
       <LucideIcon

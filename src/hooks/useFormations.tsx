@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { formationService } from '../services';
+import { toError } from '@/utils';
+import { formationService } from '@/services';
 
-export default function useFormations(page = 1, limit = 10) {
+export default function useFormations(page = 1, limit = 6) {
   const query = useQuery({
     queryKey: ['formations', 'list', page, limit],
     queryFn: () => formationService.findAll(page, limit),
@@ -10,7 +11,7 @@ export default function useFormations(page = 1, limit = 10) {
   return {
     data: query.data ?? null,
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error : query.error ? new Error('Erreur inconnue') : null,
+    error: toError(query.error),
     refetch: query.refetch,
   };
 }
@@ -24,7 +25,7 @@ export function useFeaturedFormations(limit = 6) {
   return {
     formations: query.data ?? [],
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error : query.error ? new Error('Erreur inconnue') : null,
+    error: toError(query.error),
     refetch: query.refetch,
   };
 }
@@ -39,7 +40,7 @@ export function useFormationBySlug(slug: string) {
   return {
     formation: query.data ?? null,
     loading: query.isLoading,
-    error: query.error instanceof Error ? query.error : query.error ? new Error('Erreur inconnue') : null,
+    error: toError(query.error),
     refetch: query.refetch,
   };
 }

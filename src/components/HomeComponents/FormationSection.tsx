@@ -1,26 +1,24 @@
-import { Clock, GraduationCap } from 'lucide-react';
+import { BookOpen, GraduationCap } from 'lucide-react';
 import { useMemo } from 'react';
-import { getImageUrl } from '../../utils/image.utils';
-import { CARD_WIDTH_CLASS } from '../../constants/layout';
-import { NIVEAU_ORDER } from '../../constants/formation';
-import { SectionHeader, SectionCta, SectionContent, ScrollableCardGrid } from '../../components';
+import { getImageUrl } from '@/utils';
+import { CARD_WIDTH_CLASS, NIVEAU_ORDER } from '@/constants';
+import SectionHeader from '../common/SectionHeader';
+import SectionCta from '../common/SectionCta';
+import SectionContent from '../common/SectionContent';
+import ParticlesBackground from '../animations/ParticlesBackground';
+import ScrollableCardGrid from '../common/ScrollableCardGrid';
 import MediaCard from '../common/MediaCard';
 import FilterButton from '../common/FilterButton';
 import { MediaCardSkeletonGrid } from '../common/MediaCardSkeleton';
-import { useFeaturedFormations } from '../../hooks';
-import useSectionFilters, { type FilterDefinition } from '../../hooks/useSectionFilters';
-import type { FeaturedFormationsSectionProps } from '../../types';
-import type { Formation } from '../../types/formations.types';
+import { useFeaturedFormations } from '@/hooks';
+import useSectionFilters, { type FilterDefinition } from '@/hooks/useSectionFilters';
+import type { FeaturedFormationsSectionProps, Formation } from '@/types';
 
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1523050854058-8df90110a6f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800';
 
 const SECTION_CTA = { label: 'Voir toutes les formations', link: '/formations' } as const;
 
-/**
- * Critères de filtrage. Déclarés hors du composant : une nouvelle référence
- * à chaque rendu invaliderait les `useMemo` du hook de filtrage.
- */
 const FILTERS: FilterDefinition<Formation>[] = [
   {
     key: 'niveau',
@@ -49,22 +47,13 @@ const FormationsSection = ({
     featuredQuery.error instanceof Error ? featuredQuery.error.message : featuredQuery.error;
   const error = propFeaturedFormations ? null : queryError;
 
-  /**
-   * Tri par niveau (§4).
-   *
-   * L'ordre suit la hiérarchie pédagogique (Licence → Master → Doctorat), et
-   * non l'ordre alphabétique qui donnerait « Doctorat, Licence, Master ».
-   * À niveau égal, on retombe sur le titre pour que l'affichage reste
-   * déterministe d'un chargement à l'autre.
-   */
   const sorted = useMemo(() => {
     const rank = (niveau: string) => {
       const index = NIVEAU_ORDER.indexOf(niveau as (typeof NIVEAU_ORDER)[number]);
-      // Un niveau inconnu est placé en fin de liste plutôt qu'en tête.
       return index === -1 ? NIVEAU_ORDER.length : index;
     };
     return [...formations].sort(
-      (a, b) => rank(a.niveau) - rank(b.niveau) || a.titre.localeCompare(b.titre, 'fr'),
+      (a, b) => rank(a.niveau) - rank(b.niveau) || a.titre.localeCompare(b.titre, 'fr')
     );
   }, [formations]);
 
@@ -73,49 +62,46 @@ const FormationsSection = ({
   const count = filtered.length;
   const total = sorted.length;
 
-  /** « 4 formations » ou « 2 sur 4 formations » lorsqu'un filtre est posé. */
   const suffix = total > 1 ? 's' : '';
   const countLabel =
     count === total ? `${total} formation${suffix}` : `${count} sur ${total} formation${suffix}`;
 
   return (
     <SectionContent
+      backgroundContent={<ParticlesBackground />}
       loading={loading}
       error={error}
       isEmpty={!loading && total === 0}
       emptyMessage="Aucune formation disponible pour le moment."
-      headerContent={<SectionHeader title={title} description={description} />}
-      loadingSkeletons={<MediaCardSkeletonGrid count={3} />}
-      sectionClassName="bg-white py-20"
+      headerContent={
+        <SectionHeader eyebrow="Diplômes & Cursus LMD" title={title} description={description} />
+      }
+      loadingSkeletons={<MediaCardSkeletonGrid count={3} layout="home" />}
+      sectionClassName="bg-gradient-to-b from-brand-50/65 via-white to-white section-y"
       fluid
       containerClassName="max-w-none"
     >
       <ScrollableCardGrid
         className="w-full"
         ariaLabel="Formations mises en avant"
-        toolbarStart={
-          <span aria-live="polite">{countLabel}</span>
-        }
-        controls={
-          groups.length > 0 && (
-            <FilterButton groups={groups} onChange={setFilter} onReset={reset} revealOnHover />
-          )
-        }
+        resetKey={groups.map((group) => `${group.key}:${group.value}`).join('|')}
+        toolbarStart={<span aria-live="polite">{countLabel}</span>}
+        controls={<FilterButton groups={groups} onChange={setFilter} onReset={reset} />}
       >
         {filtered.map((formation) => (
           <MediaCard
             key={formation.id}
             className={CARD_WIDTH_CLASS}
+            layout="home"
             to={`/formations/${formation.slug ?? formation.id}`}
             title={formation.titre}
             imageUrl={formation.image ? getImageUrl(formation.image) : FALLBACK_IMAGE}
-            // Le niveau reste visible sur chaque carte (§4).
             badge={formation.niveau || 'Formation'}
-            subtitle={formation.mention || formation.domaine?.[0]}
+            subtitle={formation.duree}
             description={formation.description || "Découvrez cette formation d'excellence."}
             meta={[
-              ...(formation.duree
-                ? [{ icon: <Clock className="size-3.5" />, label: formation.duree }]
+              ...(formation.mention
+                ? [{ icon: <BookOpen className="size-3.5" />, label: formation.mention }]
                 : []),
               ...(formation.credits
                 ? [
@@ -131,7 +117,6 @@ const FormationsSection = ({
         ))}
       </ScrollableCardGrid>
 
-      {/* Filtre trop restrictif : on l'indique plutôt que d'afficher un vide. */}
       {count === 0 && total > 0 && (
         <p className="py-10 text-center text-body text-ink-500">
           Aucune formation ne correspond à ces critères.{' '}

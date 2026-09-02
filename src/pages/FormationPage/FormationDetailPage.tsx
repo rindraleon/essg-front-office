@@ -1,90 +1,79 @@
-import { ArrowLeft, BookOpen, GraduationCap } from 'lucide-react';
+import { Award, BookOpen, Clock, GraduationCap } from 'lucide-react';
 import React, { useEffect } from 'react';
-import Button from '@/components/compat/button';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
-  CtaSection,
-  EmptyState,
-  PageHero,
   Breadcrumb,
+  DetailHero,
+  EmptyState,
   FormationDetailContent,
-} from '../../components';
-import { useFormationBySlug } from '../../hooks';
-import { useTitle } from '../../hooks/useTitle';
-import { getFormationImage } from '../../utils/image.utils';
-import DetailPageSkeleton from '../../components/common/DetailPageSkeleton';
+  DetailPageSkeleton,
+} from '@/components';
+import { useFormationBySlug, useTitle } from '@/hooks';
+import { getFormationImage } from '@/utils';
 
 const FormationDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { formation, loading, error } = useFormationBySlug(slug || '');
   const { setTitle } = useTitle();
-  useTitle(formation ? formation.titre : 'Formation | ESSG');
 
   useEffect(() => {
-    if (formation) {
-      setTitle(formation.titre);
-    }
+    if (formation) setTitle(formation.titre);
   }, [formation, setTitle]);
 
-  if (loading) {
-    return <DetailPageSkeleton label="Chargement de la formation…" layout="split" />;
-  }
+  if (loading) return <DetailPageSkeleton label="Chargement de la formation…" layout="split" />;
 
   if (error || !formation) {
     return (
-      <div className="min-h-screen bg-ink-50">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <EmptyState
-            icon={<BookOpen />}
-            title="Formation introuvable"
-            description="La formation que vous recherchez n'existe pas ou a été supprimée."
-            actionLabel="Retour aux formations"
-            onAction={() => window.history.back()}
-          />
-
-          <div className="mt-8 text-center">
-            <Button
-              component={RouterLink}
-              to="/formations"
-              variant="outlined"
-              startIcon={<ArrowLeft className="size-4" />}
-            >
-              Toutes les formations
-            </Button>
-          </div>
-        </div>
+      <div className="min-h-screen bg-ink-50 px-5 section-y">
+        <EmptyState
+          icon={<BookOpen />}
+          title="Formation introuvable"
+          description="La formation que vous recherchez n'existe pas ou a été supprimée."
+          actionLabel="Retour aux formations"
+          onAction={() => window.history.back()}
+        />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-ink-50">
-      <PageHero
-        image={getFormationImage(formation.image, formation.slug)}
-        imageAlt={formation.titre}
+    <div className="min-h-screen bg-gradient-to-b from-ink-50 via-white to-brand-50/35">
+      <DetailHero
+        eyebrow={formation.mention || 'Formation ESSG'}
         title={formation.titre}
         description={formation.description}
-        minHeight="50vh"
+        image={getFormationImage(formation.image, formation.slug)}
+        imageAlt={formation.titre}
+        backTo="/formations"
+        backLabel="Toutes les formations"
+        meta={[
+          { icon: GraduationCap, label: formation.niveau },
+          { icon: Clock, label: formation.duree },
+          ...(formation.credits ? [{ icon: Award, label: `${formation.credits} crédits` }] : []),
+        ]}
+        actions={
+          <>
+            <a
+              href="#programme"
+              className="inline-flex items-center rounded-full bg-brand-400 px-5 py-2.5 text-small font-bold text-brand-950 hover:bg-brand-300"
+            >
+              Voir le programme
+            </a>
+            {formation.email && (
+              <a
+                href={`mailto:${formation.email}`}
+                className="inline-flex items-center rounded-full border border-white/20 bg-white/[0.08] px-5 py-2.5 text-small font-semibold text-white backdrop-blur-md hover:bg-white/[0.14]"
+              >
+                Contacter la formation
+              </a>
+            )}
+          </>
+        }
       />
-
-      {/* Fil d'Ariane */}
       <Breadcrumb
         items={[{ label: 'Formations', to: '/formations' }, { label: formation.titre }]}
       />
-
-      {/* Contenu principal */}
       <FormationDetailContent formation={formation} />
-
-      {/* Section CTA */}
-      <CtaSection
-        icon={<GraduationCap />}
-        title="Intéressé par cette formation ?"
-        description="Contactez-nous pour obtenir plus d'informations ou postulez dès maintenant pour rejoindre l'ESSG."
-        primaryLabel="Postuler maintenant"
-        primaryLink="/admission"
-        secondaryLabel="Demander des informations"
-        secondaryLink="/contact"
-      />
     </div>
   );
 };

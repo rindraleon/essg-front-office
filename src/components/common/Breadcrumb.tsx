@@ -14,7 +14,7 @@ interface BreadcrumbProps {
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
     <nav aria-label="Fil d'Ariane" className="border-ink-100">
-      <div className="mx-auto flex max-w-7xl items-center gap-1.5 overflow-x-auto scrollbar-hide px-4 py-3 sm:px-6 lg:px-8">
+      <div className="section-shell flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-3">
         <Link
           to="/"
           className="flex shrink-0 items-center gap-1.5 text-small font-medium text-ink-600 transition-colors hover:text-brand-700"

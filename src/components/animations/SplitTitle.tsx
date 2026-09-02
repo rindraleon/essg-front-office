@@ -1,5 +1,5 @@
-import { splitWords } from '../../animations/split';
-import { cn } from '@/lib/utils';
+import { splitWords } from '@/animations';
+import { cn } from '@/lib';
 
 interface SplitTitleProps {
   text: string;

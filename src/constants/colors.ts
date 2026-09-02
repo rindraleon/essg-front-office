@@ -1,64 +1,40 @@
-/**
- * Charte graphique ESSG — inspirée du logo (vert profond + vert sauge).
- *
- * BRAND  : couleur primaire « pin » (vert profond tiré du logo ESSG)
- * SAGE   : couleur secondaire « sauge » (vert sauge du logo ESSG, #98C070)
- * INK    : neutres très sombres pour grandes surfaces (footer, overlays)
- * GREEN  : alias de BRAND — conservé pour la compatibilité du code existant
- */
-
-export const BRAND = {
-  50: '#eff7f4',
-  100: '#d9ece7',
-  200: '#b6d9d0',
-  300: '#8abfb3',
-  400: '#5ba092',
-  500: '#3d8376',
-  600: '#2e6a5f',
-  700: '#27564e',
-  800: '#224640',
-  900: '#1e3a35',
-  950: '#0f211e',
+const BRAND = {
+  50: '#f5faef',
+  100: '#e8f3db',
+  200: '#d3e8bd',
+  300: '#b7d897',
+  400: '#98c070', // vert exact du logo
+  500: '#78a44e',
+  600: '#547c36', // remplissage des CTA — 4.87:1 sur blanc
+  700: '#42612c', // liens et surtitres — 7.05:1 sur blanc
+  800: '#374e27',
+  900: '#2f4123',
+  950: '#17220f',
 } as const;
 
-export const SAGE = {
-  50: '#f7faf1',
-  100: '#eef4df',
-  200: '#dce9c2',
-  300: '#c2d799',
-  400: '#98c070',
-  500: '#7fa757',
-  600: '#648640',
-  700: '#4f6834',
-  800: '#41542d',
-  900: '#374727',
-  950: '#1d2712',
+/** Anthracite ardoise du logo — neutres et surfaces sombres. */
+const INK = {
+  50: '#f6f7f8',
+  100: '#e9ebed',
+  200: '#d4d8dc',
+  300: '#b0b7bd',
+  400: '#848d96',
+  500: '#68727c',
+  600: '#586068', // gris exact du logo
+  700: '#4a5158',
+  800: '#3c4247',
+  900: '#2b3034',
+  950: '#1b1f22',
 } as const;
 
-export const INK = {
-  50: '#f5f7f7',
-  100: '#e5eaeb',
-  200: '#c8d3d5',
-  300: '#9fb1b4',
-  400: '#6f888c',
-  500: '#546c70',
-  600: '#43575b',
-  700: '#38474b',
-  800: '#303c3f',
-  900: '#1e2829',
-  950: '#11191a',
+/** Rouge du logo — réservé aux erreurs et alertes critiques. */
+const DANGER = {
+  50: '#fdecea',
+  100: '#fbd5d1',
+  500: '#e53935',
+  600: '#d32f2f',
+  700: '#c62828',
 } as const;
 
-/**
- * Alias historique : tous les usages existants de `GREEN` utilisent
- * désormais la palette primaire « brand » du design system ESSG.
- */
 export const GREEN = BRAND;
-
-/** Sémantiques partagées (badges, alertes, statuts) */
-export const STATUS = {
-  success: { light: BRAND[50], border: BRAND[200], text: BRAND[700] },
-  warning: { light: '#fef9ec', border: '#f3e2b8', text: '#92600a' },
-  danger: { light: '#fef2f2', border: '#f5c6c6', text: '#b42318' },
-  info: { light: '#eff6ff', border: '#bfdbfe', text: '#1d4ed8' },
-} as const;
+export { BRAND, INK, DANGER };

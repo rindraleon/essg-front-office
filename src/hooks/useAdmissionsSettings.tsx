@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAdmissionSettings } from '../services/settings.service';
+import { getAdmissionSettings } from '@/services';
 
 export function useAdmissionsSettings() {
   return useQuery({

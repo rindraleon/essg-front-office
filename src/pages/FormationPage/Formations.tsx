@@ -1,22 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { GraduationCap, Search, Star, TrendingUp, Users, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import {
-  CtaSection,
   PageHero,
   Breadcrumb,
   FilterToolbar,
   FormationCard,
   Reveal,
-} from '../../components';
-import QueryState from '../../components/common/QueryState';
-import { Input } from '../../components/ui/input';
-import { Select } from '../../components/ui/select';
-import { Skeleton } from '../../components/ui/skeleton';
-import { useFormations } from '../../hooks';
-import type { Formation } from '../../types/formations.types';
+  QueryState,
+} from '@/components';
+import { Input, Select, Skeleton } from '@/components';
+import { useFormations, useTitle } from '@/hooks';
+import type { Formation } from '@/types';
 
-import { SITE_HERO_IMAGE } from '../../constants/media';
-import { useTitle } from '@/hooks/useTitle';
+import { SITE_HERO_IMAGE } from '@/constants';
 
 const HERO_IMAGE = SITE_HERO_IMAGE;
 
@@ -32,13 +28,6 @@ const DOMAINES = [
   { value: 'Géomatique et Applications', label: 'Géomatique et Applications' },
   { value: 'Géomatique et Management', label: 'Géomatique et Management' },
   { value: 'Informatique et Données Spatiales', label: 'Informatique et Données Spatiales' },
-];
-
-const HERO_STATS = [
-  { value: '6+', label: 'Formations', icon: <GraduationCap className="size-7 text-brand-300" /> },
-  { value: '500+', label: 'Étudiants', icon: <Users className="size-7 text-brand-300" /> },
-  { value: '95%', label: "Taux d'insertion", icon: <TrendingUp className="size-7 text-brand-300" /> },
-  { value: '15+', label: 'Partenaires', icon: <Star className="size-7 text-brand-300" /> },
 ];
 
 const FormationsPage = () => {
@@ -87,10 +76,22 @@ const FormationsPage = () => {
       ? [{ key: 'search', label: `Recherche: "${searchTerm}"`, onDelete: () => setSearchTerm('') }]
       : []),
     ...(niveauFilter !== 'all'
-      ? [{ key: 'niveau', label: `Niveau: ${niveauFilter}`, onDelete: () => setNiveauFilter('all') }]
+      ? [
+          {
+            key: 'niveau',
+            label: `Niveau: ${niveauFilter}`,
+            onDelete: () => setNiveauFilter('all'),
+          },
+        ]
       : []),
     ...(domaineFilter !== 'all'
-      ? [{ key: 'domaine', label: `Domaine: ${domaineFilter}`, onDelete: () => setDomaineFilter('all') }]
+      ? [
+          {
+            key: 'domaine',
+            label: `Domaine: ${domaineFilter}`,
+            onDelete: () => setDomaineFilter('all'),
+          },
+        ]
       : []),
   ];
 
@@ -104,7 +105,6 @@ const FormationsPage = () => {
         imageAlt="Campus ESSG"
         title="Nos Formations"
         description="Des programmes d'excellence pour maîtriser les technologies géospatiales et bâtir votre carrière dans un secteur en pleine expansion."
-        stats={HERO_STATS}
         minHeight="70vh"
       />
       <Breadcrumb items={[{ label: 'Formations' }]} />
@@ -148,14 +148,22 @@ const FormationsPage = () => {
         }
       >
         <div className="grid gap-4 md:grid-cols-2">
-          <Select label="Niveau" value={niveauFilter} onChange={(e) => setNiveauFilter(e.target.value)}>
+          <Select
+            label="Niveau"
+            value={niveauFilter}
+            onChange={(e) => setNiveauFilter(e.target.value)}
+          >
             {NIVEAUX.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
               </option>
             ))}
           </Select>
-          <Select label="Domaine" value={domaineFilter} onChange={(e) => setDomaineFilter(e.target.value)}>
+          <Select
+            label="Domaine"
+            value={domaineFilter}
+            onChange={(e) => setDomaineFilter(e.target.value)}
+          >
             {DOMAINES.map((item) => (
               <option key={item.value} value={item.value}>
                 {item.label}
@@ -165,8 +173,8 @@ const FormationsPage = () => {
         </div>
       </FilterToolbar>
 
-      <section className="py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-y-tight">
+        <div className="section-shell">
           <QueryState
             loading={loading}
             error={error}
@@ -178,7 +186,10 @@ const FormationsPage = () => {
             skeleton={
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {Array.from({ length: 6 }).map((_, index) => (
-                  <div key={index} className="overflow-hidden rounded-2xl border border-ink-100 shadow-card">
+                  <div
+                    key={index}
+                    className="overflow-hidden rounded-2xl border border-ink-100 shadow-card"
+                  >
                     <Skeleton className="h-52 w-full rounded-none" />
                     <div className="space-y-3 p-5">
                       <Skeleton className="h-4 w-1/3" />
@@ -199,16 +210,6 @@ const FormationsPage = () => {
           </QueryState>
         </div>
       </section>
-
-      <CtaSection
-        icon={<GraduationCap className="size-12 text-brand-400" />}
-        title="Vous ne trouvez pas la formation idéale ?"
-        description="Contactez-nous pour obtenir des conseils personnalisés sur votre orientation académique et professionnelle."
-        primaryLabel="Demander des conseils"
-        primaryLink="/contact"
-        secondaryLabel="Postuler maintenant"
-        secondaryLink="/admission"
-      />
     </div>
   );
 };

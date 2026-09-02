@@ -1,14 +1,27 @@
 import { useEffect, useRef } from 'react';
-import { revealFrom } from '../animations/presets';
-import { gsap, motion, prefersReducedMotion, registerGsap, ScrollTrigger } from '../lib/gsap';
+import { revealFrom } from '@/animations';
+import { gsap, motion, prefersReducedMotion, registerGsap, ScrollTrigger } from '@/lib';
 
 interface UseScrollAnimationOptions {
   start?: string;
   once?: boolean;
 }
 
+function revealBatch(batch: Element[]): void {
+  gsap.to(batch, {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    duration: motion.duration,
+    stagger: motion.stagger,
+    overwrite: 'auto',
+  });
+  batch.forEach((element) => element.classList.add('is-visible'));
+}
+
 export default function useScrollAnimation<T extends HTMLElement>(
-  options: UseScrollAnimationOptions = {},
+  options: UseScrollAnimationOptions = {}
 ) {
   const ref = useRef<T | null>(null);
   const { start = 'top 88%', once = true } = options;
@@ -35,25 +48,14 @@ export default function useScrollAnimation<T extends HTMLElement>(
       const targets = items.length > 0 ? items : [node];
 
       targets.forEach((target) => {
-        const kind = target.getAttribute('data-gsap');
+        const kind = target.dataset.gsap;
         gsap.set(target, revealFrom(kind));
       });
 
       ScrollTrigger.batch(targets, {
         start,
         once,
-        onEnter: (batch) => {
-          gsap.to(batch, {
-            opacity: 1,
-            x: 0,
-            y: 0,
-            scale: 1,
-            duration: motion.duration,
-            stagger: motion.stagger,
-            overwrite: 'auto',
-          });
-          batch.forEach((el) => el.classList.add('is-visible'));
-        },
+        onEnter: revealBatch,
       });
     }, node);
 

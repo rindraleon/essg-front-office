@@ -2,39 +2,18 @@ import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 
 interface DetailPageSkeletonProps {
-  /**
-   * Message annoncé aux lecteurs d'écran. Le squelette est décoratif ; sans
-   * ce texte, une personne non voyante n'aurait aucune indication que la
-   * page est en cours de chargement.
-   */
   label?: string;
-  /**
-   * `article` : un grand visuel puis une colonne de texte (actualité).
-   * `split`   : un bandeau puis deux colonnes (formation, projet).
-   */
   layout?: 'article' | 'split';
 }
 
-/**
- * Silhouette d'une page de détail pendant le chargement (§7.13).
- *
- * Remplace le spinner centré qui occupait ces pages : un spinner indique
- * qu'il se passe quelque chose, mais ne dit rien de ce qui va arriver.
- * Le squelette reprend le gabarit réel de la page, donc l'utilisateur en
- * comprend la structure avant même que les données arrivent — et le contenu
- * final s'y substitue sans décalage de mise en page.
- */
 const DetailPageSkeleton: React.FC<DetailPageSkeletonProps> = ({
   label = 'Chargement…',
   layout = 'article',
 }) => (
   <div className="min-h-screen bg-ink-50">
-    <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <div className="section-shell section-y">
       <div className="space-y-8">
-        {/* Fil d'Ariane */}
         <Skeleton className="h-4 w-64" />
-
-        {/* Visuel principal */}
         <Skeleton className="h-72 rounded-3xl sm:h-80" />
 
         {layout === 'article' ? (
@@ -61,10 +40,7 @@ const DetailPageSkeleton: React.FC<DetailPageSkeletonProps> = ({
         )}
       </div>
 
-      {/* `role="status"` : le changement est annoncé sans voler le focus. */}
-      <p role="status" className="sr-only">
-        {label}
-      </p>
+      <output className="sr-only">{label}</output>
     </div>
   </div>
 );

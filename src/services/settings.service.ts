@@ -1,5 +1,4 @@
-import { apiClient } from '@/api/client/http';
-import { endpoints } from '@/api/endpoints';
+import { apiClient, endpoints } from '@/api';
 
 export interface AdmissionSettings {
   admissionsOuvertes: boolean;

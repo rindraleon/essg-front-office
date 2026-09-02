@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { createContactMessage } from '../../services/contact.service';
-import type { ContactFormData } from '../../types/contact.types';
+import { createContactMessage } from '@/services';
+import type { ContactFormData } from '@/types';
 
 export function useCreateContact() {
   return useMutation({

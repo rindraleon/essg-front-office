@@ -1,12 +1,15 @@
 import { Calendar, MapPin } from 'lucide-react';
-import type { FeaturedProjetsSectionProps } from '../../types/projets.types';
-import { useProjets } from '../../hooks';
-import useSectionFilters, { type FilterDefinition } from '../../hooks/useSectionFilters';
+import type { FeaturedProjetsSectionProps, ProjetItem } from '@/types';
+import { useProjets } from '@/hooks';
+import useSectionFilters, { type FilterDefinition } from '@/hooks/useSectionFilters';
 import FilterButton from '../common/FilterButton';
-import type { ProjetItem } from '../../types/projets.types';
-import { getImageUrl } from '../../utils/image.utils';
-import { CARD_WIDTH_CLASS } from '../../constants/layout';
-import { SectionHeader, SectionCta, SectionContent, ScrollableCardGrid } from '../../components';
+import { getImageUrl } from '@/utils';
+import { CARD_WIDTH_CLASS } from '@/constants';
+import SectionHeader from '../common/SectionHeader';
+import SectionCta from '../common/SectionCta';
+import SectionContent from '../common/SectionContent';
+import ParticlesBackground from '../animations/ParticlesBackground';
+import ScrollableCardGrid from '../common/ScrollableCardGrid';
 import MediaCard from '../common/MediaCard';
 import { MediaCardSkeletonGrid } from '../common/MediaCardSkeleton';
 
@@ -15,14 +18,6 @@ const FALLBACK_IMAGE =
 
 const SECTION_CTA = { label: 'Découvrir tous nos projets', link: '/projets' } as const;
 
-/**
- * Critères de filtrage (§6), limités aux champs réellement fournis par le
- * backend (`type`, `statut`, `annee` de l'entité Projet).
- *
- * Le partenaire n'est pas proposé : c'est un tableau, donc un projet
- * multi-partenaires appartiendrait à plusieurs valeurs à la fois, ce que le
- * filtre à sélection unique ne sait pas représenter honnêtement.
- */
 const FILTERS: FilterDefinition<ProjetItem>[] = [
   { key: 'type', label: 'Type', accessor: (projet) => projet.type, allLabel: 'Tous' },
   { key: 'statut', label: 'Statut', accessor: (projet) => projet.statut, allLabel: 'Tous' },
@@ -39,39 +34,41 @@ const ProjetsSection = ({
   const count = filtered.length;
   const total = projets.length;
 
-  /** « 4 projets » ou « 2 sur 4 projets » lorsqu'un filtre est posé. */
   const suffix = total > 1 ? 's' : '';
   const countLabel =
     count === total ? `${total} projet${suffix}` : `${count} sur ${total} projet${suffix}`;
 
   return (
     <SectionContent
+      backgroundContent={<ParticlesBackground />}
       loading={loading}
       error={error}
       isEmpty={!loading && total === 0}
       emptyMessage="Aucun projet disponible pour le moment."
-      headerContent={<SectionHeader title={title} description={description} />}
-      loadingSkeletons={<MediaCardSkeletonGrid />}
-      sectionClassName="bg-ink-50 py-20"
+      headerContent={
+        <SectionHeader
+          eyebrow="Impact & Applications Géomatiques"
+          title={title}
+          description={description}
+        />
+      }
+      loadingSkeletons={<MediaCardSkeletonGrid layout="home" />}
+      sectionClassName="bg-gradient-to-b from-brand-50/45 via-ink-50 to-white section-y"
       fluid
       containerClassName="max-w-none"
     >
       <ScrollableCardGrid
         className="w-full"
         ariaLabel="Projets de l'école"
-        toolbarStart={
-          <span aria-live="polite">{countLabel}</span>
-        }
-        controls={
-          groups.length > 0 && (
-            <FilterButton groups={groups} onChange={setFilter} onReset={reset} revealOnHover />
-          )
-        }
+        resetKey={groups.map((group) => `${group.key}:${group.value}`).join('|')}
+        toolbarStart={<span aria-live="polite">{countLabel}</span>}
+        controls={<FilterButton groups={groups} onChange={setFilter} onReset={reset} />}
       >
         {filtered.map((projet) => (
           <MediaCard
             key={projet.id}
             className={CARD_WIDTH_CLASS}
+            layout="home"
             to={`/projets/${projet.slug}`}
             title={projet.titre}
             imageUrl={projet.image ? getImageUrl(projet.image) : FALLBACK_IMAGE}
@@ -86,7 +83,7 @@ const ProjetsSection = ({
                 ? [
                     {
                       icon: <MapPin className="size-3.5" />,
-                      label: `${projet.location.ville}, ${projet.location.pays}`,
+                      label: `${projet.location.adresse}`,
                     },
                   ]
                 : []),

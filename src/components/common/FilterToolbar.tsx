@@ -1,8 +1,8 @@
 import { Filter, Search, X } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
-import type { FilterToolbarProps } from '../../types/common.types';
+import { cn } from '@/lib';
+import type { FilterToolbarProps } from '@/types';
 
 const FilterToolbar = ({
   resultText,
@@ -50,7 +50,7 @@ const FilterToolbar = ({
               aria-expanded={showSearch}
               className={cn(
                 'relative border-ink-200 text-ink-600',
-                showSearch && 'border-brand-200 bg-brand-50 text-brand-700',
+                showSearch && 'border-brand-200 bg-brand-50 text-brand-700'
               )}
             >
               {showSearch ? <X className="size-4" /> : <Search className="size-4" />}
@@ -68,7 +68,7 @@ const FilterToolbar = ({
             aria-expanded={showFilters}
             className={cn(
               'relative border-ink-200 text-ink-600',
-              showFilters && 'border-brand-200 bg-brand-50 text-brand-700',
+              showFilters && 'border-brand-200 bg-brand-50 text-brand-700'
             )}
           >
             {showFilters ? <X className="size-4" /> : <Filter className="size-4" />}

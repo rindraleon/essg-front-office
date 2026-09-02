@@ -1,5 +1,5 @@
 import { Badge } from '../ui/badge';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib';
 
 interface CategoryChipProps {
   category: string;
@@ -8,7 +8,7 @@ interface CategoryChipProps {
 }
 
 const categoryColors: Record<string, string> = {
-  Événement: 'border-sage-200 bg-sage-50 text-sage-800',
+  Événement: 'border-brand-200 bg-brand-50 text-brand-800',
   Partenariat: 'border-amber-200 bg-amber-50 text-amber-800',
   Recherche: 'border-brand-200 bg-brand-50 text-brand-800',
   'Vie Étudiante': 'border-pink-200 bg-pink-50 text-pink-800',
@@ -20,7 +20,7 @@ const CategoryChip = ({ category, size = 'small', className }: CategoryChipProps
       className={cn(
         categoryColors[category] || 'border-indigo-100 bg-indigo-50 text-indigo-800',
         size === 'medium' && 'text-caption px-3 py-1',
-        className,
+        className
       )}
     >
       {category}

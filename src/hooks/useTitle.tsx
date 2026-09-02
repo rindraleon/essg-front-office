@@ -1,5 +1,3 @@
-// src/hooks/useTitle.tsx
-
 import { useEffect, useCallback } from 'react';
 
 export const useTitle = (title?: string) => {

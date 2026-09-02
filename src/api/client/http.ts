@@ -28,9 +28,11 @@ function resolveBaseUrl(): string {
 export const API_BASE_URL = resolveBaseUrl();
 
 function buildUrl(path: string, params?: PaginationParams): string {
-  const url = new URL(
-    path.startsWith('http') ? path : `${API_BASE_URL}${path.startsWith('/') ? path : `/${path}`}`
-  );
+  let resolvedPath = path;
+  if (!path.startsWith('http')) {
+    resolvedPath = path.startsWith('/') ? `${API_BASE_URL}${path}` : `${API_BASE_URL}/${path}`;
+  }
+  const url = new URL(resolvedPath);
   if (params) {
     for (const [key, value] of Object.entries(params)) {
       if (value === undefined || value === null || value === '') continue;
@@ -78,8 +80,6 @@ function toApiErrorFromStatus(status: number, payload: unknown, fallback?: strin
     });
   }
   if (status === 409) {
-    // Doublon détecté par le backend : le message est explicite et destiné
-    // à l'utilisateur, on le transmet sans le remplacer.
     return new ApiError(message || 'Cette valeur est déjà utilisée.', {
       statusCode: status,
       kind: 'conflict',

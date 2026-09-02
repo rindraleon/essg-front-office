@@ -1,24 +1,30 @@
-import { cn } from '@/lib/utils';
-import usePagination from '../../hooks/usePagination';
-import Pagination from '../../components/common/Pagination';
-import { FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Skeleton, TextField } from '@/components/compat/mui';
+import { cn } from '@/lib';
+import { usePaginatedPartenaires, useTitle } from '@/hooks';
+import {
+  Pagination,
+  EmptyState,
+  FilterToolbar,
+  PageHero,
+  Breadcrumb,
+  PartenaireCard,
+} from '@/components';
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  CompatSelect as Select,
+  CompatSkeleton as Skeleton,
+  TextField,
+  type SelectChangeEvent,
+} from '@/components';
 import { Handshake, Search, X } from 'lucide-react';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import type { SelectChangeEvent } from '@/components/compat/mui';
+import { generateSlug } from '@/utils';
+import type { PartenairesPageProps, PartenaireItem } from '@/types';
 
-import CtaSection from '../../components/common/CtaSection';
-import EmptyState from '../../components/common/EmptyState';
-import FilterToolbar from '../../components/common/FilterToolbar';
-import PageHero from '../../components/common/PageHero';
-import Breadcrumb from '../../components/common/Breadcrumb';
-import PartenaireCard from '../../components/PartenaireComponents/PartenaireCard';
-
-import { usePartenaires } from '../../hooks';
-import { generateSlug } from '../../utils/slug.utils';
-import type { PartenairesPageProps, PartenaireItem } from '../../types/partenaire.types';
-
-import { SITE_HERO_IMAGE } from '../../constants/media';
-import { useTitle } from '@/hooks/useTitle';
+import { SITE_HERO_IMAGE } from '@/constants';
 
 const HERO_IMAGE = SITE_HERO_IMAGE;
 
@@ -38,12 +44,13 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
     pageDescription = 'Des collaborations prestigieuses au niveau national et international pour une excellence partagée.',
   } = props;
 
-  const { partenaires, loading, error } = usePartenaires();
   const [typeFilter, setTypeFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(1);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const { data, loading, error } = usePaginatedPartenaires(page, 6, searchTerm, typeFilter);
 
   useEffect(() => {
     if (showSearch && searchInputRef.current) {
@@ -53,29 +60,17 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
 
   const allPartenaires = useMemo<PartenaireItem[]>(
     () =>
-      partenaires.map((partenaire) => ({
+      (data?.data ?? []).map((partenaire) => ({
         ...partenaire,
         slug: partenaire.slug || generateSlug(partenaire.nom),
       })),
-    [partenaires],
+    [data]
   );
 
   const hasActiveFilters = typeFilter !== 'all' || searchTerm !== '';
   const activeFilterCount = typeFilter !== 'all' ? 1 : 0;
 
-  const filteredPartenaires = useMemo(() => {
-    const search = searchTerm.toLowerCase();
-    return allPartenaires.filter((partenaire) => {
-      const matchesSearch =
-        partenaire.nom.toLowerCase().includes(search) ||
-        (partenaire.secteur || '').toLowerCase().includes(search) ||
-        (partenaire.description || '').toLowerCase().includes(search);
-      const matchesType = typeFilter === 'all' || partenaire.type === typeFilter;
-      return matchesSearch && matchesType;
-    });
-  }, [allPartenaires, typeFilter, searchTerm]);
-
-  const resultCount = filteredPartenaires.length;
+  const resultCount = data?.meta.total ?? 0;
   const resultText = `${resultCount} partenaire${resultCount > 1 ? 's' : ''} trouvé${resultCount > 1 ? 's' : ''}`;
 
   const handleTypeChange = (event: SelectChangeEvent) => {
@@ -115,8 +110,9 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
       : []),
   ];
 
-  const { pageItems, page, totalPages, goToPage, listRef, isChanging } =
-    usePagination(filteredPartenaires, { pageSize: 9 });
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, typeFilter]);
 
   return (
     <div className="min-h-screen bg-ink-50">
@@ -125,11 +121,6 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
         imageAlt="Partenaires ESSG"
         title={pageTitle}
         description={pageDescription}
-        stats={[
-          { value: `${allPartenaires.length}+`, label: 'Partenaires' },
-          { value: '30+', label: 'Pays' },
-          { value: '100+', label: 'Projets communs' },
-        ]}
       />
 
       <Breadcrumb items={[{ label: 'Partenaires' }]} />
@@ -175,9 +166,7 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
       >
         <div className="max-w-xs">
           <FormControl fullWidth size="small">
-            <InputLabel id="type-label">
-              Type de partenaire
-            </InputLabel>
+            <InputLabel id="type-label">Type de partenaire</InputLabel>
             <Select
               labelId="type-label"
               label="Type de partenaire"
@@ -195,9 +184,9 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
       </FilterToolbar>
 
       {loading && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <section className="section-y-tight">
+          <div className="section-shell">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card">
                   <div className="mb-4 flex justify-center">
@@ -214,18 +203,18 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
       )}
 
       {error && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="section-y-tight">
+          <div className="section-shell">
             <div className="text-center">
-              <p className="text-red-600">{error}</p>
+              <p className="text-danger-600">{error}</p>
             </div>
           </div>
         </section>
       )}
 
       {!loading && !error && (
-        <section className="py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="section-y-tight">
+          <div className="section-shell">
             {resultCount === 0 ? (
               <EmptyState
                 icon={<Handshake />}
@@ -234,41 +223,36 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
                 onAction={handleResetFilters}
               />
             ) : (
-              <div ref={listRef} className="scroll-mt-24">
-              {/* Fondu bref au changement de page (§23). */}
-              <div
-                className={cn(
-                  'grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-                  'transition-opacity duration-[--duration-hover] motion-reduce:transition-none',
-                  isChanging && 'opacity-40',
-                )}
-              >
-                {pageItems.map((partenaire) => (
-                  <PartenaireCard key={partenaire.slug || partenaire.id} partenaire={partenaire} />
-                ))}
-              </div>
+              <div className="scroll-mt-24">
+                <div
+                  className={cn(
+                    'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
+                    'transition-opacity duration-(--duration-hover) motion-reduce:transition-none'
+                  )}
+                >
+                  {allPartenaires.map((partenaire) => (
+                    <PartenaireCard
+                      key={partenaire.slug || partenaire.id}
+                      partenaire={partenaire}
+                    />
+                  ))}
+                </div>
 
-              <Pagination
-                page={page}
-                totalPages={totalPages}
-                onChange={goToPage}
-                ariaLabel="Pagination des partenaires"
-                className="mt-12"
-              />
-            </div>
+                <Pagination
+                  page={page}
+                  totalPages={data?.meta.totalPages ?? 1}
+                  onChange={(nextPage) => {
+                    setPage(nextPage);
+                    window.scrollTo({ top: 420, behavior: 'smooth' });
+                  }}
+                  ariaLabel="Pagination des partenaires"
+                  className="mt-12"
+                />
+              </div>
             )}
           </div>
         </section>
       )}
-
-      <CtaSection
-        icon={<Handshake />}
-        title="Devenir partenaire de l'ESSG"
-        description="Rejoignez notre réseau de partenaires prestigieux et contribuez à former les talents de demain."
-        primaryLabel="Contactez-nous"
-        primaryLink="partenariats@essg.mg"
-        primaryIsMailto
-      />
     </div>
   );
 };

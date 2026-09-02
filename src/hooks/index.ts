@@ -1,23 +1,30 @@
-export { default as useScrollToTop } from './useScrollToTop';
-export { default as useDebounce } from './useDebounce';
-export { default as useReveal } from './useReveal';
-export { default as useGsapReveal } from './useGsapReveal';
-export { default as useGsapHero } from './useGsapHero';
-export { default as useGsap } from './useGsap';
-export { default as useScrollAnimation } from './useScrollAnimation';
-export { default as useHeaderScroll } from './useHeaderScroll';
-export { default as useFormations } from './useFormations';
-export { useFeaturedFormations } from './useFormations';
-export { useFormationBySlug } from './useFormations';
-export { default as useActualites } from './useActualites';
-export { useRecentActualites } from './useActualites';
-export { useActualiteBySlug } from './useActualites';
-export { default as useRessourcesHumaines } from './useRessourcesHumaines';
-export { useActiveRessourcesHumaines } from './useRessourcesHumaines';
-export { useRessourceHumaineBySlug } from './useRessourcesHumaines';
-export { default as usePartenaires } from './usePartenaires';
-export { usePartenaireBySlug } from './usePartenaires';
-export { default as useProjets } from './useProjets';
-export { useProjetBySlug } from './useProjets';
+export { useCreateContact } from './mutations/useCreateContact';
+export { useRecentActualites, useActualiteBySlug, default as useActualites } from './useActualites';
 export { useAdmissionsSettings, useAdmissionsOuvertes } from './useAdmissionsSettings';
-export { useCreateAdmission, useCreateContact } from './mutations';
+export {
+  useFeaturedFormations,
+  useFormationBySlug,
+  default as useFormations,
+} from './useFormations';
+export { default as useGsapHero } from './useGsapHero';
+export { default as useGsapReveal } from './useGsapReveal';
+export { default as useHeaderScroll } from './useHeaderScroll';
+export { usePagination } from './usePagination';
+export {
+  usePaginatedPartenaires,
+  usePartenaireBySlug,
+  default as usePartenaires,
+} from './usePartenaires';
+export { usePaginatedProjets, useProjetBySlug, default as useProjets } from './useProjets';
+export {
+  useActiveRessourcesHumaines,
+  useRessourceHumaineBySlug,
+  default as useRessourcesHumaines,
+} from './useRessourcesHumaines';
+export { default as useReveal } from './useReveal';
+export type { RevealOptions } from './useReveal';
+export { default as useScrollAnimation } from './useScrollAnimation';
+export { default as useScrollToTop } from './useScrollToTop';
+export { ALL, useSectionFilters } from './useSectionFilters';
+export type { FilterDefinition } from './useSectionFilters';
+export { useTitle } from './useTitle';

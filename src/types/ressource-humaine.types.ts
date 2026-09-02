@@ -1,4 +1,3 @@
-/** Une ligne d'expérience professionnelle du parcours. */
 export interface ExperienceProfessionnelle {
   poste: string;
   organisation?: string;
@@ -19,11 +18,6 @@ export interface RessourceHumaine {
   actif: boolean;
   ordre: number;
 
-  /* ── Parcours structuré ──
-     Ces champs sont renvoyés par l'API depuis l'ajout de l'import de CV.
-     Ils manquaient au type frontend, si bien que la page de détail ne
-     pouvait pas les exploiter : les données arrivaient mais restaient
-     invisibles. */
   experiences?: ExperienceProfessionnelle[];
   formations?: string[];
   diplomes?: string[];
