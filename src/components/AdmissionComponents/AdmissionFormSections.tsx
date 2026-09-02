@@ -1,4 +1,4 @@
-import { Info, AlertCircle } from 'lucide-react';
+import { Info } from 'lucide-react';
 import {
   ADMISSION_LEVELS,
   BAC_CATEGORIES,
@@ -7,6 +7,9 @@ import {
   type BacSeriesOption,
 } from '@/config';
 import type { AdmissionFormData } from '@/types';
+import { FIELD_LIMITS } from '@/validation';
+import { FormFieldError } from '../ui/field-error';
+import { fieldA11yProps } from '@/utils';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select } from '../ui/select';
@@ -14,13 +17,9 @@ import { Select } from '../ui/select';
 type Errors = Record<string, string | undefined>;
 type ChangeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 
-const ErrorText = ({ errors, name }: { errors: Errors; name: string }) =>
-  errors[name] ? (
-    <p role="alert" className="mt-1 flex items-center gap-1.5 text-caption text-danger-600">
-      <AlertCircle aria-hidden="true" className="size-3.5 shrink-0" />
-      {errors[name]}
-    </p>
-  ) : null;
+const ErrorText = ({ errors, name }: { errors: Errors; name: string }) => (
+  <FormFieldError id={`${name}-error`} error={errors[name]} />
+);
 
 const Field = ({
   label,
@@ -45,8 +44,41 @@ const Field = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      {...fieldA11yProps(String(name), errors[name])}
       {...props}
     />
+    <ErrorText errors={errors} name={name} />
+  </div>
+);
+
+const SelectField = ({
+  name,
+  label,
+  value,
+  onChange,
+  errors,
+  children,
+  ...props
+}: {
+  name: keyof AdmissionFormData;
+  label: string;
+  value: string;
+  onChange: ChangeHandler;
+  errors: Errors;
+  children: React.ReactNode;
+} & Omit<React.ComponentProps<'select'>, 'name' | 'value' | 'onChange' | 'children'>) => (
+  <div>
+    <Select
+      id={name}
+      name={name}
+      label={label}
+      value={value}
+      onChange={onChange}
+      {...fieldA11yProps(String(name), errors[name])}
+      {...props}
+    >
+      {children}
+    </Select>
     <ErrorText errors={errors} name={name} />
   </div>
 );
@@ -91,6 +123,7 @@ export function PersonalInformation({
           errors={errors}
           autoComplete="family-name"
           placeholder="Ex : RAKOTO"
+          maxLength={FIELD_LIMITS.nameMaxLength}
           required
         />
         <Field
@@ -101,7 +134,7 @@ export function PersonalInformation({
           errors={errors}
           autoComplete="given-name"
           placeholder="Ex : Jean Pierre"
-          
+          maxLength={FIELD_LIMITS.nameMaxLength}
         />
         <Field
           label="Date de naissance *"
@@ -119,6 +152,8 @@ export function PersonalInformation({
           value={data.lieuNaissance}
           onChange={onChange}
           errors={errors}
+          placeholder="Ex : Antananarivo"
+          maxLength={FIELD_LIMITS.placeMaxLength}
           required
         />
         <Field
@@ -128,17 +163,21 @@ export function PersonalInformation({
           onChange={onChange}
           errors={errors}
           autoComplete="country-name"
+          maxLength={FIELD_LIMITS.nameMaxLength}
           required
         />
-        <div>
-          <Select name="sexe" label="Sexe *" value={data.sexe} onChange={onChange} required>
-            <option value="">Choisir</option>
-            <option value="feminin">Féminin</option>
-            <option value="masculin">Masculin</option>
-            <option value="autre">Autre / préfère ne pas préciser</option>
-          </Select>
-          <ErrorText errors={errors} name="sexe" />
-        </div>
+        <SelectField
+          name="sexe"
+          label="Sexe *"
+          value={data.sexe}
+          onChange={onChange}
+          errors={errors}
+        >
+          <option value="">Choisir</option>
+          <option value="feminin">Féminin</option>
+          <option value="masculin">Masculin</option>
+          <option value="autre">Autre / préfère ne pas préciser</option>
+        </SelectField>
         <Field
           label="Téléphone *"
           name="telephone"
@@ -147,7 +186,10 @@ export function PersonalInformation({
           onBlur={() => onDuplicateCheck?.('telephone')}
           errors={errors}
           type="tel"
+          inputMode="tel"
           autoComplete="tel"
+          placeholder="Ex : 032 12 345 67"
+          maxLength={FIELD_LIMITS.phoneMaxLength}
           required
         />
         <Field
@@ -159,6 +201,7 @@ export function PersonalInformation({
           errors={errors}
           type="email"
           autoComplete="email"
+          maxLength={FIELD_LIMITS.emailMaxLength}
           required
         />
         <div className="sm:col-span-2">
@@ -170,6 +213,7 @@ export function PersonalInformation({
             errors={errors}
             autoComplete="street-address"
             placeholder="Quartier, ville, région..."
+            maxLength={FIELD_LIMITS.addressMaxLength}
             required
           />
         </div>
@@ -196,43 +240,35 @@ export function BacInformation({
     <section>
       <AdmissionSectionTitle number={2}>Informations sur le Baccalauréat</AdmissionSectionTitle>
       <div className="grid items-start gap-4 sm:grid-cols-2">
-        <div>
-          <Select
-            name="bacType"
-            label="Type de baccalauréat *"
-            value={data.bacType}
-            onChange={onChange}
-            required
-          >
-            <option value="">Choisir un type</option>
-            {BAC_TYPES.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.label}
-              </option>
-            ))}
-          </Select>
-          <ErrorText errors={errors} name="bacType" />
-        </div>
-        <div>
-          <Select
-            name="bacSerie"
-            label="Série du baccalauréat *"
-            value={data.bacSerie}
-            onChange={onChange}
-            disabled={!data.bacType}
-            required
-          >
-            <option value="">
-              {data.bacType ? 'Choisir une série' : "Choisir d'abord le type"}
+        <SelectField
+          name="bacType"
+          label="Type de baccalauréat *"
+          value={data.bacType}
+          onChange={onChange}
+          errors={errors}
+        >
+          <option value="">Choisir un type</option>
+          {BAC_TYPES.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.label}
             </option>
-            {series.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.label}
-              </option>
-            ))}
-          </Select>
-          <ErrorText errors={errors} name="bacSerie" />
-        </div>
+          ))}
+        </SelectField>
+        <SelectField
+          name="bacSerie"
+          label="Série du baccalauréat *"
+          value={data.bacSerie}
+          onChange={onChange}
+          errors={errors}
+          disabled={!data.bacType}
+        >
+          <option value="">{data.bacType ? 'Choisir une série' : "Choisir d'abord le type"}</option>
+          {series.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.label}
+            </option>
+          ))}
+        </SelectField>
         {category && (
           <div className="flex items-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-small text-brand-800 sm:col-span-2">
             <Info className="size-4" />
@@ -245,7 +281,9 @@ export function BacInformation({
           value={data.numeroBaccalaureat}
           onChange={onChange}
           errors={errors}
-          placeholder="Ex : BAC-2026-012345"
+          placeholder="Ex : 123456789"
+          inputMode="numeric"
+          maxLength={FIELD_LIMITS.bacNumberMaxLength}
           required
         />
         <Field
@@ -254,10 +292,9 @@ export function BacInformation({
           value={data.bacAnneeObtention}
           onChange={onChange}
           errors={errors}
-          type="number"
+          inputMode="numeric"
           placeholder="Ex : 2024"
-          min={1980}
-          max={new Date().getFullYear()}
+          maxLength={4}
           required
         />
         <div className="sm:col-span-2">
@@ -268,6 +305,7 @@ export function BacInformation({
             onChange={onChange}
             errors={errors}
             placeholder="Ex : Lycée Rabearivelo, Antananarivo"
+            maxLength={255}
             required
           />
         </div>
@@ -296,6 +334,7 @@ export function PreviousEducationInformation({
           value={data.ancienEtablissement}
           onChange={onChange}
           errors={errors}
+          maxLength={255}
           required
         />
         <Field
@@ -304,6 +343,7 @@ export function PreviousEducationInformation({
           value={data.numeroMatricule}
           onChange={onChange}
           errors={errors}
+          maxLength={10}
           required
         />
         <Field
@@ -313,6 +353,7 @@ export function PreviousEducationInformation({
           onChange={onChange}
           errors={errors}
           placeholder="Ex : Géographie"
+          maxLength={100}
         />
         <Field
           label="Année d'obtention de la Licence"
@@ -320,9 +361,9 @@ export function PreviousEducationInformation({
           value={data.licenceAnneeObtention}
           onChange={onChange}
           errors={errors}
-          type="number"
-          min={1980}
-          max={new Date().getFullYear()}
+          inputMode="numeric"
+          placeholder="Ex : 2024"
+          maxLength={4}
         />
       </div>
     </section>
@@ -341,12 +382,12 @@ export function LevelSelection({
   return (
     <section>
       <AdmissionSectionTitle number={3}>Formation souhaitée à l’ESSG</AdmissionSectionTitle>
-      <Select
+      <SelectField
         name="niveau"
         label="Niveau souhaité *"
         value={data.niveau}
         onChange={onChange}
-        required
+        errors={errors}
       >
         <option value="">Choisir un niveau</option>
         {ADMISSION_LEVELS.map((level) => (
@@ -354,8 +395,7 @@ export function LevelSelection({
             {level.label}
           </option>
         ))}
-      </Select>
-      <ErrorText errors={errors} name="niveau" />
+      </SelectField>
     </section>
   );
 }
@@ -378,46 +418,40 @@ export function FormationSelection({
     <section>
       <AdmissionSectionTitle>Mention et parcours éligibles</AdmissionSectionTitle>
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <Select
-            name="mention"
-            label="Mention éligible *"
-            value={data.mention}
-            onChange={onChange}
-            disabled={!hasProfile || mentions.length === 0}
-            required
-          >
-            <option value="">
-              {hasProfile ? 'Choisir une mention' : "Renseigner d'abord le Bac et le niveau"}
+        <SelectField
+          name="mention"
+          label="Mention éligible *"
+          value={data.mention}
+          onChange={onChange}
+          errors={errors}
+          disabled={!hasProfile || mentions.length === 0}
+        >
+          <option value="">
+            {hasProfile ? 'Choisir une mention' : "Renseigner d'abord le Bac et le niveau"}
+          </option>
+          {mentions.map((program) => (
+            <option key={program.mentionId} value={program.mentionId}>
+              {program.mentionLabel}
             </option>
-            {mentions.map((program) => (
-              <option key={program.mentionId} value={program.mentionId}>
-                {program.mentionLabel}
-              </option>
-            ))}
-          </Select>
-          <ErrorText errors={errors} name="mention" />
-        </div>
-        <div>
-          <Select
-            name="parcours"
-            label="Parcours *"
-            value={data.parcours}
-            onChange={onChange}
-            disabled={!data.mention}
-            required
-          >
-            <option value="">
-              {data.mention ? 'Choisir un parcours' : "Choisir d'abord une mention"}
+          ))}
+        </SelectField>
+        <SelectField
+          name="parcours"
+          label="Parcours *"
+          value={data.parcours}
+          onChange={onChange}
+          errors={errors}
+          disabled={!data.mention}
+        >
+          <option value="">
+            {data.mention ? 'Choisir un parcours' : "Choisir d'abord une mention"}
+          </option>
+          {parcours.map((program) => (
+            <option key={program.parcoursId} value={program.parcoursId}>
+              {program.parcoursLabel}
             </option>
-            {parcours.map((program) => (
-              <option key={program.parcoursId} value={program.parcoursId}>
-                {program.parcoursLabel}
-              </option>
-            ))}
-          </Select>
-          <ErrorText errors={errors} name="parcours" />
-        </div>
+          ))}
+        </SelectField>
         {hasProfile && mentions.length === 0 && (
           <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-small text-amber-800 sm:col-span-2">
             Aucune formation n'est actuellement ouverte pour cette catégorie de baccalauréat et ce

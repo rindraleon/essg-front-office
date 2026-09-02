@@ -213,7 +213,9 @@ export const StaggerReveal: React.FC<StaggerProps> = ({
     <Tag className={className}>
       {items.map((child) => {
         const itemKey =
-          React.isValidElement(child) && child.key ? String(child.key) : `${uid}-item-${itemCounter++}`;
+          React.isValidElement(child) && child.key
+            ? String(child.key)
+            : `${uid}-item-${itemCounter++}`;
 
         const index = itemCounter - 1;
 

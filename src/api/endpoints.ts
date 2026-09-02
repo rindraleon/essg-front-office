@@ -20,6 +20,7 @@ export const endpoints = {
   staffBySlug: (slug: string) => `/ressources-humaines/slug/${slug}`,
   staffSearch: '/ressources-humaines/search',
   messages: '/messages',
+  verifyEmail: '/messages/verify-email',
   admissions: '/admissions',
   admissionsCheckDuplicate: '/admissions/check-duplicate',
   settingsPublic: '/settings/public',

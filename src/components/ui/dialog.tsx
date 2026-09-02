@@ -58,7 +58,12 @@ interface DialogContentProps extends React.DialogHTMLAttributes<HTMLDialogElemen
   size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-function DialogContent({ className, size = 'md', children, ...props }: Readonly<DialogContentProps>) {
+function DialogContent({
+  className,
+  size = 'md',
+  children,
+  ...props
+}: Readonly<DialogContentProps>) {
   const sizeClass = {
     sm: 'max-w-sm',
     md: 'max-w-lg',
@@ -149,7 +154,10 @@ function DialogTitle({
   );
 }
 
-function DialogDescription({ className, ...props }: Readonly<React.HTMLAttributes<HTMLParagraphElement>>) {
+function DialogDescription({
+  className,
+  ...props
+}: Readonly<React.HTMLAttributes<HTMLParagraphElement>>) {
   return <p className={cn('mt-1 text-small text-ink-500', className)} {...props} />;
 }
 
