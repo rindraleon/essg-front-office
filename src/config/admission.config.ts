@@ -1,53 +1,88 @@
-export const ADMISSION_LEVELS = [
-  { id: 'licence', label: 'Licence' },
-  { id: 'master', label: 'Master' },
-] as const;
 
-export const BAC_CATEGORIES = {
-  scientifique: { id: 'scientifique', label: 'Scientifique' },
-  litteraire: { id: 'litteraire', label: 'Littéraire' },
-  technologique: { id: 'technologique', label: 'Technologique' },
-  ose: { id: 'ose', label: 'OSE' },
+export const ADMISSION_CONFIG = {
+  bac: {
+    types: [
+      {
+        value: 'general',
+        label: 'Baccalauréat Général',
+        series: [
+          { value: 'a1', label: 'Série A1', category: 'litteraire' },
+          { value: 'a2', label: 'Série A2', category: 'litteraire' },
+          { value: 'c', label: 'Série C', category: 'scientifique' },
+          { value: 'd', label: 'Série D', category: 'scientifique' },
+          { value: 'l', label: 'Série L', category: 'litteraire' },
+          { value: 's', label: 'Série S', category: 'scientifique' },
+          { value: 'ose', label: 'Série OSE', category: 'ose' },
+        ],
+      },
+      {
+        value: 'technologique',
+        label: 'Baccalauréat Technique',
+        series: [
+          { value: 'tgc', label: 'TGC — Génie Civil', category: 'technologique' },
+          { value: 'tgi', label: 'TGI — Industriel', category: 'technologique' },
+          { value: 'tter', label: 'TTER — Tertiaire', category: 'technologique' },
+        ],
+      },
+    ],
+  },
+  levels: [
+    { value: 'licence', label: 'Licence' },
+    { value: 'master', label: 'Master' },
+  ],
+  categories: {
+    scientifique: { value: 'scientifique', label: 'Scientifique' },
+    litteraire: { value: 'litteraire', label: 'Littéraire' },
+    technologique: { value: 'technologique', label: 'Technologique' },
+    ose: { value: 'ose', label: 'OSE' },
+  },
+  programs: [
+    {
+      mention: 'geoinformatique',
+      mentionLabel: 'Géoinformatique',
+      parcours: [{ value: 'geomatique-teledetection', label: 'Géomatique et Télédétection' }],
+      categories: ['scientifique', 'technologique'],
+    },
+    {
+      mention: 'geomatique-applications',
+      mentionLabel: 'Géomatique et Applications',
+      parcours: [
+        { value: 'geomatique-geologie-economique', label: 'Géomatique et Géologie économique' },
+        { value: 'geomatique-agriculture-durable', label: 'Géomatique et Agriculture durable' },
+        {
+          value: 'geomatique-ecosystemes',
+          label: 'Géomatique, Écosystèmes terrestres et aquatiques',
+        },
+      ],
+      categories: ['scientifique', 'technologique'],
+    },
+    {
+      mention: 'geomatique-management',
+      mentionLabel: 'Géomatique et Management',
+      parcours: [
+        {
+          value: 'geomatique-communication-marketing',
+          label: 'Géomatique, Communication et Marketing',
+        },
+        {
+          value: 'geomatique-genre-inclusion-developpement',
+          label: 'Géomatique, Genre, Inclusion et Développement durable',
+        },
+      ],
+      categories: ['scientifique', 'litteraire', 'technologique', 'ose'],
+    },
+  ],
 } as const;
 
-export type BacCategoryId = keyof typeof BAC_CATEGORIES;
-export type BacTypeId = 'general' | 'technologique';
-export type AdmissionLevelId = (typeof ADMISSION_LEVELS)[number]['id'];
+export type BacCategoryId = keyof typeof ADMISSION_CONFIG.categories;
+export type BacTypeId = (typeof ADMISSION_CONFIG.bac.types)[number]['value'];
+export type AdmissionLevelId = (typeof ADMISSION_CONFIG.levels)[number]['value'];
 
 export type BacSeriesOption = {
   id: string;
   label: string;
   categoryId: BacCategoryId;
 };
-
-export const BAC_TYPES: ReadonlyArray<{
-  id: BacTypeId;
-  label: string;
-  series: readonly BacSeriesOption[];
-}> = [
-  {
-    id: 'general',
-    label: 'Général',
-    series: [
-      { id: 'a1', label: 'Série A1', categoryId: 'litteraire' },
-      { id: 'a2', label: 'Série A2', categoryId: 'litteraire' },
-      { id: 'c', label: 'Série C', categoryId: 'scientifique' },
-      { id: 'd', label: 'Série D', categoryId: 'scientifique' },
-      { id: 'l', label: 'Série L', categoryId: 'litteraire' },
-      { id: 's', label: 'Série S', categoryId: 'scientifique' },
-      { id: 'ose', label: 'Série OSE', categoryId: 'ose' },
-    ],
-  },
-  {
-    id: 'technologique',
-    label: 'Technologique',
-    series: [
-      { id: 'tgc', label: 'TGC — Génie Civil', categoryId: 'technologique' },
-      { id: 'tgi', label: 'TGI — Industriel', categoryId: 'technologique' },
-      { id: 'tter', label: 'TTER — Tertiaire', categoryId: 'technologique' },
-    ],
-  },
-];
 
 export type AdmissionProgram = {
   id: string;
@@ -59,51 +94,41 @@ export type AdmissionProgram = {
   allowedBacCategories: readonly BacCategoryId[];
 };
 
-const PROGRAM_TEMPLATES = [
-  {
-    mentionId: 'geoinformatique',
-    mentionLabel: 'Géoinformatique',
-    parcours: [{ id: 'geomatique-teledetection', label: 'Géomatique et Télédétection' }],
-    categories: ['scientifique', 'technologique', 'ose'] as const,
-  },
-  {
-    mentionId: 'geomatique-applications',
-    mentionLabel: 'Géomatique et Applications',
-    parcours: [
-      { id: 'geomatique-geologie-economique', label: 'Géomatique et Géologie économique' },
-      { id: 'geomatique-agriculture-durable', label: 'Géomatique et Agriculture durable' },
-      {
-        id: 'geomatique-ecosystemes',
-        label: 'Géomatique, Écosystèmes terrestres et aquatiques',
-      },
-    ],
-    categories: ['scientifique', 'technologique', 'ose'] as const,
-  },
-  {
-    mentionId: 'geomatique-management',
-    mentionLabel: 'Géomatique et Management',
-    parcours: [
-      {
-        id: 'geomatique-communication-marketing',
-        label: 'Géomatique, Communication et Marketing',
-      },
-      {
-        id: 'geomatique-genre-inclusion-developpement',
-        label: 'Géomatique, Genre, Inclusion et Développement durable',
-      },
-    ],
-    categories: ['scientifique', 'litteraire', 'technologique', 'ose'] as const,
-  },
-] as const;
+export const ADMISSION_LEVELS = ADMISSION_CONFIG.levels.map(({ value, label }) => ({
+  id: value,
+  label,
+})) as Array<{ id: AdmissionLevelId; label: string }>;
+
+export const BAC_CATEGORIES: Record<BacCategoryId, { id: BacCategoryId; label: string }> =
+  Object.fromEntries(
+    (Object.keys(ADMISSION_CONFIG.categories) as BacCategoryId[]).map((key) => [
+      key,
+      { id: key, label: ADMISSION_CONFIG.categories[key].label },
+    ])
+  ) as Record<BacCategoryId, { id: BacCategoryId; label: string }>;
+
+export const BAC_TYPES: ReadonlyArray<{
+  id: BacTypeId;
+  label: string;
+  series: readonly BacSeriesOption[];
+}> = ADMISSION_CONFIG.bac.types.map((type) => ({
+  id: type.value,
+  label: type.label,
+  series: type.series.map((serie) => ({
+    id: serie.value,
+    label: serie.label,
+    categoryId: serie.category,
+  })),
+}));
 
 const ADMISSION_PROGRAMS: readonly AdmissionProgram[] = ADMISSION_LEVELS.flatMap((level) =>
-  PROGRAM_TEMPLATES.flatMap((mention) =>
+  ADMISSION_CONFIG.programs.flatMap((mention) =>
     mention.parcours.map((parcours) => ({
-      id: `${level.id}:${mention.mentionId}:${parcours.id}`,
+      id: `${level.id}:${mention.mention}:${parcours.value}`,
       levelId: level.id,
-      mentionId: mention.mentionId,
+      mentionId: mention.mention,
       mentionLabel: mention.mentionLabel,
-      parcoursId: parcours.id,
+      parcoursId: parcours.value,
       parcoursLabel: parcours.label,
       allowedBacCategories: mention.categories,
     }))

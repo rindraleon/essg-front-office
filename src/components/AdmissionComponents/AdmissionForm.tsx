@@ -15,23 +15,38 @@ import {
   Trash2,
   Upload,
   UserRound,
-  AlertCircle,
 } from 'lucide-react';
-import { ApiError } from '@/api';
-import { cn } from '@/lib';
 import {
   BAC_CATEGORIES,
   getBacCategory,
   getBacSeries,
   getEligiblePrograms,
   getRequiredDocumentIds,
-  type AdmissionProgram,
 } from '@/config';
 import type { AdmissionDocumentKind, AdmissionFormData, AdmissionFormProps } from '@/types';
+import { cn } from '@/lib';
+import {
+  bacStepErrors,
+  documentStepErrors,
+  formationStepErrors,
+  mapApiErrorToFormErrors,
+  normalizeAdmissionPayloadData,
+  personalStepErrors,
+  sanitizeDigitsInput,
+  sanitizePhoneInput,
+  validateEmail,
+  validationMessages,
+  type AdmissionField,
+  type AdmissionFiles,
+  type FormErrors,
+} from '@/validation';
+import { verifyEmailDomain } from '@/services/contact.service';
 import { toCapitalizedWords, toUpperName } from '@/utils';
 import { admissionService, formatFileSize, isProofFileValid } from '@/services';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
+import { FormFieldError } from '../ui/field-error';
+import { fieldA11yProps } from '@/utils';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import {
@@ -76,8 +91,6 @@ const INITIAL_FORM_DATA: AdmissionFormData = {
 };
 
 type AdmissionStep = 1 | 2 | 3 | 4;
-type FormErrors = Record<string, string | undefined>;
-type AdmissionFiles = Partial<Record<AdmissionDocumentKind, File>>;
 
 const STEPS = [
   { id: 1, label: 'Informations personnelles', shortLabel: 'Identité', icon: UserRound },
@@ -86,29 +99,14 @@ const STEPS = [
   { id: 4, label: 'Pièces jointes', shortLabel: 'Documents', icon: Paperclip },
 ] as const;
 
-const PERSONAL_FIELDS: Array<keyof AdmissionFormData> = [
-  'nom',
-  'prenom',
-  'dateNaissance',
-  'lieuNaissance',
-  'nationalite',
-  'sexe',
-  'adresse',
-  'telephone',
-  'email',
-];
+/** Champs purement numériques (chiffres uniquement, longueur bornée). */
+const DIGITS_ONLY_FIELDS: Partial<Record<AdmissionField, number>> = {
+  numeroBaccalaureat: 20,
+  bacAnneeObtention: 4,
+  licenceAnneeObtention: 4,
+};
 
-const BAC_FIELDS: Array<keyof AdmissionFormData> = [
-  'bacType',
-  'bacSerie',
-  'numeroBaccalaureat',
-  'bacAnneeObtention',
-  'bacCentreExamen',
-];
-
-const FORMATION_FIELDS: Array<keyof AdmissionFormData> = ['niveau', 'mention', 'parcours'];
-
-const TITLE_CASE_FIELDS = new Set<keyof AdmissionFormData>([
+const TITLE_CASE_FIELDS = new Set<AdmissionField>([
   'prenom',
   'lieuNaissance',
   'nationalite',
@@ -119,81 +117,20 @@ const TITLE_CASE_FIELDS = new Set<keyof AdmissionFormData>([
   'licenceMention',
 ]);
 
-const UPPER_CASE_FIELDS = new Set<keyof AdmissionFormData>([
-  'nom',
-  'numeroBaccalaureat',
-  'numeroMatricule',
-]);
+const UPPER_CASE_FIELDS = new Set<AdmissionField>(['nom', 'numeroMatricule']);
 
-function formatFieldValue(name: keyof AdmissionFormData, value: string): string {
+/** Champs textuels connus — utilisés pour rattacher les erreurs API au bon champ. */
+const ADMISSION_FIELD_NAMES = Object.keys(INITIAL_FORM_DATA).filter(
+  (key) => key !== 'accepteConditions'
+);
+
+function formatFieldValue(name: AdmissionField, value: string): string {
+  const digitsMaxLength = DIGITS_ONLY_FIELDS[name];
+  if (digitsMaxLength !== undefined) return sanitizeDigitsInput(value, digitsMaxLength);
+  if (name === 'telephone') return sanitizePhoneInput(value);
   if (UPPER_CASE_FIELDS.has(name)) return toUpperName(value);
   if (TITLE_CASE_FIELDS.has(name)) return toCapitalizedWords(value);
   return value;
-}
-
-function addRequiredErrors(
-  data: AdmissionFormData,
-  fields: Array<keyof AdmissionFormData>,
-  errors: FormErrors
-): void {
-  fields.forEach((key) => {
-    const value = data[key];
-    if (typeof value === 'string' && !value.trim()) errors[key] = 'Ce champ est obligatoire';
-  });
-}
-
-function personalStepErrors(data: AdmissionFormData): FormErrors {
-  const errors: FormErrors = {};
-  addRequiredErrors(data, PERSONAL_FIELDS, errors);
-  if (data.email && !/^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{1,63}$/.test(data.email)) {
-    errors.email = 'Adresse email invalide';
-  }
-  if (data.dateNaissance && new Date(data.dateNaissance) >= new Date()) {
-    errors.dateNaissance = 'La date de naissance doit être antérieure à aujourd’hui';
-  }
-  return errors;
-}
-
-function bacStepErrors(data: AdmissionFormData): FormErrors {
-  const errors: FormErrors = {};
-  addRequiredErrors(data, BAC_FIELDS, errors);
-  if (!data.bacCategorie) errors.bacSerie = 'Sélectionnez une série valide';
-  if (data.bacAnneeObtention) {
-    const year = Number(data.bacAnneeObtention);
-    if (!/^\d{4}$/.test(data.bacAnneeObtention) || year < 1980 || year > CURRENT_YEAR) {
-      errors.bacAnneeObtention = `L'année d'obtention doit être comprise entre 1980 et ${CURRENT_YEAR}`;
-    }
-  }
-  return errors;
-}
-
-function formationStepErrors(
-  data: AdmissionFormData,
-  eligiblePrograms: AdmissionProgram[]
-): FormErrors {
-  const errors: FormErrors = {};
-  const fields = [...FORMATION_FIELDS];
-  if (data.niveau === 'master') fields.push('ancienEtablissement', 'numeroMatricule');
-  addRequiredErrors(data, fields, errors);
-  const eligible = eligiblePrograms.some(
-    (program) => program.mentionId === data.mention && program.parcoursId === data.parcours
-  );
-  if (!eligible)
-    errors.eligibility = "La formation choisie n'est pas compatible avec votre profil.";
-  return errors;
-}
-
-function documentStepErrors(
-  data: AdmissionFormData,
-  files: AdmissionFiles,
-  requiredDocumentIds: AdmissionDocumentKind[]
-): FormErrors {
-  const errors: FormErrors = {};
-  requiredDocumentIds.forEach((kind) => {
-    if (!files[kind]) errors[kind] = 'Cette pièce est obligatoire';
-  });
-  if (!data.accepteConditions) errors.accepteConditions = 'Veuillez accepter les conditions';
-  return errors;
 }
 
 const HINT_PDF_IMG = 'PDF, JPG ou PNG — 10 Mo max';
@@ -253,7 +190,6 @@ function FilePicker({
   error?: string;
   onChange: (file: File | null) => void;
 }>) {
-  const inputRef = useRef<HTMLInputElement>(null);
   const config = FILE_CONFIG[kind];
   const handleChange = (next: File | null) => {
     if (!next) return;
@@ -306,7 +242,6 @@ function FilePicker({
       )}
       <input
         id={`file-${kind}`}
-        ref={inputRef}
         type="file"
         accept={config.accept}
         className="sr-only"
@@ -316,32 +251,24 @@ function FilePicker({
         }}
       />
       <p className="text-caption text-ink-400">{config.hint}</p>
-      {error && (
-        <p role="alert" className="flex items-center gap-1.5 text-caption text-danger-600">
-          <AlertCircle aria-hidden="true" className="size-3.5 shrink-0" />
-          {error}
-        </p>
-      )}
+      <FormFieldError id={`file-${kind}-error`} error={error} />
     </div>
   );
 }
 
-const fieldError = (errors: Record<string, string | undefined>, key: string) =>
-  errors[key] ? (
-    <p role="alert" className="mt-1 flex items-center gap-1.5 text-caption text-danger-600">
-      <AlertCircle aria-hidden="true" className="size-3.5 shrink-0" />
-      {errors[key]}
-    </p>
-  ) : null;
-
 const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
   const [formData, setFormData] = useState<AdmissionFormData>(INITIAL_FORM_DATA);
   const [files, setFiles] = useState<AdmissionFiles>({});
-  const [errors, setErrors] = useState<FormErrors>({});
+  /** Erreurs asynchrones : doublons, vérification email serveur, rejets API. */
+  const [asyncErrors, setAsyncErrors] = useState<FormErrors>({});
+  /** Champs touchés (perte de focus) : l'erreur de format n'apparaît qu'après interaction. */
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+  /** Tentative de validation de l'étape courante : affiche toutes ses erreurs. */
+  const [stepAttempted, setStepAttempted] = useState(false);
   const [currentStep, setCurrentStep] = useState<AdmissionStep>(1);
-  const [documentValidationRequested, setDocumentValidationRequested] = useState(false);
   const formTopRef = useRef<HTMLDivElement>(null);
   const finalSubmitRequestedRef = useRef(false);
+  const lastVerifiedEmailRef = useRef('');
   const [progress, setProgress] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -370,7 +297,31 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
   );
   const missingDocumentCount = requiredDocumentIds.filter((kind) => !files[kind]).length;
 
-  const setField = (name: keyof AdmissionFormData, value: string) => {
+  /** Erreurs de format de l'étape courante (validateurs partagés). */
+  const stepFormatErrors = useMemo<FormErrors>(() => {
+    if (currentStep === 1) return personalStepErrors(formData);
+    if (currentStep === 2) return bacStepErrors(formData);
+    if (currentStep === 3) return formationStepErrors(formData, eligiblePrograms);
+    return documentStepErrors(formData, files, requiredDocumentIds);
+  }, [currentStep, formData, eligiblePrograms, files, requiredDocumentIds]);
+
+  /**
+   * Erreurs visibles de l'étape courante : erreurs asynchrones immédiates, et
+   * erreurs de format seulement après blur du champ ou tentative de validation.
+   */
+  const visibleErrors = useMemo<FormErrors>(() => {
+    const merged: FormErrors = {};
+    const keys = new Set<string>([...Object.keys(stepFormatErrors), ...Object.keys(asyncErrors)]);
+    keys.forEach((key) => {
+      const error =
+        asyncErrors[key] ??
+        (touchedFields[key] || stepAttempted ? stepFormatErrors[key] : undefined);
+      if (error) merged[key] = error;
+    });
+    return merged;
+  }, [stepFormatErrors, asyncErrors, touchedFields, stepAttempted]);
+
+  const setField = (name: AdmissionField, value: string) => {
     setFormData((previous) => {
       const next = { ...previous, [name]: value };
       if (name === 'bacType') {
@@ -402,13 +353,20 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       if (name === 'ancienEtablissement') next.licenceEtablissement = value;
       return next;
     });
-    setErrors((previous) => ({ ...previous, [name]: undefined, eligibility: undefined }));
+    setAsyncErrors((previous) => ({ ...previous, [name]: undefined, eligibility: undefined }));
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
-    const fieldName = name as keyof AdmissionFormData;
+    const fieldName = name as AdmissionField;
     setField(fieldName, formatFieldValue(fieldName, value));
+  };
+
+  /** Blur délégué au <form> : marque le champ comme touché (validation douce). */
+  const handleBlur = (event: React.FocusEvent<HTMLFormElement>) => {
+    const target = event.target as EventTarget & { name?: string };
+    if (!target.name) return;
+    setTouchedFields((previous) => ({ ...previous, [target.name as string]: true }));
   };
 
   const setFile = (kind: AdmissionDocumentKind, file: File | null) => {
@@ -418,7 +376,24 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       else delete next[kind];
       return next;
     });
-    setErrors((previous) => ({ ...previous, [kind]: undefined }));
+    setAsyncErrors((previous) => ({ ...previous, [kind]: undefined }));
+  };
+
+  /** Vérifie côté serveur que le domaine email peut recevoir des messages (fail-open). */
+  const verifyEmail = async (email: string): Promise<boolean> => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || validateEmail(trimmed)) return false;
+    if (lastVerifiedEmailRef.current === trimmed) return !asyncErrors.email;
+    lastVerifiedEmailRef.current = trimmed;
+    const result = await verifyEmailDomain(trimmed);
+    if (result?.valide === false) {
+      setAsyncErrors((previous) => ({
+        ...previous,
+        email: result.raison || validationMessages.emailUnverified,
+      }));
+      return false;
+    }
+    return true;
   };
 
   const checkDuplicate = async (
@@ -441,7 +416,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
           email: `Une candidature avec cette adresse email a déjà été déposée${annee}. Une seule inscription est autorisée par an.`,
           telephone: `Une candidature avec ce numéro de téléphone a déjà été déposée${annee}. Une seule inscription est autorisée par an.`,
         } as const;
-        setErrors((previous) => ({
+        setAsyncErrors((previous) => ({
           ...previous,
           [kind]: messages[kind],
         }));
@@ -453,12 +428,9 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     }
   };
 
-  const getStepErrors = (step: AdmissionStep): FormErrors => {
-    if (step === 1) return personalStepErrors(formData);
-    if (step === 2) return bacStepErrors(formData);
-    if (step === 3) return formationStepErrors(formData, eligiblePrograms);
-    return documentStepErrors(formData, files, requiredDocumentIds);
-  };
+  /** Blur du champ email : vérification du domaine puis des doublons annuels. */
+  const handleEmailBlur = (email: string): Promise<boolean> =>
+    verifyEmail(email).then((domainOk) => (domainOk ? checkDuplicate('email') : false));
 
   const focusFirstError = (nextErrors: FormErrors) => {
     const firstField = Object.keys(nextErrors)[0];
@@ -472,19 +444,27 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     });
   };
 
+  const getStepErrors = (step: AdmissionStep): FormErrors => {
+    if (step === 1) return personalStepErrors(formData);
+    if (step === 2) return bacStepErrors(formData);
+    if (step === 3) return formationStepErrors(formData, eligiblePrograms);
+    return documentStepErrors(formData, files, requiredDocumentIds);
+  };
+
   const validateStep = (step: AdmissionStep): boolean => {
+    setStepAttempted(true);
     const nextErrors = getStepErrors(step);
-    setErrors(nextErrors);
-    const valid = Object.keys(nextErrors).length === 0;
-    if (!valid) focusFirstError(nextErrors);
+    const hasAsyncError = Object.keys(asyncErrors).some((key) => asyncErrors[key]);
+    const valid = Object.keys(nextErrors).length === 0 && !hasAsyncError;
+    if (!valid) focusFirstError({ ...asyncErrors, ...nextErrors });
     return valid;
   };
 
   const moveToStep = (step: AdmissionStep) => {
     finalSubmitRequestedRef.current = false;
     setCurrentStep(step);
-    setDocumentValidationRequested(false);
-    setErrors({});
+    setStepAttempted(false);
+    setAsyncErrors({});
     window.requestAnimationFrame(() => {
       formTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -496,7 +476,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       return;
     }
     if (currentStep === 1) {
-      if (!(await checkDuplicate('email'))) return;
+      if (!(await handleEmailBlur(formData.email))) return;
       if (!(await checkDuplicate('telephone'))) return;
     }
     if (currentStep < 4) moveToStep((currentStep + 1) as AdmissionStep);
@@ -509,7 +489,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       ...formationStepErrors(formData, eligiblePrograms),
       ...documentStepErrors(formData, files, requiredDocumentIds),
     };
-    setErrors(allErrors);
+    setStepAttempted(true);
     const valid = Object.keys(allErrors).length === 0;
     if (!valid) focusFirstError(allErrors);
     return valid;
@@ -534,10 +514,12 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     const categoryLabel =
       BAC_CATEGORIES[formData.bacCategorie as keyof typeof BAC_CATEGORIES]?.label ??
       formData.bacCategorie;
+    const normalizedData = normalizeAdmissionPayloadData(formData);
     const payloadData = {
-      ...formData,
-      diplomePrecedent: formData.niveau === 'master' ? 'Licence' : `Baccalauréat ${categoryLabel}`,
-      licenceEtablissement: formData.ancienEtablissement,
+      ...normalizedData,
+      diplomePrecedent:
+        normalizedData.niveau === 'master' ? 'Licence' : `Baccalauréat ${categoryLabel}`,
+      licenceEtablissement: normalizedData.ancienEtablissement,
     };
     const payload = new FormData();
     Object.entries(payloadData).forEach(([key, value]) => {
@@ -555,12 +537,18 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       toast.success('Candidature soumise avec succès ! Vous recevrez un email de confirmation.');
       setSubmitted(true);
     } catch (error) {
-      toast.error(
-        error instanceof ApiError
-          ? error.message
-          : 'Une erreur est survenue lors de la soumission.',
-        { duration: 6000 }
+      // Rattachement au champ concerné quand l'erreur backend l'identifie,
+      // notification globale claire sinon (jamais de détail technique).
+      const { fieldErrors: mapped, globalMessage } = mapApiErrorToFormErrors(
+        error,
+        ADMISSION_FIELD_NAMES
       );
+      if (Object.keys(mapped).length > 0) {
+        setAsyncErrors((previous) => ({ ...previous, ...mapped }));
+      }
+      toast.error(globalMessage ?? 'Une erreur est survenue lors de la soumission.', {
+        duration: 6000,
+      });
       setProgress(0);
     } finally {
       setSubmitting(false);
@@ -596,7 +584,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
         Les champs marqués d'un astérisque (*) sont obligatoires. Les formations proposées
         s'adaptent automatiquement à votre baccalauréat.
       </p>
-      <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+      <form onSubmit={handleSubmit} onBlur={handleBlur} className="space-y-8" noValidate>
         <nav aria-label="Progression de la candidature" className="relative mb-10">
           <div
             className="absolute left-[12.5%] right-[12.5%] top-5 h-0.5 bg-ink-100"
@@ -660,9 +648,13 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
           {currentStep === 1 && (
             <PersonalInformation
               data={formData}
-              errors={errors}
+              errors={visibleErrors}
               onChange={handleChange}
-              onDuplicateCheck={(field) => void checkDuplicate(field)}
+              onDuplicateCheck={(field) =>
+                field === 'email'
+                  ? void handleEmailBlur(formData.email)
+                  : void checkDuplicate(field)
+              }
             />
           )}
 
@@ -670,29 +662,29 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
             <BacInformation
               data={formData}
               series={bacSeries}
-              errors={errors}
+              errors={visibleErrors}
               onChange={handleChange}
             />
           )}
 
           {currentStep === 3 && (
             <div className="space-y-8">
-              <LevelSelection data={formData} errors={errors} onChange={handleChange} />
+              <LevelSelection data={formData} errors={visibleErrors} onChange={handleChange} />
               <PreviousEducationInformation
                 data={formData}
-                errors={errors}
+                errors={visibleErrors}
                 onChange={handleChange}
               />
               <FormationSelection
                 data={formData}
                 mentions={eligibleMentions}
                 parcours={eligibleParcours}
-                errors={errors}
+                errors={visibleErrors}
                 onChange={handleChange}
               />
-              {errors.eligibility && (
+              {visibleErrors.eligibility && (
                 <p className="rounded-xl border border-danger-100 bg-danger-50 p-3 text-small text-danger-700">
-                  {errors.eligibility}
+                  {visibleErrors.eligibility}
                 </p>
               )}
             </div>
@@ -734,8 +726,12 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
                     onBlur={() => void checkDuplicate('numeroBordereau')}
                     placeholder="Ex : VER-2026-987456"
                     maxLength={15}
+                    {...fieldA11yProps('numeroBordereau', visibleErrors.numeroBordereau)}
                   />
-                  {fieldError(errors, 'numeroBordereau')}
+                  <FormFieldError
+                    id="numeroBordereau-error"
+                    error={visibleErrors.numeroBordereau}
+                  />
                   <p className="text-caption text-ink-400">
                     Référence du reçu de paiement des droits d'inscription (60 000 Ar).
                   </p>
@@ -747,7 +743,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
                     ? "Pour un Bac obtenu cette année, le relevé de notes ou l'extrait de liste est demandé."
                     : 'Pour un Bac obtenu avant cette année, la photocopie du diplôme est demandée.'}
                 </div>
-                {documentValidationRequested && missingDocumentCount > 0 && (
+                {stepAttempted && missingDocumentCount > 0 && (
                   <div
                     role="alert"
                     className="mb-5 rounded-xl border border-danger-100 bg-danger-50 px-4 py-3 text-small text-danger-700"
@@ -763,7 +759,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
                       kind={kind}
                       file={files[kind] ?? null}
                       required
-                      error={documentValidationRequested ? errors[kind] : undefined}
+                      error={visibleErrors[kind]}
                       onChange={(file) => setFile(kind, file)}
                     />
                   ))}
@@ -778,15 +774,19 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
                       ...previous,
                       accepteConditions: event.target.checked,
                     }));
-                    setErrors((previous) => ({ ...previous, accepteConditions: undefined }));
+                    setAsyncErrors((previous) => ({ ...previous, accepteConditions: undefined }));
                   }}
                   label="J'accepte les conditions générales *"
+                  {...fieldA11yProps('accepteConditions', visibleErrors.accepteConditions)}
                 />
                 <p className="mt-2 pl-6 text-small text-ink-500">
                   Je certifie que les informations fournies sont exactes et comprends que toute
                   fausse déclaration peut entraîner le rejet de ma candidature.
                 </p>
-                {documentValidationRequested && fieldError(errors, 'accepteConditions')}
+                <FormFieldError
+                  id="accepteConditions-error"
+                  error={visibleErrors.accepteConditions}
+                />
               </div>
 
               {submitting && (
@@ -832,7 +832,6 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
               disabled={submitting}
               onClick={() => {
                 finalSubmitRequestedRef.current = true;
-                setDocumentValidationRequested(true);
               }}
             >
               {submitting ? 'Soumission en cours...' : 'Soumettre ma candidature'}

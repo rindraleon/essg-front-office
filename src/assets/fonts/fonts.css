@@ -1,18 +1,3 @@
-/* ============================================================
-   POLICES AUTO-HÉBERGÉES — ESSG
-   ------------------------------------------------------------
-   Les trois familles utilisées par la page d'accueil, et donc par
-   l'ensemble du site :
-
-     • Manrope Variable → texte courant (--font-sans)
-     • Outfit Variable  → titres et chiffres clés (--font-display)
-     • Space Mono       → accents techniques / géospatiaux (--font-tech)
-
-   Les fichiers .woff2 vivent à côté de ce fichier : Vite les résout
-   et les empreinte au build. Seuls les sous-ensembles « latin » et
-   « latin-ext » sont embarqués (français + malgache) ; les autres
-   alphabets sont inutiles ici et alourdiraient le chargement.
-   ============================================================ */
 
 /* ---------- Manrope Variable (100 → 800) ---------- */
 @font-face {

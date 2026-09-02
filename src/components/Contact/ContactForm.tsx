@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   CheckCircle2,
   IdCard,
@@ -10,11 +10,21 @@ import {
   User,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { toUpperName } from '@/utils';
+import { fieldA11yProps, toUpperName } from '@/utils';
 import type { ContactFormData, ContactFormProps } from '@/types';
 import { useCreateContact } from '@/hooks';
-import { ApiError } from '@/api';
+import {
+  mapApiErrorToFormErrors,
+  normalizeContactPayload,
+  sanitizePhoneInput,
+  validateContactField,
+  validateContactForm,
+  validationMessages,
+  type ContactFormField,
+} from '@/validation';
+import { verifyEmailDomain } from '@/services/contact.service';
 import { Button } from '../ui/button';
+import { FormFieldError } from '../ui/field-error';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select } from '../ui/select';
@@ -36,11 +46,124 @@ const DEFAULT_SUJETS = [
   { value: 'autre', label: 'Autre' },
 ];
 
+const FORM_FIELDS = Object.keys(INITIAL_FORM_DATA) as ContactFormField[];
+
 const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) => {
   const [formData, setFormData] = useState<ContactFormData>(INITIAL_FORM_DATA);
   const [submitted, setSubmitted] = useState(false);
+  /** Champs touchés (perte de focus) : l'erreur n'apparaît qu'après interaction. */
+  const [touched, setTouched] = useState<Partial<Record<ContactFormField, boolean>>>({});
+  /** Tentative de soumission : toutes les erreurs sont affichées. */
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  /** Erreurs serveur (vérification email, rejet API) rattachées à un champ. */
+  const [serverErrors, setServerErrors] = useState<Partial<Record<ContactFormField, string>>>({});
+  const lastVerifiedEmailRef = useRef('');
+  const formRef = useRef<HTMLFormElement>(null);
   const createContact = useCreateContact();
   const loading = createContact.isPending;
+
+  const fieldErrors = useMemo(() => validateContactForm(formData), [formData]);
+
+  /** Erreur visible : erreur serveur immédiate, sinon erreur de format après blur/submit. */
+  const errorOf = useCallback(
+    (field: ContactFormField): string | undefined =>
+      serverErrors[field] ?? (touched[field] || submitAttempted ? fieldErrors[field] : undefined),
+    [serverErrors, touched, submitAttempted, fieldErrors]
+  );
+
+  const checkEmailDomain = useCallback(async (email: string): Promise<void> => {
+    const trimmed = email.trim().toLowerCase();
+    // Vérification serveur uniquement si la syntaxe est valide et l'adresse a changé.
+    if (
+      !trimmed ||
+      validateContactField('email', trimmed) ||
+      lastVerifiedEmailRef.current === trimmed
+    ) {
+      return;
+    }
+    lastVerifiedEmailRef.current = trimmed;
+    try {
+      const result = await verifyEmailDomain(trimmed);
+      setServerErrors((previous) => ({
+        ...previous,
+        email:
+          result?.valide === false
+            ? result.raison || validationMessages.emailUnverified
+            : undefined,
+      }));
+    } catch {
+      // Indisponibilité du service de vérification : on ne bloque pas la saisie.
+    }
+  }, []);
+
+  const formatContactValue = (field: ContactFormField, value: string): string => {
+    if (field === 'nom') return toUpperName(value);
+    if (field === 'telephone') return sanitizePhoneInput(value);
+    return value;
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    const field = name as ContactFormField;
+    setServerErrors((previous) => ({ ...previous, [field]: undefined }));
+    setFormData((prev) => ({ ...prev, [field]: formatContactValue(field, value) }));
+  };
+
+  /** Blur délégué au <form> : marque le champ comme touché et déclenche les contrôles serveur. */
+  const handleBlur = (event: React.FocusEvent<HTMLFormElement>) => {
+    const target = event.target as EventTarget & { name?: string; value?: string };
+    const field = target.name as ContactFormField | undefined;
+    if (!field || !FORM_FIELDS.includes(field)) return;
+    setTouched((previous) => ({ ...previous, [field]: true }));
+    if (field === 'email') void checkEmailDomain(target.value ?? '');
+  };
+
+  const focusFirstError = (errors: Record<string, string | undefined>) => {
+    const firstField = FORM_FIELDS.find((field) => errors[field]);
+    if (!firstField) return;
+    window.requestAnimationFrame(() => {
+      const element = formRef.current?.querySelector<HTMLElement>(`[name="${firstField}"]`);
+      element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      element?.focus({ preventScroll: true });
+    });
+  };
+
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitAttempted(true);
+    const errors = validateContactForm(formData);
+    if (Object.keys(errors).length > 0) {
+      focusFirstError(errors);
+      return;
+    }
+    const payload = normalizeContactPayload(formData);
+    try {
+      await createContact.mutateAsync(payload);
+      onSubmit?.(payload);
+      toast.success('Message envoyé avec succès !', {
+        duration: 5000,
+        position: 'top-right',
+      });
+      setSubmitted(true);
+    } catch (error) {
+      // Rattachement de l'erreur au champ concerné quand c'est possible, toast global sinon.
+      const { fieldErrors: mapped, globalMessage } = mapApiErrorToFormErrors(error, FORM_FIELDS);
+      if (Object.keys(mapped).length > 0) {
+        setServerErrors((previous) => ({ ...previous, ...mapped }));
+        setTouched((previous) => ({
+          ...previous,
+          ...Object.fromEntries(Object.keys(mapped).map((field) => [field, true])),
+        }));
+        return;
+      }
+      toast.error(globalMessage ?? validationMessages.apiGeneric, {
+        duration: 5000,
+        position: 'top-right',
+      });
+    }
+  };
 
   if (submitted) {
     return (
@@ -60,6 +183,10 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
             onClick={() => {
               setSubmitted(false);
               setFormData(INITIAL_FORM_DATA);
+              setTouched({});
+              setServerErrors({});
+              setSubmitAttempted(false);
+              lastVerifiedEmailRef.current = '';
             }}
           >
             Envoyer un autre message
@@ -68,35 +195,6 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
       </div>
     );
   }
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'nom' ? toUpperName(value) : value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      await createContact.mutateAsync(formData);
-      onSubmit?.(formData);
-      toast.success('Message envoyé avec succès !', {
-        duration: 5000,
-        position: 'top-right',
-      });
-      setSubmitted(true);
-    } catch (error) {
-      const message =
-        error instanceof ApiError
-          ? error.message
-          : "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.";
-      toast.error(message, { duration: 5000, position: 'top-right' });
-    }
-  };
 
   return (
     <div className="h-full overflow-hidden rounded-2xl border border-ink-100 bg-white p-4 shadow-card sm:p-6">
@@ -108,7 +206,13 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        onBlur={handleBlur}
+        noValidate
+        className="space-y-4"
+      >
         <div className="rounded-2xl border border-ink-100 bg-white p-5 sm:p-6">
           <div className="mb-3 flex items-center gap-2">
             <div className="flex h-7 w-7 items-center justify-center rounded-md bg-brand-50 text-brand-600">
@@ -128,13 +232,15 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
                   autoComplete="given-name"
                   value={formData.prenom}
                   onChange={handleChange}
-                  required
+                  maxLength={100}
                   className="pl-9"
+                  {...fieldA11yProps('prenom', errorOf('prenom'))}
                 />
               </div>
+              <FormFieldError id="prenom-error" error={errorOf('prenom')} />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="nom">Nom</Label>
+              <Label htmlFor="nom">Nom *</Label>
               <div className="relative">
                 <IdCard className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-brand-500" />
                 <Input
@@ -143,13 +249,15 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
                   autoComplete="family-name"
                   value={formData.nom}
                   onChange={handleChange}
-                  required
+                  maxLength={100}
                   className="pl-9"
+                  {...fieldA11yProps('nom', errorOf('nom'))}
                 />
               </div>
+              <FormFieldError id="nom-error" error={errorOf('nom')} />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email *</Label>
               <div className="relative">
                 <Mail className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-brand-500" />
                 <Input
@@ -160,10 +268,12 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
                   placeholder="example@gmail.com"
                   value={formData.email}
                   onChange={handleChange}
-                  required
+                  maxLength={50}
                   className="pl-9"
+                  {...fieldA11yProps('email', errorOf('email'))}
                 />
               </div>
+              <FormFieldError id="email-error" error={errorOf('email')} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="telephone">Téléphone</Label>
@@ -174,12 +284,16 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
                   name="telephone"
                   type="tel"
                   autoComplete="tel"
-                  placeholder="+261 3X XXX XX"
+                  placeholder="032 12 345 67 ou +261 32 12 345 67"
                   value={formData.telephone}
                   onChange={handleChange}
+                  maxLength={20}
+                  inputMode="tel"
                   className="pl-9"
+                  {...fieldA11yProps('telephone', errorOf('telephone'))}
                 />
               </div>
+              <FormFieldError id="telephone-error" error={errorOf('telephone')} />
             </div>
           </div>
         </div>
@@ -192,30 +306,36 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
             <h3 className="text-body font-semibold text-ink-900">Votre demande</h3>
           </div>
           <div className="space-y-4">
-            <Select
-              name="sujet"
-              label="Sujet"
-              value={formData.sujet}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Choisir un sujet</option>
-              {sujets.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </Select>
+            <div>
+              <Select
+                id="sujet"
+                name="sujet"
+                label="Sujet *"
+                value={formData.sujet}
+                onChange={handleChange}
+                {...fieldA11yProps('sujet', errorOf('sujet'))}
+              >
+                <option value="">Choisir un sujet</option>
+                {sujets.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </Select>
+              <FormFieldError id="sujet-error" error={errorOf('sujet')} />
+            </div>
             <div className="space-y-1.5">
-              <Label htmlFor="message">Message</Label>
+              <Label htmlFor="message">Message *</Label>
               <Textarea
                 id="message"
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
-                required
                 placeholder="Décrivez votre demande avec le plus de précision possible..."
+                maxLength={1000}
+                {...fieldA11yProps('message', errorOf('message'))}
               />
+              <FormFieldError id="message-error" error={errorOf('message')} />
             </div>
           </div>
         </div>
