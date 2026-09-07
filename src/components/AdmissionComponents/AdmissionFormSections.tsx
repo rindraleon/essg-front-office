@@ -167,9 +167,9 @@ export function PersonalInformation({
           required
         />
         <SelectField
-          name="sexe"
-          label="Sexe *"
-          value={data.sexe}
+          name="genre"
+          label="Genre *"
+          value={data.genre}
           onChange={onChange}
           errors={errors}
         >
@@ -413,7 +413,7 @@ export function FormationSelection({
   errors: Errors;
   onChange: ChangeHandler;
 }>) {
-  const hasProfile = Boolean(data.bacCategorie && data.niveau);
+  const hasProfile = Boolean(data.bacSerie && data.niveau);
   return (
     <section>
       <AdmissionSectionTitle>Mention et parcours éligibles</AdmissionSectionTitle>

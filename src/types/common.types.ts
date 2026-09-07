@@ -13,6 +13,8 @@ export type PageHeroProps = {
   description?: string;
   stats?: HeroStatItem[];
   minHeight?: string;
+
+  actions?: ReactNode;
 };
 
 export type ActiveFilterChip = {

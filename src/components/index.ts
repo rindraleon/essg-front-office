@@ -1,7 +1,7 @@
 export { default as ActualiteCard } from './ActualiteCompnent/ActualiteCard';
 
-//admission components
 export { default as AdmissionForm } from './AdmissionComponents/AdmissionForm';
+export { default as AdmissionDocumentDownload } from './AdmissionComponents/AdmissionDocumentDownload';
 export {
   AdmissionSectionTitle,
   PersonalInformation,
@@ -11,12 +11,21 @@ export {
   FormationSelection,
 } from './AdmissionComponents/AdmissionFormSections';
 
-//background animation
-export { default as AnimatedBackground } from './animations/AnimatedBackground';
-export { default as SplitTitle } from './animations/SplitTitle';
-export { default as ParticlesBackground } from './animations/ParticlesBackground';
+export { default as AboutCampus } from './AboutComponents/AboutCampus';
+export { default as AboutHero } from './AboutComponents/AboutHero';
+export { default as AboutIntro } from './AboutComponents/AboutIntro';
+export { default as AboutMission } from './AboutComponents/AboutMission';
+export { default as AboutObjectives } from './AboutComponents/AboutObjectives';
+export { default as AboutSection } from './AboutComponents/AboutSection';
+export { default as AboutTeam } from './AboutComponents/AboutTeam';
+export { default as AboutTimeline } from './AboutComponents/AboutTimeline';
+export { default as AboutValues } from './AboutComponents/AboutValues';
+export { default as AboutVision } from './AboutComponents/AboutVision';
 
-//common component
+export { default as AnimatedBackground } from './common/AnimatedBackground';
+export { default as SplitTitle } from './common/SplitTitle';
+export { default as TypedText } from './common/TypedText';
+
 export { default as AnimatedNumber } from './common/AnimatedNumber';
 export { default as AppToaster } from './common/AppToaster';
 export { default as BackToTop } from './common/BackToTop';
@@ -52,8 +61,7 @@ export { default as SectionHeader } from './common/SectionHeader';
 export { default as ViewDetailsButton } from './common/ViewDetailsButton';
 export { default as SocialLinks } from './common/SocialLinks';
 
-//compat component
-export { default as CompatButton } from './compat/button';
+export { default as CompatButton } from './common/button';
 export {
   Card as CompatCard,
   CardContent as CompatCardContent,
@@ -69,16 +77,17 @@ export {
   TextField,
   Select as CompatSelect,
   MenuItem,
-} from './compat/mui';
-export type { SelectChangeEvent } from './compat/mui';
-export { default as ContactCard } from './Contact/ContactCard';
-export { default as ContactForm } from './Contact/ContactForm';
-export { default as ContactInfoCards } from './Contact/ContactInfoCards';
+} from './common/mui';
+export type { SelectChangeEvent } from './common/mui';
+export { default as ContactCard } from './ContactComponents/ContactCard';
+export { default as ContactForm } from './ContactComponents/ContactForm';
+export { default as ContactInfoCards } from './ContactComponents/ContactInfoCards';
 export { default as FormationCard } from './FormationComponents/FormationCard';
 export { default as FormationDetailContent } from './FormationComponents/FormationDetailCotent';
 export { default as ResponsableCard } from './FormationComponents/ResponsableCard';
 export { default as ActualitesSection } from './HomeComponents/ActualitesSection';
 export { default as AdmissionSection } from './HomeComponents/AdmissionSection';
+export { default as DirectorMessageSection } from './HomeComponents/DirectorMessageSection';
 export { default as FaqAccordion } from './HomeComponents/FaqAccordion';
 export { default as FaqSection } from './HomeComponents/FaqSection';
 export { default as FormationsSection } from './HomeComponents/FormationSection';

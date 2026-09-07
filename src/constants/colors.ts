@@ -12,7 +12,6 @@ const BRAND = {
   950: '#17220f',
 } as const;
 
-/** Anthracite ardoise du logo — neutres et surfaces sombres. */
 const INK = {
   50: '#f6f7f8',
   100: '#e9ebed',
@@ -27,7 +26,6 @@ const INK = {
   950: '#1b1f22',
 } as const;
 
-/** Rouge du logo — réservé aux erreurs et alertes critiques. */
 const DANGER = {
   50: '#fdecea',
   100: '#fbd5d1',

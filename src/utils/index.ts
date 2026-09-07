@@ -1,4 +1,3 @@
-// Point d'entrée unique des exports du répertoire "utils".
 export { fieldA11yProps } from './a11y.utils';
 export { formatDate } from './date.utils';
 export { getImageUrl, getFormationImage } from './image.utils';

@@ -2,7 +2,6 @@ import { ArrowRight, Database, Layers, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RevealOnScroll } from '../common/RevealOnScroll';
 import SectionHeader from '../common/SectionHeader';
-import ParticlesBackground from '../animations/ParticlesBackground';
 import { cn } from '@/lib';
 import { buttonVariants } from '../ui/button-variants';
 
@@ -27,7 +26,6 @@ const MISSION_PILLARS = [
 const WhoWeAreSection = () => {
   return (
     <section className="relative isolate overflow-hidden bg-brand-950 section-y-tight text-white">
-      <ParticlesBackground particleCount={85} />
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(27,31,34,.98)_0%,rgba(27,31,34,.92)_48%,rgba(27,31,34,.65)_100%)]" />
       <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_78%_40%,rgba(152,192,112,.2),transparent_36%)]" />
 

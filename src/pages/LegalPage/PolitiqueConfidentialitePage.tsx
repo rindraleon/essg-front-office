@@ -87,7 +87,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
                 <FileCheck className="size-4 text-brand-600" /> Candidatures d'Admission
               </strong>
               <ul className="list-disc pl-4 space-y-1 text-caption text-ink-600">
-                <li>Nom, Prénom(s), date et lieu de naissance, nationalité, sexe, adresse</li>
+                <li>Nom, Prénom(s), date et lieu de naissance, nationalité, genre, adresse</li>
                 <li>Email et numéro de téléphone portable</li>
                 <li>Parcours scolaire (type, série, numéro d'inscription et année du Bac)</li>
                 <li>Antécédents universitaires pour le Master (établissement, matricule)</li>

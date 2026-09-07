@@ -1,7 +1,3 @@
-/**
- * Props d'accessibilité pour les champs de formulaire :
- * `aria-invalid` + `aria-describedby` pointant vers le message d'erreur.
- */
 export function fieldA11yProps(
   id: string,
   error?: string

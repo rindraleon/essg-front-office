@@ -1,4 +1,3 @@
-// Point d'entrée unique des exports du répertoire « validation ».
 export { validationMessages } from './messages';
 export type { FormErrors } from './form-errors';
 export {
@@ -29,6 +28,7 @@ export {
   validateBirthPlace,
   validateBordereau,
   validateEmail,
+  validateOptionalEmail,
   validateExamCenter,
   validateFirstName,
   validateMessage,
@@ -54,4 +54,5 @@ export {
   type AdmissionField,
   type AdmissionFiles,
 } from './admission-form.validation';
+export { isDisposableEmail, isValidEmail, normalizeEmail, checkEmailSyntax } from './email';
 export { mapApiErrorToFormErrors, type MappedApiErrors } from './api-error.mapper';

@@ -1,4 +1,3 @@
-
 export const ADMISSION_CONFIG = {
   bac: {
     types: [
@@ -21,6 +20,11 @@ export const ADMISSION_CONFIG = {
         series: [
           { value: 'tgc', label: 'TGC — Génie Civil', category: 'technologique' },
           { value: 'tgi', label: 'TGI — Industriel', category: 'technologique' },
+          {
+            value: 'taef',
+            label: 'TAEF — Agricole, Élevage et Forêts',
+            category: 'technologique',
+          },
           { value: 'tter', label: 'TTER — Tertiaire', category: 'technologique' },
         ],
       },
@@ -28,7 +32,7 @@ export const ADMISSION_CONFIG = {
   },
   levels: [
     { value: 'licence', label: 'Licence' },
-    { value: 'master', label: 'Master' },
+    // { value: 'master', label: 'Master' } // Uncomment if Master level is needed
   ],
   categories: {
     scientifique: { value: 'scientifique', label: 'Scientifique' },
@@ -36,25 +40,47 @@ export const ADMISSION_CONFIG = {
     technologique: { value: 'technologique', label: 'Technologique' },
     ose: { value: 'ose', label: 'OSE' },
   },
+
+  series: {
+
+    scientifiqueTechnique: ['c', 'd', 's', 'tgc', 'tgi'],
+
+    scientifiqueAgricole: ['c', 'd', 's', 'taef'],
+
+    toutesSeries: ['a1', 'a2', 'c', 'd', 'l', 's', 'ose', 'tgc', 'tgi', 'taef', 'tter'],
+  },
   programs: [
     {
       mention: 'geoinformatique',
       mentionLabel: 'Géoinformatique',
-      parcours: [{ value: 'geomatique-teledetection', label: 'Géomatique et Télédétection' }],
-      categories: ['scientifique', 'technologique'],
+      parcours: [
+        {
+          value: 'geomatique-teledetection',
+          label: 'Géomatique et Télédétection',
+          series: 'scientifiqueTechnique',
+        },
+      ],
     },
     {
       mention: 'geomatique-applications',
       mentionLabel: 'Géomatique et Applications',
       parcours: [
-        { value: 'geomatique-geologie-economique', label: 'Géomatique et Géologie économique' },
-        { value: 'geomatique-agriculture-durable', label: 'Géomatique et Agriculture durable' },
+        {
+          value: 'geomatique-geologie-economique',
+          label: 'Géomatique et Géologie économique',
+          series: 'scientifiqueTechnique',
+        },
+        {
+          value: 'geomatique-agriculture-durable',
+          label: 'Géomatique et Agriculture durable',
+          series: 'scientifiqueAgricole',
+        },
         {
           value: 'geomatique-ecosystemes',
           label: 'Géomatique, Écosystèmes terrestres et aquatiques',
+          series: 'scientifiqueTechnique',
         },
       ],
-      categories: ['scientifique', 'technologique'],
     },
     {
       mention: 'geomatique-management',
@@ -63,13 +89,14 @@ export const ADMISSION_CONFIG = {
         {
           value: 'geomatique-communication-marketing',
           label: 'Géomatique, Communication et Marketing',
+          series: 'toutesSeries',
         },
         {
           value: 'geomatique-genre-inclusion-developpement',
           label: 'Géomatique, Genre, Inclusion et Développement durable',
+          series: 'toutesSeries',
         },
       ],
-      categories: ['scientifique', 'litteraire', 'technologique', 'ose'],
     },
   ],
 } as const;
@@ -77,6 +104,7 @@ export const ADMISSION_CONFIG = {
 export type BacCategoryId = keyof typeof ADMISSION_CONFIG.categories;
 export type BacTypeId = (typeof ADMISSION_CONFIG.bac.types)[number]['value'];
 export type AdmissionLevelId = (typeof ADMISSION_CONFIG.levels)[number]['value'];
+export type BacSeriesGroupId = keyof typeof ADMISSION_CONFIG.series;
 
 export type BacSeriesOption = {
   id: string;
@@ -91,7 +119,7 @@ export type AdmissionProgram = {
   mentionLabel: string;
   parcoursId: string;
   parcoursLabel: string;
-  allowedBacCategories: readonly BacCategoryId[];
+  allowedBacSeries: readonly string[];
 };
 
 export const ADMISSION_LEVELS = ADMISSION_CONFIG.levels.map(({ value, label }) => ({
@@ -130,7 +158,7 @@ const ADMISSION_PROGRAMS: readonly AdmissionProgram[] = ADMISSION_LEVELS.flatMap
       mentionLabel: mention.mentionLabel,
       parcoursId: parcours.value,
       parcoursLabel: parcours.label,
-      allowedBacCategories: mention.categories,
+      allowedBacSeries: ADMISSION_CONFIG.series[parcours.series as BacSeriesGroupId],
     }))
   )
 );
@@ -143,22 +171,34 @@ export function getBacCategory(typeId: string, seriesId: string): BacCategoryId 
   return getBacSeries(typeId).find((series) => series.id === seriesId)?.categoryId ?? '';
 }
 
-export function getEligiblePrograms(levelId: string, categoryId: string): AdmissionProgram[] {
+export function getEligiblePrograms(levelId: string, seriesId: string): AdmissionProgram[] {
+  const normalizedSeries = seriesId.trim().toLowerCase();
   return ADMISSION_PROGRAMS.filter(
-    (program) =>
-      program.levelId === levelId &&
-      program.allowedBacCategories.includes(categoryId as BacCategoryId)
+    (program) => program.levelId === levelId && program.allowedBacSeries.includes(normalizedSeries)
   );
 }
 
-export function getRequiredDocumentIds(
-  levelId: string,
-  bacYear: string,
-  currentYear: number
-): string[] {
-  const common = ['demandeInscription', 'bordereau', 'photoIdentite', 'acteEtatCivil'];
-  const bacDocument = Number(bacYear) === currentYear ? 'releveBac' : 'diplomeBac';
-  return levelId === 'master'
-    ? [...common, bacDocument, 'attestationEtablissement']
-    : [...common, bacDocument];
+export function getRequiredDocumentIds(levelId: string): string[] {
+  const common = ['demandeInscription', 'bordereau', 'photoIdentite', 'acteEtatCivil', 'releveBac'];
+  return levelId === 'master' ? [...common, 'attestationEtablissement'] : common;
 }
+
+export function getOptionalDocumentIds(): string[] {
+  return ['diplomeBac'];
+}
+
+export const ADMISSION_SOURCES = [
+  { value: 'soifee', label: 'SOIFEE' },
+  { value: 'evenement-universite', label: 'Évènement université' },
+  { value: 'radio', label: 'Radio' },
+  { value: 'salon-tana', label: 'Salon Tana' },
+  { value: 'recommandation', label: 'Recommandation' },
+] as const;
+
+export type AdmissionSourceId = (typeof ADMISSION_SOURCES)[number]['value'];
+
+export const ADMISSION_DOCUMENT = {
+  url: '/files/fiche-renseignement-recu-2026-essg.pdf',
+  fileName: 'FICHE-RENSEIGNEMENT-RECU-2026-ESSG.pdf',
+  label: "Télécharger le document d'admission",
+} as const;

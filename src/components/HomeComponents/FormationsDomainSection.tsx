@@ -2,7 +2,6 @@ import React from 'react';
 import { ArrowRight, Binary, Briefcase, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { RevealOnScroll, StaggerReveal } from '../common/RevealOnScroll';
-import ParticlesBackground from '../animations/ParticlesBackground';
 import SectionHeader from '../common/SectionHeader';
 
 interface DomainItem {
@@ -17,7 +16,7 @@ interface DomainItem {
 const DOMAINS: DomainItem[] = [
   {
     icon: <Binary className="size-6 text-emerald-400" />,
-    title: 'Géomatique Informatique',
+    title: 'Géoinformatique',
     subtitle: 'Technos numériques & Données spatiales',
     description:
       'Une formation orientée vers l’informatique, les données spatiales, les systèmes d’information géographique (SIG) et les technologies numériques appliquées à la géomatique.',
@@ -47,7 +46,6 @@ const DOMAINS: DomainItem[] = [
 const FormationsDomainSection: React.FC = () => {
   return (
     <section className="relative overflow-hidden bg-brand-950 section-y-tight text-white">
-      <ParticlesBackground particleCount={85} />
       {/* Background glow and subtle grid */}
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_30%,rgba(152,192,112,.12),transparent_40%)]" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_80%_70%,rgb(84_124_54_/_.2),transparent_50%)]" />

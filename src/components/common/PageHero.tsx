@@ -1,8 +1,7 @@
 import { SITE_HERO_ALT, SITE_HERO_IMAGE } from '@/constants';
 import useGsapHero from '@/hooks/useGsapHero';
-import AnimatedBackground from '../animations/AnimatedBackground';
-import ParticlesBackground from '../animations/ParticlesBackground';
-import SplitTitle from '../animations/SplitTitle';
+import AnimatedBackground from './AnimatedBackground';
+import SplitTitle from './SplitTitle';
 import AnimatedNumber from './AnimatedNumber';
 import type { PageHeroProps } from '@/types';
 
@@ -13,6 +12,7 @@ const PageHero = ({
   description,
   stats = [],
   minHeight = '60vh',
+  actions,
 }: PageHeroProps) => {
   const heroRef = useGsapHero<HTMLElement>();
 
@@ -45,7 +45,6 @@ const PageHero = ({
         className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/16 to-transparent blur-2xl will-change-transform"
       />
       <AnimatedBackground variant="hero" />
-      <ParticlesBackground particleCount={85} />
 
       <div
         className="section-shell relative flex flex-col items-center justify-center section-y text-center"
@@ -70,6 +69,15 @@ const PageHero = ({
             >
               {description}
             </p>
+          )}
+
+          {actions && (
+            <div
+              data-hero="actions"
+              className="mt-8 flex flex-wrap items-center justify-center gap-3"
+            >
+              {actions}
+            </div>
           )}
         </div>
 

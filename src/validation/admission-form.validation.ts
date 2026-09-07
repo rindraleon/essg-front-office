@@ -1,8 +1,3 @@
-/**
- * Validation du formulaire d'admission — reprend les étapes existantes
- * (identité, bac, formation, pièces jointes) en réutilisant les validateurs
- * partagés avec le formulaire de contact.
- */
 import type { AdmissionProgram } from '@/config';
 import type { AdmissionDocumentKind, AdmissionFormData } from '@/types';
 import type { FormErrors } from './form-errors';
@@ -33,7 +28,6 @@ function requiredError(value: string | undefined): string | undefined {
   return value && value.trim() ? undefined : REQUIRED_MESSAGE;
 }
 
-/** Étape 1 — Informations personnelles. */
 export function personalStepErrors(data: AdmissionFormData): FormErrors {
   const errors: FormErrors = {};
   const checks: Array<[AdmissionField, (value: string) => string | undefined]> = [
@@ -42,7 +36,7 @@ export function personalStepErrors(data: AdmissionFormData): FormErrors {
     ['dateNaissance', validateBirthDate],
     ['lieuNaissance', validateBirthPlace],
     ['nationalite', validateNationality],
-    ['sexe', requiredError],
+    ['genre', requiredError],
     ['adresse', validateAddress],
     ['telephone', validatePhone],
     ['email', validateEmail],
@@ -54,7 +48,6 @@ export function personalStepErrors(data: AdmissionFormData): FormErrors {
   return errors;
 }
 
-/** Étape 2 — Informations sur le baccalauréat. */
 export function bacStepErrors(data: AdmissionFormData): FormErrors {
   const errors: FormErrors = {};
   const checks: Array<[AdmissionField, (value: string) => string | undefined]> = [
@@ -72,7 +65,6 @@ export function bacStepErrors(data: AdmissionFormData): FormErrors {
   return errors;
 }
 
-/** Étape 3 — Formation souhaitée (+ études antérieures pour le Master). */
 export function formationStepErrors(
   data: AdmissionFormData,
   eligiblePrograms: readonly AdmissionProgram[]
@@ -102,7 +94,6 @@ export function formationStepErrors(
   return errors;
 }
 
-/** Étape 4 — Pièces jointes et conditions. */
 export function documentStepErrors(
   data: AdmissionFormData,
   files: AdmissionFiles,
@@ -113,12 +104,12 @@ export function documentStepErrors(
     if (!files[kind]) errors[kind] = 'Cette pièce est obligatoire';
   });
   const bordereauError = validateBordereau(data.numeroBordereau);
+  if (!data.sourceReconnaissance?.trim()) errors.sourceReconnaissance = REQUIRED_MESSAGE;
   if (bordereauError) errors.numeroBordereau = bordereauError;
   if (!data.accepteConditions) errors.accepteConditions = 'Veuillez accepter les conditions';
   return errors;
 }
 
-/** Normalise les données texte juste avant la construction du payload. */
 export function normalizeAdmissionPayloadData(data: AdmissionFormData): AdmissionFormData {
   const normalized: Record<string, unknown> = { ...data };
   (Object.keys(data) as AdmissionField[]).forEach((field) => {

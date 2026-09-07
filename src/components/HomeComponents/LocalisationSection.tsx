@@ -1,6 +1,6 @@
 import { Facebook, Globe, Mail, MapPin, Phone } from 'lucide-react';
 import React from 'react';
-import Button from '../compat/button';
+import Button from '../common/button';
 import { Link as RouterLink } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -8,7 +8,6 @@ import 'leaflet/dist/leaflet.css';
 import useGsapReveal from '@/hooks/useGsapReveal';
 import type { LocalisationSectionProps } from '@/types';
 import SectionHeader from '../common/SectionHeader';
-import ParticlesBackground from '../animations/ParticlesBackground';
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -36,7 +35,6 @@ const LocalisationSection: React.FC<LocalisationSectionProps> = (
       ref={revealRef}
       className="relative overflow-hidden bg-gradient-to-b from-ink-50/50 via-white to-brand-50/30 section-y"
     >
-      <ParticlesBackground />
       <div className="section-shell">
         <SectionHeader
           eyebrow="Contact & Accès"

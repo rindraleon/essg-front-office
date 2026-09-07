@@ -1,4 +1,3 @@
-// Point d'entrée unique des exports du répertoire "pages".
 export { default as AboutPage } from './AboutPage/AboutPage';
 export { default as ActualiteDetailPage } from './ActualitePage/ActualiteDetailPage';
 export { default as ActualitesPage } from './ActualitePage/ActualitePage';

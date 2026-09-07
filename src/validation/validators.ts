@@ -1,8 +1,4 @@
-/**
- * Validateurs réutilisables — chaque fonction retourne `undefined` quand la
- * valeur est valide, sinon un message d'erreur en français.
- * Utilisés à la fois par le formulaire Contact et le formulaire Admission.
- */
+import { isDisposableEmail, isValidEmail, normalizeEmail } from './email';
 import { validationMessages as msg } from './messages';
 import {
   ADDRESS_REGEX,
@@ -11,7 +7,6 @@ import {
   BORDEREAU_REGEX,
   DIPLOMA_YEAR_MIN,
   EMAIL_MAX_LENGTH,
-  EMAIL_REGEX,
   FIELD_LIMITS,
   PERSON_NAME_REGEX,
   PLACE_NAME_REGEX,
@@ -19,7 +14,6 @@ import {
   isValidPhoneNumber,
 } from './rules';
 
-/** NOM — obligatoire : lettres, espaces, apostrophes, traits d'union. */
 export function validateName(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.nomRequired;
@@ -28,7 +22,6 @@ export function validateName(value: string): string | undefined {
   return undefined;
 }
 
-/** PRÉNOM — facultatif : mêmes règles que le nom, vide = valide. */
 export function validateFirstName(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
@@ -37,7 +30,6 @@ export function validateFirstName(value: string): string | undefined {
   return undefined;
 }
 
-/** NATIONALITÉ — obligatoire : lettres, espaces, apostrophes, traits d'union. */
 export function validateNationality(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.nationalityRequired;
@@ -46,7 +38,6 @@ export function validateNationality(value: string): string | undefined {
   return undefined;
 }
 
-/** LIEU DE NAISSANCE — obligatoire : nom de lieu réaliste. */
 export function validateBirthPlace(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.birthPlaceRequired;
@@ -55,7 +46,6 @@ export function validateBirthPlace(value: string): string | undefined {
   return undefined;
 }
 
-/** CENTRE D'EXAMEN — même logique que le lieu de naissance. */
 export function validateExamCenter(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.examCenterInvalid;
@@ -64,16 +54,19 @@ export function validateExamCenter(value: string): string | undefined {
   return undefined;
 }
 
-/** EMAIL — obligatoire : syntaxe sérieuse + longueur alignée sur le backend. */
 export function validateEmail(value: string): string | undefined {
-  const trimmed = value.trim();
-  if (!trimmed) return msg.emailRequired;
-  if (trimmed.length > EMAIL_MAX_LENGTH) return msg.emailTooLong;
-  if (!EMAIL_REGEX.test(trimmed) || trimmed.includes(' ')) return msg.emailInvalid;
+  const normalized = normalizeEmail(value);
+  if (!normalized) return msg.emailRequired;
+  if (normalized.length > EMAIL_MAX_LENGTH) return msg.emailTooLong;
+  if (!isValidEmail(normalized)) return msg.emailInvalid;
+  if (isDisposableEmail(normalized)) return msg.emailDisposable;
   return undefined;
 }
 
-/** TÉLÉPHONE — format malgache ou international strict. */
+export function validateOptionalEmail(value: string): string | undefined {
+  return value.trim() ? validateEmail(value) : undefined;
+}
+
 export function validatePhone(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.phoneInvalid;
@@ -81,14 +74,12 @@ export function validatePhone(value: string): string | undefined {
   return undefined;
 }
 
-/** TÉLÉPHONE facultatif (formulaire Contact) : vide = valide. */
 export function validateOptionalPhone(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
   return validatePhone(trimmed);
 }
 
-/** ADRESSE — souple (internationale ou malgache) : lettres, chiffres, , . ' - / ( ). */
 export function validateAddress(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.addressRequired;
@@ -97,7 +88,6 @@ export function validateAddress(value: string): string | undefined {
   return undefined;
 }
 
-/** NUMÉRO D'INSCRIPTION AU BAC — chiffres uniquement (4 à 20). */
 export function validateBacNumber(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.bacNumberRequired;
@@ -106,7 +96,6 @@ export function validateBacNumber(value: string): string | undefined {
   return undefined;
 }
 
-/** ANNÉE D'OBTENTION — exactement 4 chiffres, plage métier cohérente. */
 export function validateBacYear(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.bacYearRequired;
@@ -118,14 +107,12 @@ export function validateBacYear(value: string): string | undefined {
   return undefined;
 }
 
-/** ANNÉE D'OBTENTION D'UN DIPLÔME (Licence) — facultative, mêmes règles. */
 export function validateOptionalDiplomaYear(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
   return validateBacYear(trimmed);
 }
 
-/** NUMÉRO DE BORDEREAU — facultatif : alphanumérique + séparateurs raisonnables. */
 export function validateBordereau(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return undefined;
@@ -134,7 +121,6 @@ export function validateBordereau(value: string): string | undefined {
   return undefined;
 }
 
-/** DATE DE NAISSANCE — obligatoire, antérieure à aujourd'hui, plausible. */
 export function validateBirthDate(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.dateNaissanceRequired;
@@ -145,12 +131,10 @@ export function validateBirthDate(value: string): string | undefined {
   return undefined;
 }
 
-/** SUJET (Contact) — obligatoire. */
 export function validateSujet(value: string): string | undefined {
   return value.trim() ? undefined : msg.sujetRequired;
 }
 
-/** MESSAGE (Contact) — obligatoire, 1000 caractères max. */
 export function validateMessage(value: string): string | undefined {
   const trimmed = value.trim();
   if (!trimmed) return msg.messageRequired;

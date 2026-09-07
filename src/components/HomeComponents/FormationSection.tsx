@@ -5,7 +5,6 @@ import { CARD_WIDTH_CLASS, NIVEAU_ORDER } from '@/constants';
 import SectionHeader from '../common/SectionHeader';
 import SectionCta from '../common/SectionCta';
 import SectionContent from '../common/SectionContent';
-import ParticlesBackground from '../animations/ParticlesBackground';
 import ScrollableCardGrid from '../common/ScrollableCardGrid';
 import MediaCard from '../common/MediaCard';
 import FilterButton from '../common/FilterButton';
@@ -68,7 +67,6 @@ const FormationsSection = ({
 
   return (
     <SectionContent
-      backgroundContent={<ParticlesBackground />}
       loading={loading}
       error={error}
       isEmpty={!loading && total === 0}

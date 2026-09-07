@@ -8,8 +8,6 @@ import { cn } from '@/lib';
 import { buttonVariants } from '../ui/button-variants';
 import type { HeroSectionProps } from '@/types';
 
-import ParticlesBackground from '../animations/ParticlesBackground';
-
 const HeroSection: React.FC<HeroSectionProps> = ({
   title = 'École Supérieure des Sciences Géomatiques',
   primaryButton = { text: 'Explorer les formations', link: '/formations' },
@@ -38,13 +36,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         className="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_62%_58%_at_50%_50%,rgb(27_31_34_/_0.46)_0%,rgb(27_31_34_/_0.28)_55%,transparent_78%)]"
       />
 
-      <ParticlesBackground particleCount={85} />
-
-      {/* Trame géospatiale discrète */}
       <div className="hero-home-grid pointer-events-none absolute inset-0 -z-10 opacity-20" />
 
       <div className="section-shell relative z-10 flex w-full max-w-5xl flex-col items-center text-center">
-        {/* Rattachement institutionnel */}
         <Reveal animation="fade-down" duration={700} delay={80}>
           <div className="mb-6 inline-flex flex-wrap items-center justify-center gap-2.5 rounded-full border border-white/20 bg-ink-950/40 px-4 py-2 backdrop-blur-md">
             <span className="relative flex size-2">
@@ -67,7 +61,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Slogan statique */}
         <Reveal animation="fade-up" duration={700} delay={320} className="w-full">
           <p className="mx-auto mt-6 max-w-3xl text-h2 font-medium text-ink-100">
-            Formez les experts de demain!
+            Ensemble, Formons les experts de demain!
           </p>
         </Reveal>
 

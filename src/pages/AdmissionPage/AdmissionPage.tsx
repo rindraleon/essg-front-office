@@ -3,7 +3,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import type { AdmissionPageProps } from '@/types';
-import { AdmissionForm, PageHero, Breadcrumb, EmptyState } from '@/components';
+import {
+  AdmissionDocumentDownload,
+  AdmissionForm,
+  PageHero,
+  Breadcrumb,
+  EmptyState,
+} from '@/components';
 
 import { SITE_HERO_IMAGE } from '@/constants';
 import { useAdmissionsSettings, useTitle } from '@/hooks';
@@ -26,7 +32,7 @@ const AdmissionClosed = () => {
 };
 
 const AdmissionPage: React.FC<AdmissionPageProps> = (props: Readonly<AdmissionPageProps>) => {
-  useTitle('Admission | ESSG');
+  useTitle('Candidature | ESSG');
 
   const { data: settings, isLoading } = useAdmissionsSettings();
   const admissionsOuvertes = settings?.admissionsOuvertes ?? true;
@@ -55,6 +61,7 @@ const AdmissionPage: React.FC<AdmissionPageProps> = (props: Readonly<AdmissionPa
         imageAlt="Admission ESSG"
         title={pageTitle}
         description={pageDescription}
+        actions={<AdmissionDocumentDownload />}
       />
 
       <Breadcrumb items={[{ label: 'Admission' }]} />

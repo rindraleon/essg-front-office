@@ -51,11 +51,11 @@ const FORM_FIELDS = Object.keys(INITIAL_FORM_DATA) as ContactFormField[];
 const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) => {
   const [formData, setFormData] = useState<ContactFormData>(INITIAL_FORM_DATA);
   const [submitted, setSubmitted] = useState(false);
-  /** Champs touchés (perte de focus) : l'erreur n'apparaît qu'après interaction. */
+
   const [touched, setTouched] = useState<Partial<Record<ContactFormField, boolean>>>({});
-  /** Tentative de soumission : toutes les erreurs sont affichées. */
+
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  /** Erreurs serveur (vérification email, rejet API) rattachées à un champ. */
+
   const [serverErrors, setServerErrors] = useState<Partial<Record<ContactFormField, string>>>({});
   const lastVerifiedEmailRef = useRef('');
   const formRef = useRef<HTMLFormElement>(null);
@@ -64,7 +64,6 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
 
   const fieldErrors = useMemo(() => validateContactForm(formData), [formData]);
 
-  /** Erreur visible : erreur serveur immédiate, sinon erreur de format après blur/submit. */
   const errorOf = useCallback(
     (field: ContactFormField): string | undefined =>
       serverErrors[field] ?? (touched[field] || submitAttempted ? fieldErrors[field] : undefined),
@@ -73,7 +72,7 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
 
   const checkEmailDomain = useCallback(async (email: string): Promise<void> => {
     const trimmed = email.trim().toLowerCase();
-    // Vérification serveur uniquement si la syntaxe est valide et l'adresse a changé.
+
     if (
       !trimmed ||
       validateContactField('email', trimmed) ||
@@ -111,7 +110,6 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
     setFormData((prev) => ({ ...prev, [field]: formatContactValue(field, value) }));
   };
 
-  /** Blur délégué au <form> : marque le champ comme touché et déclenche les contrôles serveur. */
   const handleBlur = (event: React.FocusEvent<HTMLFormElement>) => {
     const target = event.target as EventTarget & { name?: string; value?: string };
     const field = target.name as ContactFormField | undefined;
@@ -148,7 +146,7 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
       });
       setSubmitted(true);
     } catch (error) {
-      // Rattachement de l'erreur au champ concerné quand c'est possible, toast global sinon.
+
       const { fieldErrors: mapped, globalMessage } = mapApiErrorToFormErrors(error, FORM_FIELDS);
       if (Object.keys(mapped).length > 0) {
         setServerErrors((previous) => ({ ...previous, ...mapped }));
@@ -223,23 +221,6 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
 
           <div className="grid items-start gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="prenom">Prénom</Label>
-              <div className="relative">
-                <User className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-brand-500" />
-                <Input
-                  id="prenom"
-                  name="prenom"
-                  autoComplete="given-name"
-                  value={formData.prenom}
-                  onChange={handleChange}
-                  maxLength={100}
-                  className="pl-9"
-                  {...fieldA11yProps('prenom', errorOf('prenom'))}
-                />
-              </div>
-              <FormFieldError id="prenom-error" error={errorOf('prenom')} />
-            </div>
-            <div className="space-y-1.5">
               <Label htmlFor="nom">Nom *</Label>
               <div className="relative">
                 <IdCard className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-brand-500" />
@@ -256,6 +237,25 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
               </div>
               <FormFieldError id="nom-error" error={errorOf('nom')} />
             </div>
+            
+            <div className="space-y-1.5">
+              <Label htmlFor="prenom">Prénom</Label>
+              <div className="relative">
+                <User className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-brand-500" />
+                <Input
+                  id="prenom"
+                  name="prenom"
+                  autoComplete="given-name"
+                  value={formData.prenom}
+                  onChange={handleChange}
+                  maxLength={100}
+                  className="pl-9"
+                  {...fieldA11yProps('prenom', errorOf('prenom'))}
+                />
+              </div>
+              <FormFieldError id="prenom-error" error={errorOf('prenom')} />
+            </div>
+            
             <div className="space-y-1.5">
               <Label htmlFor="email">Email *</Label>
               <div className="relative">

@@ -3,7 +3,6 @@ import SectionCta from '../common/SectionCta';
 import SectionHeader from '../common/SectionHeader';
 import RevealOnScroll from '../common/RevealOnScroll';
 import PartnerChipCard from '../PartenaireComponents/PartnerChipCard';
-import ParticlesBackground from '../animations/ParticlesBackground';
 import { usePartenaires } from '@/hooks';
 import { gsap, prefersReducedMotion, registerGsap } from '@/lib';
 import type { PartenairesSectionProps, PartenaireItem } from '@/types';
@@ -108,7 +107,6 @@ const PartenairesSection = ({
     };
   }, [visibles]);
 
-  // Pas de chargement, pas d'erreur, aucun partenaire : masquer la section.
   if (!loading && !error && visibles.length === 0) {
     return null;
   }
@@ -154,7 +152,6 @@ const PartenairesSection = ({
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-ink-50 via-white to-brand-50/55 section-y">
-      <ParticlesBackground />
       <div className="section-shell">
         <SectionHeader eyebrow="Réseau & Coopérations" title={title} description={description} />
       </div>

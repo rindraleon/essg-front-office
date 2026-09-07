@@ -90,7 +90,6 @@ const makeIcon =
     );
   };
 
-/* ---- Icônes (noms MUI → lucide-react) ---- */
 export const ArrowForwardRoundedIcon = makeIcon(ArrowRight);
 export const ArrowBackRoundedIcon = makeIcon(ArrowLeft);
 export const SchoolRoundedIcon = makeIcon(GraduationCap);
@@ -149,5 +148,4 @@ export const HomeRoundedIcon = makeIcon(Home);
 export const FilterListRoundedIcon = makeIcon(SlidersHorizontal);
 export const InsertLinkOutlined = makeIcon(ExternalLink);
 
-/** Icône par défaut générique */
 export const GenericIcon = makeIcon(Sparkles);
