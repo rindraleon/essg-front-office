@@ -2,7 +2,6 @@ import React from 'react';
 import { Award, Briefcase, Globe2, Lightbulb, Network } from 'lucide-react';
 import SectionHeader from '../common/SectionHeader';
 import { StaggerReveal } from '../common/RevealOnScroll';
-import ParticlesBackground from '../animations/ParticlesBackground';
 
 interface ValueItem {
   icon: React.ReactNode;
@@ -51,7 +50,6 @@ const VALUES: ValueItem[] = [
 const ValuesSection: React.FC = () => {
   return (
     <section className="relative overflow-hidden bg-brand-300/10 section-y-tight">
-      <ParticlesBackground particleCount={85} />
       <div className="absolute inset-0 -z-10 opacity-[0.03] [background-image:radial-gradient(circle_at_50%_50%,var(--color-brand-700)_1px,transparent_1px)] [background-size:24px_24px]" />
 
       <div className="section-shell">

@@ -26,7 +26,7 @@ function Dialog({ open, onOpenChange, children }: DialogProps) {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
-      // Restauration du focus à la fermeture (accessibilité)
+
       requestAnimationFrame(() => previouslyFocused?.focus?.());
     };
   }, [open, onOpenChange]);
@@ -71,7 +71,6 @@ function DialogContent({
     xl: 'max-w-4xl',
   }[size];
 
-  // Focus initial : premier élément focusable du dialogue
   const contentRef = React.useRef<HTMLDialogElement>(null);
   React.useEffect(() => {
     const el = contentRef.current;

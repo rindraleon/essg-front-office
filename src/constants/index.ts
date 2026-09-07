@@ -1,3 +1,11 @@
+export {
+  ABOUT_MISSION,
+  ABOUT_OBJECTIVES,
+  ABOUT_TIMELINE,
+  ABOUT_VALUES,
+  ABOUT_VISION,
+} from './about.constants';
+export { DIRECTOR_MESSAGE } from './director.constants';
 export { GREEN } from './colors';
 export { FAQ_ITEMS, HOME_FAQ_ITEMS } from './faq.constants';
 export { NIVEAU_ORDER } from './formation';

@@ -1,19 +1,8 @@
-/**
- * Transformation centralisée des erreurs backend (ApiError) en erreurs de
- * formulaire : le message est rattaché au champ concerné lorsqu'il est
- * identifiable, sinon une notification globale claire est produite.
- * Aucun détail technique (stack trace, SQL, codes internes) n'est exposé.
- */
 import { ApiError } from '@/api';
 import { validationMessages as msg } from './messages';
 
 type FieldMatcher = { field: string; pattern: RegExp };
 
-/**
- * Mots-clés des messages backend (français) par champ.
- * Les libellés correspondent à ceux produits par le backend
- * (see: essg-backend — validation-messages.ts).
- */
 const FIELD_MATCHERS: readonly FieldMatcher[] = [
   { field: 'email', pattern: /\bemail\b/i },
   { field: 'telephone', pattern: /t[eé]l[eé]phone/i },
@@ -30,9 +19,9 @@ const FIELD_MATCHERS: readonly FieldMatcher[] = [
 ];
 
 export type MappedApiErrors = {
-  /** Erreurs rattachables à des champs du formulaire. */
+
   fieldErrors: Record<string, string>;
-  /** Message global compréhensible (toast), toujours défini si une erreur existe. */
+
   globalMessage?: string;
 };
 
@@ -44,12 +33,6 @@ function humanizeApiMessage(error: ApiError): string | undefined {
   return message || msg.apiGeneric;
 }
 
-/**
- * Mappe une erreur API vers les champs du formulaire courant.
- * @param error erreur attrapée (ApiError ou inconnue)
- * @param knownFields champs réellement présents dans le formulaire —
- *        seuls ces champs peuvent recevoir une erreur
- */
 export function mapApiErrorToFormErrors(
   error: unknown,
   knownFields: readonly string[]

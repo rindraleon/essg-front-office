@@ -1,4 +1,3 @@
-// Point d'entrée unique des exports du répertoire "types".
 export type {
   Actualite,
   ActualitesPageProps,

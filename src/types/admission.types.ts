@@ -4,7 +4,7 @@ export type AdmissionFormData = {
   dateNaissance: string;
   lieuNaissance: string;
   nationalite: string;
-  sexe: string;
+  genre: string;
   adresse: string;
   telephone: string;
   email: string;
@@ -25,6 +25,7 @@ export type AdmissionFormData = {
   licenceMention: string;
   licenceAnneeObtention: string;
   numeroBordereau: string;
+  sourceReconnaissance: string;
   releveBac?: File;
   bordereau?: File;
   demandeInscription?: File;

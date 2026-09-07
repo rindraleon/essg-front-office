@@ -2,18 +2,12 @@ import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib';
 
 type FormFieldErrorProps = {
-  /** id du message, référencé par aria-describedby du champ. */
+
   id?: string;
   error?: string;
   className?: string;
 };
 
-/**
- * Message d'erreur sous un champ de formulaire.
- * La hauteur d'une ligne est toujours réservée afin d'éviter tout saut de
- * layout quand l'erreur apparaît (UX stable), avec icône + couleur + texte
- * (l'erreur ne dépend jamais de la couleur seule).
- */
 export const FormFieldError = ({ id, error, className }: FormFieldErrorProps) => (
   <p
     id={id}

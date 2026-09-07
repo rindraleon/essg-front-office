@@ -13,7 +13,6 @@ export const useTyped = (words: readonly string[], options: UseTypedOptions = {}
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
 
-  // Blinking cursor
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev);
@@ -21,7 +20,6 @@ export const useTyped = (words: readonly string[], options: UseTypedOptions = {}
     return () => clearInterval(cursorInterval);
   }, []);
 
-  // Typewriter logic
   useEffect(() => {
     if (!words || words.length === 0) return;
 
@@ -35,7 +33,7 @@ export const useTyped = (words: readonly string[], options: UseTypedOptions = {}
           setText(currentWord.slice(0, text.length + 1));
         }, typeSpeed);
       } else {
-        // Word is fully typed, pause before deleting
+
         timer = setTimeout(() => {
           setIsDeleting(true);
         }, pauseDuration);
@@ -45,7 +43,7 @@ export const useTyped = (words: readonly string[], options: UseTypedOptions = {}
         setText(currentWord.slice(0, text.length - 1));
       }, deleteSpeed);
     } else {
-      // Word is fully deleted, move to next
+
       setIsDeleting(false);
       setWordIndex((prev) => (prev + 1) % words.length);
     }

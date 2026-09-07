@@ -1,4 +1,4 @@
-import { Fade, IconButton, Tooltip } from '../compat/mui';
+import { Fade, IconButton, Tooltip } from '../common/mui';
 import { ExternalLink, MapPin } from 'lucide-react';
 import React, { useState } from 'react';
 import { GREEN } from '@/constants';

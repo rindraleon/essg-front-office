@@ -1,4 +1,3 @@
-// Point d'entrée unique des exports du répertoire "services".
 export { default as actualiteService } from './actualite.service';
 export {
   ADMISSION_MAX_FILE_SIZE,

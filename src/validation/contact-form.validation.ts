@@ -1,6 +1,3 @@
-/**
- * Validation du formulaire de contact (champ par champ + formulaire complet).
- */
 import type { ContactFormData } from '@/types';
 import type { FormErrors } from './form-errors';
 import {
@@ -34,7 +31,6 @@ export function validateContactField(field: ContactFormField, value: string): st
   }
 }
 
-/** Valide tout le formulaire et retourne la carte des erreurs (vide = valide). */
 export function validateContactForm(data: ContactFormData): FormErrors {
   const errors: FormErrors = {};
   (Object.keys(data) as ContactFormField[]).forEach((field) => {
@@ -44,7 +40,6 @@ export function validateContactForm(data: ContactFormData): FormErrors {
   return errors;
 }
 
-/** Normalise les données juste avant l'envoi à l'API. */
 export function normalizeContactPayload(data: ContactFormData): ContactFormData {
   return {
     nom: data.nom.trim(),

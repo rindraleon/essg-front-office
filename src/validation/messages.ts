@@ -1,7 +1,3 @@
-/**
- * Messages d'erreur de validation — français, simples et humains.
- * Source unique partagée par les formulaires Contact et Admission.
- */
 export const validationMessages = {
   required: 'Ce champ est obligatoire.',
   nomRequired: 'Le nom est obligatoire.',
@@ -11,7 +7,9 @@ export const validationMessages = {
     'Le prénom ne peut contenir que des lettres, espaces, apostrophes ou traits d’union.',
   prenomTooLong: 'Le prénom ne peut pas dépasser 100 caractères.',
   emailRequired: 'Veuillez saisir une adresse email valide.',
-  emailInvalid: 'Veuillez saisir une adresse email valide.',
+  emailInvalid: 'Adresse e-mail invalide.',
+  emailDisposable: 'Le domaine de cette adresse est introuvable ou jetable. Utilisez une adresse e-mail valide.',
+  emailUndeliverable: 'Cette adresse e-mail ne semble pas pouvoir recevoir de messages.',
   emailTooLong: 'L’adresse email ne peut pas dépasser 50 caractères.',
   emailUnverified: 'Cette adresse email semble invalide ou ne peut pas être vérifiée.',
   phoneInvalid: 'Veuillez saisir un numéro de téléphone valide.',

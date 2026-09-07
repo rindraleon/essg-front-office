@@ -969,3 +969,22 @@
     transform: none;
   }
 }
+
+/* ------------------------------------------------------------------
+   Texte justifié institutionnel (page À propos notamment).
+   La justification n'est appliquée qu'à partir du breakpoint tablette :
+   sur mobile elle créerait des espaces excessifs entre les mots.
+   ------------------------------------------------------------------ */
+.text-justified {
+  text-align: left;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-wrap: pretty;
+}
+
+@media (min-width: 640px) {
+  .text-justified {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+}

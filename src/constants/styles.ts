@@ -1,6 +1,5 @@
 import { BRAND } from './colors';
 
-/** Bouton « lien » discret (ex: « En savoir plus », « Lire la suite ») */
 export const TEXT_LINK_BUTTON = {
   mt: 3,
   p: 0,
@@ -13,7 +12,6 @@ export const TEXT_LINK_BUTTON = {
   '&:hover': { backgroundColor: 'transparent', color: BRAND[700] },
 } as const;
 
-/** Bouton plein (CTA principal) */
 export const PRIMARY_BUTTON = {
   py: 1,
   px: 2.5,
@@ -33,6 +31,5 @@ export const PRIMARY_BUTTON = {
   },
 } as const;
 
-/** Carte squelette de chargement (largeur de carte standard) */
 export const SKELETON_CARD_CLASS =
   'rounded-3xl overflow-hidden border border-ink-100 bg-white shadow-card';

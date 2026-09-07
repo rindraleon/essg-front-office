@@ -1,5 +1,4 @@
 import SectionContent from '../common/SectionContent';
-import ParticlesBackground from '../animations/ParticlesBackground';
 import SectionCta from '../common/SectionCta';
 import SectionHeader from '../common/SectionHeader';
 import { HOME_FAQ_ITEMS } from '@/constants';
@@ -10,7 +9,6 @@ const SECTION_CTA = { label: 'Toutes les questions', link: '/faq' } as const;
 const FaqSection = () => {
   return (
     <SectionContent
-      backgroundContent={<ParticlesBackground />}
       isEmpty={HOME_FAQ_ITEMS.length === 0}
       emptyMessage="Aucune question fréquente disponible pour le moment."
       headerContent={

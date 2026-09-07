@@ -14,7 +14,6 @@ import {
   Users,
 } from 'lucide-react';
 import SectionHeader from '../common/SectionHeader';
-import ParticlesBackground from '../animations/ParticlesBackground';
 import { RevealOnScroll, StaggerReveal } from '../common/RevealOnScroll';
 
 const ADVANTAGES = [
@@ -87,7 +86,6 @@ const SECTORS = [
 const WhyChooseSection: React.FC = () => {
   return (
     <section className="relative overflow-hidden bg-brand-200/80 section-y-tight">
-      <ParticlesBackground />
       <div className="section-shell">
         {/* Animated Section Header */}
         <SectionHeader

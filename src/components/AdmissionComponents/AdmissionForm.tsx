@@ -17,10 +17,12 @@ import {
   UserRound,
 } from 'lucide-react';
 import {
+  ADMISSION_SOURCES,
   BAC_CATEGORIES,
   getBacCategory,
   getBacSeries,
   getEligiblePrograms,
+  getOptionalDocumentIds,
   getRequiredDocumentIds,
 } from '@/config';
 import type { AdmissionDocumentKind, AdmissionFormData, AdmissionFormProps } from '@/types';
@@ -49,6 +51,7 @@ import { FormFieldError } from '../ui/field-error';
 import { fieldA11yProps } from '@/utils';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { Select } from '../ui/select';
 import {
   AdmissionSectionTitle,
   BacInformation,
@@ -58,15 +61,13 @@ import {
   PreviousEducationInformation,
 } from './AdmissionFormSections';
 
-const CURRENT_YEAR = new Date().getFullYear();
-
 const INITIAL_FORM_DATA: AdmissionFormData = {
   nom: '',
   prenom: '',
   dateNaissance: '',
   lieuNaissance: '',
   nationalite: 'Malgache',
-  sexe: '',
+  genre: '',
   adresse: '',
   telephone: '',
   email: '',
@@ -87,6 +88,7 @@ const INITIAL_FORM_DATA: AdmissionFormData = {
   licenceMention: '',
   licenceAnneeObtention: '',
   numeroBordereau: '',
+  sourceReconnaissance: '',
   accepteConditions: false,
 };
 
@@ -99,7 +101,6 @@ const STEPS = [
   { id: 4, label: 'Pièces jointes', shortLabel: 'Documents', icon: Paperclip },
 ] as const;
 
-/** Champs purement numériques (chiffres uniquement, longueur bornée). */
 const DIGITS_ONLY_FIELDS: Partial<Record<AdmissionField, number>> = {
   numeroBaccalaureat: 20,
   bacAnneeObtention: 4,
@@ -119,7 +120,6 @@ const TITLE_CASE_FIELDS = new Set<AdmissionField>([
 
 const UPPER_CASE_FIELDS = new Set<AdmissionField>(['nom', 'numeroMatricule']);
 
-/** Champs textuels connus — utilisés pour rattacher les erreurs API au bon champ. */
 const ADMISSION_FIELD_NAMES = Object.keys(INITIAL_FORM_DATA).filter(
   (key) => key !== 'accepteConditions'
 );
@@ -161,12 +161,12 @@ const FILE_CONFIG: Record<AdmissionDocumentKind, { label: string; hint: string; 
       accept: ACCEPT_PDF_IMG,
     },
     releveBac: {
-      label: 'Relevé de notes du baccalauréat ou extrait de liste',
+      label: 'Relevé de notes BAC ou extrait de liste',
       hint: HINT_PDF_IMG,
       accept: ACCEPT_PDF_IMG,
     },
     diplomeBac: {
-      label: 'Photocopie du diplôme du baccalauréat',
+      label: 'Diplôme BAC (facultatif)',
       hint: HINT_PDF_IMG,
       accept: ACCEPT_PDF_IMG,
     },
@@ -259,11 +259,11 @@ function FilePicker({
 const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
   const [formData, setFormData] = useState<AdmissionFormData>(INITIAL_FORM_DATA);
   const [files, setFiles] = useState<AdmissionFiles>({});
-  /** Erreurs asynchrones : doublons, vérification email serveur, rejets API. */
+
   const [asyncErrors, setAsyncErrors] = useState<FormErrors>({});
-  /** Champs touchés (perte de focus) : l'erreur de format n'apparaît qu'après interaction. */
+
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
-  /** Tentative de validation de l'étape courante : affiche toutes ses erreurs. */
+
   const [stepAttempted, setStepAttempted] = useState(false);
   const [currentStep, setCurrentStep] = useState<AdmissionStep>(1);
   const formTopRef = useRef<HTMLDivElement>(null);
@@ -275,8 +275,8 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
 
   const bacSeries = useMemo(() => getBacSeries(formData.bacType), [formData.bacType]);
   const eligiblePrograms = useMemo(
-    () => getEligiblePrograms(formData.niveau, formData.bacCategorie),
-    [formData.niveau, formData.bacCategorie]
+    () => getEligiblePrograms(formData.niveau, formData.bacSerie),
+    [formData.niveau, formData.bacSerie]
   );
   const eligibleMentions = useMemo(
     () => [...new Map(eligiblePrograms.map((program) => [program.mentionId, program])).values()],
@@ -287,17 +287,15 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     [eligiblePrograms, formData.mention]
   );
   const requiredDocumentIds = useMemo(
-    () =>
-      getRequiredDocumentIds(
-        formData.niveau,
-        formData.bacAnneeObtention,
-        CURRENT_YEAR
-      ) as AdmissionDocumentKind[],
-    [formData.niveau, formData.bacAnneeObtention]
+    () => getRequiredDocumentIds(formData.niveau) as AdmissionDocumentKind[],
+    [formData.niveau]
+  );
+  const optionalDocumentIds = useMemo(
+    () => getOptionalDocumentIds() as AdmissionDocumentKind[],
+    []
   );
   const missingDocumentCount = requiredDocumentIds.filter((kind) => !files[kind]).length;
 
-  /** Erreurs de format de l'étape courante (validateurs partagés). */
   const stepFormatErrors = useMemo<FormErrors>(() => {
     if (currentStep === 1) return personalStepErrors(formData);
     if (currentStep === 2) return bacStepErrors(formData);
@@ -305,10 +303,6 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     return documentStepErrors(formData, files, requiredDocumentIds);
   }, [currentStep, formData, eligiblePrograms, files, requiredDocumentIds]);
 
-  /**
-   * Erreurs visibles de l'étape courante : erreurs asynchrones immédiates, et
-   * erreurs de format seulement après blur du champ ou tentative de validation.
-   */
   const visibleErrors = useMemo<FormErrors>(() => {
     const merged: FormErrors = {};
     const keys = new Set<string>([...Object.keys(stepFormatErrors), ...Object.keys(asyncErrors)]);
@@ -362,7 +356,6 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     setField(fieldName, formatFieldValue(fieldName, value));
   };
 
-  /** Blur délégué au <form> : marque le champ comme touché (validation douce). */
   const handleBlur = (event: React.FocusEvent<HTMLFormElement>) => {
     const target = event.target as EventTarget & { name?: string };
     if (!target.name) return;
@@ -379,7 +372,6 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     setAsyncErrors((previous) => ({ ...previous, [kind]: undefined }));
   };
 
-  /** Vérifie côté serveur que le domaine email peut recevoir des messages (fail-open). */
   const verifyEmail = async (email: string): Promise<boolean> => {
     const trimmed = email.trim().toLowerCase();
     if (!trimmed || validateEmail(trimmed)) return false;
@@ -428,7 +420,6 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     }
   };
 
-  /** Blur du champ email : vérification du domaine puis des doublons annuels. */
   const handleEmailBlur = (email: string): Promise<boolean> =>
     verifyEmail(email).then((domainOk) => (domainOk ? checkDuplicate('email') : false));
 
@@ -537,8 +528,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       toast.success('Candidature soumise avec succès ! Vous recevrez un email de confirmation.');
       setSubmitted(true);
     } catch (error) {
-      // Rattachement au champ concerné quand l'erreur backend l'identifie,
-      // notification globale claire sinon (jamais de détail technique).
+
       const { fieldErrors: mapped, globalMessage } = mapApiErrorToFormErrors(
         error,
         ADMISSION_FIELD_NAMES
@@ -739,9 +729,8 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
 
                 <div className="mb-5 flex items-start gap-2 rounded-xl border border-brand-100 bg-brand-50 p-3 text-small text-brand-800">
                   <Info className="mt-0.5 size-4 shrink-0" />
-                  {formData.bacAnneeObtention && Number(formData.bacAnneeObtention) === CURRENT_YEAR
-                    ? "Pour un Bac obtenu cette année, le relevé de notes ou l'extrait de liste est demandé."
-                    : 'Pour un Bac obtenu avant cette année, la photocopie du diplôme est demandée.'}
+                  Le relevé de notes du baccalauréat ou l'extrait de liste est obligatoire. La
+                  photocopie du diplôme du baccalauréat reste facultative.
                 </div>
                 {stepAttempted && missingDocumentCount > 0 && (
                   <div
@@ -763,6 +752,37 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
                       onChange={(file) => setFile(kind, file)}
                     />
                   ))}
+                  {optionalDocumentIds.map((kind) => (
+                    <FilePicker
+                      key={kind}
+                      kind={kind}
+                      file={files[kind] ?? null}
+                      error={visibleErrors[kind]}
+                      onChange={(file) => setFile(kind, file)}
+                    />
+                  ))}
+                </div>
+
+                <div className="mt-6 rounded-xl border border-brand-100 bg-white p-4 shadow-sm">
+                  <Select
+                    id="sourceReconnaissance"
+                    name="sourceReconnaissance"
+                    label="Comment avez-vous connu l'ESSG ? *"
+                    value={formData.sourceReconnaissance}
+                    onChange={handleChange}
+                    {...fieldA11yProps('sourceReconnaissance', visibleErrors.sourceReconnaissance)}
+                  >
+                    <option value="">Choisir une réponse</option>
+                    {ADMISSION_SOURCES.map((source) => (
+                      <option key={source.value} value={source.value}>
+                        {source.label}
+                      </option>
+                    ))}
+                  </Select>
+                  <FormFieldError
+                    id="sourceReconnaissance-error"
+                    error={visibleErrors.sourceReconnaissance}
+                  />
                 </div>
               </section>
 
