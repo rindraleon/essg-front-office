@@ -13,7 +13,11 @@ export const createContactMessage = async (data: ContactFormData): Promise<void>
 export const verifyEmailDomain = async (email: string): Promise<EmailDomainCheck | null> => {
   try {
     return await apiClient.get<EmailDomainCheck>(endpoints.verifyEmail, { email });
-  } catch {
+  } catch (error) {
+    console.warn(
+      'Échec dans verifyEmailDomain — poursuite en mode dégradé',
+      error instanceof Error ? error.message : error
+    );
     return null;
   }
 };

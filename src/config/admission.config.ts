@@ -42,7 +42,6 @@ export const ADMISSION_CONFIG = {
   },
 
   series: {
-
     scientifiqueTechnique: ['c', 'd', 's', 'tgc', 'tgi'],
 
     scientifiqueAgricole: ['c', 'd', 's', 'taef'],

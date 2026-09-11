@@ -54,7 +54,6 @@ const SectionContent: React.FC<SectionContentProps> = ({
       </div>
     );
   } else if (isEmpty) {
-
     content = <div className="section-y-tight text-center text-ink-500">{emptyMessage}</div>;
   } else {
     content = children;

@@ -2,7 +2,6 @@ import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib';
 
 type FormFieldErrorProps = {
-
   id?: string;
   error?: string;
   className?: string;

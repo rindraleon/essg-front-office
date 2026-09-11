@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import {
   ArrowLeft,
@@ -43,12 +43,11 @@ import {
   type FormErrors,
 } from '@/validation';
 import { verifyEmailDomain } from '@/services/contact.service';
-import { toCapitalizedWords, toUpperName } from '@/utils';
+import { toCapitalizedWords, toUpperName, fieldA11yProps } from '@/utils';
 import { admissionService, formatFileSize, isProofFileValid } from '@/services';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { FormFieldError } from '../ui/field-error';
-import { fieldA11yProps } from '@/utils';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select } from '../ui/select';
@@ -95,10 +94,10 @@ const INITIAL_FORM_DATA: AdmissionFormData = {
 type AdmissionStep = 1 | 2 | 3 | 4;
 
 const STEPS = [
-  { id: 1, label: 'Informations personnelles', shortLabel: 'Identité', icon: UserRound },
-  { id: 2, label: 'Informations sur le Bac', shortLabel: 'Bac', icon: GraduationCap },
-  { id: 3, label: 'Formation souhaitée', shortLabel: 'Formation', icon: BookOpenCheck },
-  { id: 4, label: 'Pièces jointes', shortLabel: 'Documents', icon: Paperclip },
+  { id: 1, label: 'Informations', shortLabel: 'Informations', icon: UserRound },
+  { id: 2, label: 'Scolarité', shortLabel: 'Scolarité', icon: GraduationCap },
+  { id: 3, label: 'Formation', shortLabel: 'Formation', icon: BookOpenCheck },
+  { id: 4, label: 'Validation', shortLabel: 'Validation', icon: Paperclip },
 ] as const;
 
 const DIGITS_ONLY_FIELDS: Partial<Record<AdmissionField, number>> = {
@@ -256,8 +255,27 @@ function FilePicker({
   );
 }
 
+const DRAFT_KEY = 'essg_admission_draft_v1';
+
+function loadDraft(): { data: AdmissionFormData; step: AdmissionStep } | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed?.data && typeof parsed.step === 'number') return parsed;
+  } catch (error) {
+    console.warn(
+      'Brouillon d’admission illisible — reprise avec un formulaire vierge',
+      error instanceof Error ? error.message : error
+    );
+  }
+  return null;
+}
+
 const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
-  const [formData, setFormData] = useState<AdmissionFormData>(INITIAL_FORM_DATA);
+  // Chargé une seule fois au montage via l'initialiseur paresseux de useState.
+  const [draft] = useState(() => (typeof window === 'undefined' ? null : loadDraft()));
+  const [formData, setFormData] = useState<AdmissionFormData>(draft?.data ?? INITIAL_FORM_DATA);
   const [files, setFiles] = useState<AdmissionFiles>({});
 
   const [asyncErrors, setAsyncErrors] = useState<FormErrors>({});
@@ -272,6 +290,54 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
   const [progress, setProgress] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Sauvegarde brouillon localStorage (UX-05 : reprise sans retaper)
+  const hasHydratedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (!hasHydratedRef.current) {
+      hasHydratedRef.current = true;
+      if (draft) {
+        // Restaurer étape sauvegardée
+        const step = draft.step as AdmissionStep;
+        if (step >= 1 && step <= 4) setCurrentStep(step);
+      }
+    }
+  }, [draft]);
+
+  React.useEffect(() => {
+    if (submitted) return;
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ data: formData, step: currentStep }));
+    } catch (error) {
+      console.warn(
+        'Sauvegarde du brouillon ignorée (stockage plein ou indisponible)',
+        error instanceof Error ? error.message : error
+      );
+    }
+  }, [formData, currentStep, submitted]);
+
+  React.useEffect(() => {
+    if (submitted) {
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch (error) {
+        console.warn(
+          'Suppression du brouillon ignorée (best-effort)',
+          error instanceof Error ? error.message : error
+        );
+      }
+    }
+  }, [submitted]);
+
+  const isFieldValid = (name: keyof AdmissionFormData): boolean => {
+    const touched = touchedFields[name as string];
+    if (!touched) return false;
+    if (visibleErrors[name as string]) return false;
+    const val = formData[name];
+    if (typeof val === 'string') return val.trim().length > 0;
+    if (typeof val === 'boolean') return val === true;
+    return false;
+  };
 
   const bacSeries = useMemo(() => getBacSeries(formData.bacType), [formData.bacType]);
   const eligiblePrograms = useMemo(
@@ -391,37 +457,32 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
   const checkDuplicate = async (
     kind: 'numeroBordereau' | 'email' | 'telephone'
   ): Promise<boolean> => {
+    // Seul le bordereau est désormais une contrainte d'unicité. Email/téléphone n'empêchent plus la candidature.
+    if (kind === 'email' || kind === 'telephone') {
+      return true;
+    }
     const value = formData[kind].trim();
     if (!value) return true;
     try {
       const result = await admissionService.checkDuplicate({ [kind]: value });
-      const disponibilites = {
-        numeroBordereau: result.numeroBordereauDisponible,
-        email: result.emailDisponible,
-        telephone: result.telephoneDisponible,
-      } as const;
-      const disponible = disponibilites[kind];
-      if (disponible === false) {
-        const annee = result.annee ? ` pour l'année ${result.annee}` : '';
-        const messages = {
-          numeroBordereau: 'Ce numéro de bordereau est déjà utilisé.',
-          email: `Une candidature avec cette adresse email a déjà été déposée${annee}. Une seule inscription est autorisée par an.`,
-          telephone: `Une candidature avec ce numéro de téléphone a déjà été déposée${annee}. Une seule inscription est autorisée par an.`,
-        } as const;
+      if (result.numeroBordereauDisponible === false) {
         setAsyncErrors((previous) => ({
           ...previous,
-          [kind]: messages[kind],
+          numeroBordereau: 'Ce numéro de bordereau est déjà utilisé.',
         }));
         return false;
       }
       return true;
-    } catch {
+    } catch (error) {
+      console.warn(
+        'Échec dans checkDuplicate — poursuite en mode dégradé',
+        error instanceof Error ? error.message : error
+      );
       return true;
     }
   };
 
-  const handleEmailBlur = (email: string): Promise<boolean> =>
-    verifyEmail(email).then((domainOk) => (domainOk ? checkDuplicate('email') : false));
+  const handleEmailBlur = (email: string): Promise<boolean> => verifyEmail(email);
 
   const focusFirstError = (nextErrors: FormErrors) => {
     const firstField = Object.keys(nextErrors)[0];
@@ -468,7 +529,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
     }
     if (currentStep === 1) {
       if (!(await handleEmailBlur(formData.email))) return;
-      if (!(await checkDuplicate('telephone'))) return;
+      // Email et téléphone ne bloquent plus la candidature (unicité supprimée)
     }
     if (currentStep < 4) moveToStep((currentStep + 1) as AdmissionStep);
   };
@@ -528,7 +589,10 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
       toast.success('Candidature soumise avec succès ! Vous recevrez un email de confirmation.');
       setSubmitted(true);
     } catch (error) {
-
+      console.warn(
+        'Échec dans handleSubmit — poursuite en mode dégradé',
+        error instanceof Error ? error.message : error
+      );
       const { fieldErrors: mapped, globalMessage } = mapApiErrorToFormErrors(
         error,
         ADMISSION_FIELD_NAMES
@@ -554,11 +618,51 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
           </div>
           <h2 className="text-h3 text-ink-900">Candidature envoyée !</h2>
           <p className="max-w-md text-small text-ink-500">
-            Votre dossier a bien été enregistré. Un accusé de réception vous a été envoyé par email.
+            Votre dossier a bien été enregistré. Un accusé de réception vous a été envoyé à{' '}
+            <strong className="text-ink-900">{formData.email}</strong>.
           </p>
-          <Button type="button" variant="outline" onClick={() => window.scrollTo({ top: 0 })}>
-            Retour en haut
-          </Button>
+          <div className="rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-small text-brand-900">
+            <strong>Conservez votre n° de dossier : {formData.numeroBordereau}</strong> — c’est
+            votre référence de bordereau. L’équipe vous répond sous{' '}
+            <strong>5 à 10 jours ouvrés</strong>.
+          </div>
+          <div className="w-full max-w-md rounded-xl border border-ink-100 bg-ink-50/70 p-4 text-left">
+            <h3 className="text-small font-semibold text-ink-900">Prochaines étapes</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-small text-ink-600">
+              <li>Vérification de l'éligibilité de votre baccalauréat et de vos pièces jointes.</li>
+              <li>
+                Analyse des doublons sur le numéro de bordereau (contact email/téléphone non
+                bloquant).
+              </li>
+              <li>Convocation par email/SMS si votre dossier est retenu.</li>
+            </ul>
+            <p className="mt-3 text-caption text-ink-500">
+              Délai indicatif de réponse : 5 à 10 jours ouvrés. En cas de question, contactez la
+              scolarité à{' '}
+              <a
+                href="mailto:essg@univ-fianarantsoa.mg"
+                className="font-medium text-brand-700 hover:underline"
+              >
+                essg@univ-fianarantsoa.mg
+              </a>{' '}
+              en rappelant votre nom et numéro de bordereau.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+              Retour en haut
+            </Button>
+            <a
+              href="mailto:essg@univ-fianarantsoa.mg"
+              className="text-small font-medium text-brand-700 hover:text-brand-800 underline underline-offset-4"
+            >
+              Contacter la scolarité
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -640,10 +744,9 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
               data={formData}
               errors={visibleErrors}
               onChange={handleChange}
+              isValid={isFieldValid}
               onDuplicateCheck={(field) =>
-                field === 'email'
-                  ? void handleEmailBlur(formData.email)
-                  : void checkDuplicate(field)
+                field === 'email' ? void handleEmailBlur(formData.email) : undefined
               }
             />
           )}
@@ -654,16 +757,23 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
               series={bacSeries}
               errors={visibleErrors}
               onChange={handleChange}
+              isValid={isFieldValid}
             />
           )}
 
           {currentStep === 3 && (
             <div className="space-y-8">
-              <LevelSelection data={formData} errors={visibleErrors} onChange={handleChange} />
+              <LevelSelection
+                data={formData}
+                errors={visibleErrors}
+                onChange={handleChange}
+                isValid={isFieldValid}
+              />
               <PreviousEducationInformation
                 data={formData}
                 errors={visibleErrors}
                 onChange={handleChange}
+                isValid={isFieldValid}
               />
               <FormationSelection
                 data={formData}
@@ -671,6 +781,7 @@ const AdmissionForm = ({ onSubmit }: AdmissionFormProps) => {
                 parcours={eligibleParcours}
                 errors={visibleErrors}
                 onChange={handleChange}
+                isValid={isFieldValid}
               />
               {visibleErrors.eligibility && (
                 <p className="rounded-xl border border-danger-100 bg-danger-50 p-3 text-small text-danger-700">

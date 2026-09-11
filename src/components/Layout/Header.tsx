@@ -156,7 +156,7 @@ const Header = () => {
             ref={menuButtonRef}
             type="button"
             className={cn(
-              'relative inline-flex size-10 items-center justify-center overflow-hidden rounded-xl border border-brand-100 bg-brand-50 text-brand-800 transition-[background-color,color,transform] duration-(--duration-hover) hover:bg-brand-100 active:scale-[0.98] lg:hidden motion-reduce:transition-none motion-reduce:active:scale-100',
+              'relative inline-flex size-11 items-center justify-center overflow-hidden rounded-xl border border-brand-100 bg-brand-50 text-brand-800 transition-[background-color,color,transform] duration-(--duration-hover) hover:bg-brand-100 active:scale-[0.98] lg:hidden motion-reduce:transition-none motion-reduce:active:scale-100',
               mobileMenuOpen && 'border-brand-200 bg-brand-100'
             )}
             onClick={() => setMobileMenuOpen((open) => !open)}

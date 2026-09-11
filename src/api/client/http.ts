@@ -141,7 +141,11 @@ async function parseJsonSafe(response: Response): Promise<unknown> {
   if (!text) return null;
   try {
     return JSON.parse(text) as unknown;
-  } catch {
+  } catch (error) {
+    console.warn(
+      'Échec dans parseJsonSafe — poursuite en mode dégradé',
+      error instanceof Error ? error.message : error
+    );
     return text;
   }
 }

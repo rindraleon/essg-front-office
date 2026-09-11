@@ -19,7 +19,6 @@ const FIELD_MATCHERS: readonly FieldMatcher[] = [
 ];
 
 export type MappedApiErrors = {
-
   fieldErrors: Record<string, string>;
 
   globalMessage?: string;

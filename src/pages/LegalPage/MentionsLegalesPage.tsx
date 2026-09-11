@@ -59,13 +59,13 @@ const MentionsLegalesPage: React.FC = () => {
             <li className="flex items-center gap-2">
               <Mail className="size-4 shrink-0 text-brand-600" />
               <span>
-                <strong>Email :</strong> contact@essg.sn
+                <strong>Email :</strong> essg@univ-fianarantsoa.mg
               </span>
             </li>
             <li className="flex items-center gap-2">
               <Globe className="size-4 shrink-0 text-brand-600" />
               <span>
-                <strong>Site Web :</strong> https://www.essg.sn
+                <strong>Site Web :</strong> https://essg.itdcmada.com
               </span>
             </li>
           </ul>
@@ -90,10 +90,10 @@ const MentionsLegalesPage: React.FC = () => {
             Pour toute question relative aux contenus publiés ou aux programmes académiques, vous
             pouvez contacter la direction pédagogique à l'adresse{' '}
             <a
-              href="mailto:contact@essg.sn"
+              href="mailto:essg@univ-fianarantsoa.mg"
               className="font-medium text-brand-700 underline underline-offset-4 hover:text-brand-800"
             >
-              contact@essg.sn
+              essg@univ-fianarantsoa.mg
             </a>
             .
           </p>

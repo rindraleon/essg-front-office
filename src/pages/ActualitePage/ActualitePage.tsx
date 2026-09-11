@@ -11,6 +11,7 @@ import {
   Select,
   Skeleton,
 } from '@/components';
+import HonestEmptyState from '@/components/common/HonestEmptyState';
 import { cn } from '@/lib';
 import { useActualites, useTitle } from '@/hooks';
 import type { Actualite } from '@/types';
@@ -26,6 +27,8 @@ const CATEGORIES = [
   { value: 'Partenariat', label: 'Partenariat' },
   { value: 'Vie Étudiante', label: 'Vie Étudiante' },
 ];
+
+const SKELETON_IDS = ['actu-sk-1', 'actu-sk-2', 'actu-sk-3', 'actu-sk-4', 'actu-sk-5', 'actu-sk-6'];
 
 const ActualitesPage = () => {
   useTitle('Actualités | ESSG');
@@ -74,6 +77,8 @@ const ActualitesPage = () => {
       : []),
   ];
 
+  const isEmptyFromDB = !loading && !error && (data?.meta.total ?? 0) === 0;
+
   return (
     <div>
       <PageHero
@@ -84,111 +89,121 @@ const ActualitesPage = () => {
       />
       <Breadcrumb items={[{ label: 'Actualités' }]} />
 
-      <FilterToolbar
-        resultText={resultText}
-        activeFilterChips={activeFilterChips}
-        hasActiveFilters={searchTerm !== '' || categorieFilter !== 'all'}
-        activeFilterCount={categorieFilter !== 'all' ? 1 : 0}
-        showFilters={showFilters}
-        onToggleFilters={() => setShowFilters((prev) => !prev)}
-        onResetFilters={handleResetFilters}
-        searchEnabled
-        showSearch={showSearch}
-        searchIsActive={searchTerm !== ''}
-        onToggleSearch={() => {
-          setShowSearch((prev) => !prev);
-          if (showSearch) setSearchTerm('');
-        }}
-        searchContent={
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-brand-600" />
-            <Input
-              ref={searchInputRef}
-              placeholder="Rechercher une actualité..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 pr-9"
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700"
-                aria-label="Effacer la recherche"
-              >
-                <X className="size-4" />
-              </button>
-            )}
+      {isEmptyFromDB ? (
+        <section className="section-y-tight">
+          <div className="section-shell">
+            <HonestEmptyState variant="actualites" />
           </div>
-        }
-      >
-        <Select
-          label="Catégorie"
-          value={categorieFilter}
-          onChange={(e) => setCategorieFilter(e.target.value)}
-        >
-          {CATEGORIES.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </Select>
-      </FilterToolbar>
-
-      <section className="section-y-tight">
-        <div className="section-shell">
-          <QueryState
-            loading={loading}
-            error={error}
-            empty={!loading && !error && actualites.length === 0}
-            onRetry={refetch}
-            emptyTitle="Aucune actualité trouvée"
-            emptyDescription="Essayez de modifier vos critères de recherche ou de réinitialiser les filtres."
-            onEmptyAction={handleResetFilters}
-            skeleton={
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="overflow-hidden rounded-2xl border border-ink-100 shadow-card"
+        </section>
+      ) : (
+        <>
+          <FilterToolbar
+            resultText={resultText}
+            activeFilterChips={activeFilterChips}
+            hasActiveFilters={searchTerm !== '' || categorieFilter !== 'all'}
+            activeFilterCount={categorieFilter !== 'all' ? 1 : 0}
+            showFilters={showFilters}
+            onToggleFilters={() => setShowFilters((prev) => !prev)}
+            onResetFilters={handleResetFilters}
+            searchEnabled
+            showSearch={showSearch}
+            searchIsActive={searchTerm !== ''}
+            onToggleSearch={() => {
+              setShowSearch((prev) => !prev);
+              if (showSearch) setSearchTerm('');
+            }}
+            searchContent={
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-brand-600" />
+                <Input
+                  ref={searchInputRef}
+                  placeholder="Rechercher une actualité..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 pr-9"
+                />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700"
+                    aria-label="Effacer la recherche"
                   >
-                    <Skeleton className="h-48 w-full rounded-none" />
-                    <div className="space-y-3 p-5">
-                      <Skeleton className="h-4 w-1/3" />
-                      <Skeleton className="h-5 w-4/5" />
-                      <Skeleton className="h-4 w-full" />
-                    </div>
-                  </div>
-                ))}
+                    <X className="size-4" />
+                  </button>
+                )}
               </div>
             }
           >
-            <div className="scroll-mt-24">
-              <div
-                className={cn(
-                  'grid grid-cols-1 gap-6 transition-opacity duration-(--duration-hover) sm:grid-cols-2 lg:grid-cols-3',
-                  'motion-reduce:transition-none'
-                )}
-              >
-                {actualites.map((actu) => (
-                  <ActualiteCard key={actu.id} actualite={actu} />
-                ))}
-              </div>
+            <Select
+              label="Catégorie"
+              value={categorieFilter}
+              onChange={(e) => setCategorieFilter(e.target.value)}
+            >
+              {CATEGORIES.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
+            </Select>
+          </FilterToolbar>
 
-              <Pagination
-                page={page}
-                totalPages={data?.meta.totalPages ?? 1}
-                onChange={(nextPage) => {
-                  setPage(nextPage);
-                  window.scrollTo({ top: 420, behavior: 'smooth' });
-                }}
-                ariaLabel="Pagination des actualités"
-                className="mt-12"
-              />
+          <section className="section-y-tight">
+            <div className="section-shell">
+              <QueryState
+                loading={loading}
+                error={error}
+                empty={!loading && !error && actualites.length === 0}
+                onRetry={refetch}
+                emptyTitle="Aucune actualité trouvée"
+                emptyDescription="Essayez de modifier vos critères de recherche ou de réinitialiser les filtres."
+                onEmptyAction={handleResetFilters}
+                skeleton={
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {SKELETON_IDS.map((id) => (
+                      <div
+                        key={id}
+                        className="overflow-hidden rounded-2xl border border-ink-100 shadow-card"
+                      >
+                        <Skeleton className="h-48 w-full rounded-none" />
+                        <div className="space-y-3 p-5">
+                          <Skeleton className="h-4 w-1/3" />
+                          <Skeleton className="h-5 w-4/5" />
+                          <Skeleton className="h-4 w-full" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <div className="scroll-mt-24">
+                  <div
+                    className={cn(
+                      'grid grid-cols-1 gap-6 transition-opacity duration-(--duration-hover) sm:grid-cols-2 lg:grid-cols-3',
+                      'motion-reduce:transition-none'
+                    )}
+                  >
+                    {actualites.map((actu) => (
+                      <ActualiteCard key={actu.id} actualite={actu} />
+                    ))}
+                  </div>
+
+                  <Pagination
+                    page={page}
+                    totalPages={data?.meta.totalPages ?? 1}
+                    onChange={(nextPage) => {
+                      setPage(nextPage);
+                      window.scrollTo({ top: 420, behavior: 'smooth' });
+                    }}
+                    ariaLabel="Pagination des actualités"
+                    className="mt-12"
+                  />
+                </div>
+              </QueryState>
             </div>
-          </QueryState>
-        </div>
-      </section>
+          </section>
+        </>
+      )}
     </div>
   );
 };

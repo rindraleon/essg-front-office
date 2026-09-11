@@ -2,12 +2,12 @@ import { cn } from '@/lib';
 import { useRessourcesHumaines, useTitle } from '@/hooks';
 import {
   Pagination,
-  EmptyState,
   FilterToolbar,
   PageHero,
   Breadcrumb,
   RessourceHumaineCard,
 } from '@/components';
+import HonestEmptyState from '@/components/common/HonestEmptyState';
 import {
   FormControl,
   IconButton,
@@ -19,7 +19,7 @@ import {
   TextField,
   type SelectChangeEvent,
 } from '@/components';
-import { Search, Users, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { generateSlug, formatFullName } from '@/utils';
 import type { RessourceHumaine } from '@/types';
@@ -34,6 +34,17 @@ const POSTES = [
   { value: 'Direction', label: 'Direction' },
   { value: 'Recherche', label: 'Recherche' },
   { value: 'Autre', label: 'Autre' },
+];
+
+const SKELETON_IDS = [
+  'rh-sk-1',
+  'rh-sk-2',
+  'rh-sk-3',
+  'rh-sk-4',
+  'rh-sk-5',
+  'rh-sk-6',
+  'rh-sk-7',
+  'rh-sk-8',
 ];
 
 const RessourcesHumainesPage: React.FC = () => {
@@ -113,6 +124,8 @@ const RessourcesHumainesPage: React.FC = () => {
     setPage(1);
   }, [searchTerm, posteFilter]);
 
+  const isEmptyFromDB = !loading && !error && (rhResult?.meta.total ?? 0) === 0;
+
   return (
     <div className="min-h-screen bg-ink-50">
       <PageHero
@@ -124,130 +137,147 @@ const RessourcesHumainesPage: React.FC = () => {
 
       <Breadcrumb items={[{ label: 'Ressources Humaines' }]} />
 
-      <FilterToolbar
-        resultText={resultText}
-        showFilters={showFilters}
-        activeFilterCount={activeFilterCount}
-        hasActiveFilters={hasActiveFilters}
-        onToggleFilters={() => setShowFilters((prev) => !prev)}
-        onResetFilters={handleResetFilters}
-        activeFilterChips={activeFilterChips}
-        searchEnabled
-        showSearch={showSearch}
-        searchIsActive={searchTerm !== ''}
-        onToggleSearch={handleToggleSearch}
-        searchContent={
-          <TextField
-            inputRef={searchInputRef}
-            fullWidth
-            size="small"
-            placeholder="Rechercher un membre par nom, prénom ou poste..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-                endAdornment: searchTerm && (
-                  <InputAdornment position="end">
-                    <IconButton size="small" onClick={() => setSearchTerm('')}>
-                      <X />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-        }
-      >
-        <div className="max-w-xs">
-          <FormControl fullWidth size="small">
-            <InputLabel id="poste-label">Poste</InputLabel>
-            <Select
-              labelId="poste-label"
-              label="Poste"
-              value={posteFilter}
-              onChange={handlePosteChange}
-            >
-              {POSTES.map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-      </FilterToolbar>
-
-      {loading && (
+      {isEmptyFromDB ? (
         <section className="section-y-tight">
           <div className="section-shell">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card">
-                  <div className="mb-4 flex justify-center">
-                    <Skeleton variant="circular" width={80} height={80} />
-                  </div>
-                  <Skeleton variant="text" width="70%" className="mx-auto" />
-                  <Skeleton variant="text" width="40%" className="mx-auto" />
-                  <Skeleton variant="text" width="90%" className="mx-auto mt-4" />
-                </div>
-              ))}
-            </div>
+            <HonestEmptyState variant="ressourcesHumaines" />
           </div>
         </section>
-      )}
-
-      {error && (
-        <section className="section-y-tight">
-          <div className="section-shell">
-            <div className="text-center">
-              <p className="text-danger-600">{error}</p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {!loading && !error && (
-        <section className="section-y-tight">
-          <div className="section-shell">
-            {resultCount === 0 ? (
-              <EmptyState
-                icon={<Users />}
-                title="Aucun membre trouvé"
-                description="Essayez de modifier vos critères de filtrage."
-                onAction={handleResetFilters}
+      ) : (
+        <>
+          <FilterToolbar
+            resultText={resultText}
+            showFilters={showFilters}
+            activeFilterCount={activeFilterCount}
+            hasActiveFilters={hasActiveFilters}
+            onToggleFilters={() => setShowFilters((prev) => !prev)}
+            onResetFilters={handleResetFilters}
+            activeFilterChips={activeFilterChips}
+            searchEnabled
+            showSearch={showSearch}
+            searchIsActive={searchTerm !== ''}
+            onToggleSearch={handleToggleSearch}
+            searchContent={
+              <TextField
+                inputRef={searchInputRef}
+                fullWidth
+                size="small"
+                placeholder="Rechercher un membre par nom, prénom ou poste..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                    endAdornment: searchTerm && (
+                      <InputAdornment position="end">
+                        <IconButton size="small" onClick={() => setSearchTerm('')}>
+                          <X />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
               />
-            ) : (
-              <div className="scroll-mt-24">
-                <div
-                  className={cn(
-                    'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
-                    'transition-opacity duration-(--duration-hover) motion-reduce:transition-none'
-                  )}
+            }
+          >
+            <div className="max-w-xs">
+              <FormControl fullWidth size="small">
+                <InputLabel id="poste-label">Poste</InputLabel>
+                <Select
+                  labelId="poste-label"
+                  label="Poste"
+                  value={posteFilter}
+                  onChange={handlePosteChange}
                 >
-                  {allRessourcesHumaines.map((rh) => (
-                    <RessourceHumaineCard key={rh.slug || rh.id} ressourceHumaine={rh} />
+                  {POSTES.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          </FilterToolbar>
+
+          {loading && (
+            <section className="section-y-tight">
+              <div className="section-shell">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {SKELETON_IDS.map((id) => (
+                    <div
+                      key={id}
+                      className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card"
+                    >
+                      <div className="mb-4 flex justify-center">
+                        <Skeleton variant="circular" width={80} height={80} />
+                      </div>
+                      <Skeleton variant="text" width="70%" className="mx-auto" />
+                      <Skeleton variant="text" width="40%" className="mx-auto" />
+                      <Skeleton variant="text" width="90%" className="mx-auto mt-4" />
+                    </div>
                   ))}
                 </div>
-
-                <Pagination
-                  page={page}
-                  totalPages={rhResult?.meta.totalPages ?? 1}
-                  onChange={(nextPage) => {
-                    setPage(nextPage);
-                    window.scrollTo({ top: 420, behavior: 'smooth' });
-                  }}
-                  ariaLabel="Pagination des membres"
-                  className="mt-12"
-                />
               </div>
-            )}
-          </div>
-        </section>
+            </section>
+          )}
+
+          {error && (
+            <section className="section-y-tight">
+              <div className="section-shell">
+                <div className="text-center">
+                  <p className="text-danger-600">{error}</p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {!loading && !error && (
+            <section className="section-y-tight">
+              <div className="section-shell">
+                {allRessourcesHumaines.length === 0 ? (
+                  <div className="py-10 text-center text-ink-500">
+                    Aucun membre ne correspond à vos critères.{' '}
+                    <button
+                      type="button"
+                      onClick={handleResetFilters}
+                      className="font-medium text-brand-700 underline underline-offset-4 hover:text-brand-800"
+                    >
+                      Réinitialiser les filtres
+                    </button>
+                  </div>
+                ) : (
+                  <div className="scroll-mt-24">
+                    <div
+                      className={cn(
+                        'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
+                        'transition-opacity duration-(--duration-hover) motion-reduce:transition-none'
+                      )}
+                    >
+                      {allRessourcesHumaines.map((rh) => (
+                        <RessourceHumaineCard key={rh.slug || rh.id} ressourceHumaine={rh} />
+                      ))}
+                    </div>
+
+                    <Pagination
+                      page={page}
+                      totalPages={rhResult?.meta.totalPages ?? 1}
+                      onChange={(nextPage) => {
+                        setPage(nextPage);
+                        window.scrollTo({ top: 420, behavior: 'smooth' });
+                      }}
+                      ariaLabel="Pagination des membres"
+                      className="mt-12"
+                    />
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

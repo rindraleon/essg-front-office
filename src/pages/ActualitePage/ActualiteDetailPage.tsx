@@ -51,7 +51,11 @@ const ActualiteDetailPage: React.FC = () => {
         await navigator.clipboard.writeText(window.location.href);
         toast.success('Lien copié dans le presse-papiers');
       }
-    } catch {
+    } catch (error) {
+      console.warn(
+        'Échec dans handleShare — poursuite en mode dégradé',
+        error instanceof Error ? error.message : error
+      );
       return;
     }
   };

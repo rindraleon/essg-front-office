@@ -61,10 +61,10 @@ const PolitiqueConfidentialitePage: React.FC = () => {
             Pour toute demande relative à vos données personnelles ou pour exercer vos droits, vous
             pouvez contacter notre délégué à la protection des données par email à :{' '}
             <a
-              href="mailto:contact@essg.sn"
+              href="mailto:essg@univ-fianarantsoa.mg"
               className="font-semibold text-brand-700 underline underline-offset-4 hover:text-brand-800"
             >
-              contact@essg.sn
+              essg@univ-fianarantsoa.mg
             </a>
             .
           </p>
@@ -274,10 +274,10 @@ const PolitiqueConfidentialitePage: React.FC = () => {
               Pour exercer l'un de ces droits, adressez votre demande accompagnée d'un justificatif
               d'identité à :{' '}
               <a
-                href="mailto:contact@essg.sn"
+                href="mailto:essg@univ-fianarantsoa.mg"
                 className="font-bold underline underline-offset-4 hover:text-brand-700"
               >
-                contact@essg.sn
+                essg@univ-fianarantsoa.mg
               </a>
               . Nous nous engageons à répondre dans un délai maximal de 30 jours.
             </p>
@@ -321,9 +321,9 @@ const PolitiqueConfidentialitePage: React.FC = () => {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <RevealOnScroll variant="fade-up" className="mb-12">
             <div className="grid gap-4 sm:grid-cols-3">
-              {principles.map((item, index) => (
+              {principles.map((item) => (
                 <div
-                  key={index}
+                  key={item.title}
                   className="rounded-2xl border border-brand-100 bg-white p-5 shadow-card transition-[box-shadow,border-color] duration-200 hover:border-brand-300 hover:shadow-card-hover"
                 >
                   <div className="mb-3 grid size-10 place-items-center rounded-xl bg-brand-50">

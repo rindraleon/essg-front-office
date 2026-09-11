@@ -33,7 +33,6 @@ export const useTyped = (words: readonly string[], options: UseTypedOptions = {}
           setText(currentWord.slice(0, text.length + 1));
         }, typeSpeed);
       } else {
-
         timer = setTimeout(() => {
           setIsDeleting(true);
         }, pauseDuration);
@@ -43,7 +42,6 @@ export const useTyped = (words: readonly string[], options: UseTypedOptions = {}
         setText(currentWord.slice(0, text.length - 1));
       }, deleteSpeed);
     } else {
-
       setIsDeleting(false);
       setWordIndex((prev) => (prev + 1) % words.length);
     }
