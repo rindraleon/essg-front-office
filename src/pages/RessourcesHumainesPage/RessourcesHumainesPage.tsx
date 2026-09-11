@@ -48,7 +48,7 @@ const SKELETON_IDS = [
 ];
 
 const RessourcesHumainesPage: React.FC = () => {
-  useTitle('Ressources Humaines | ESSG');
+  useTitle('Equipes pédagogiques | ESSG');
 
   const [posteFilter, setPosteFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -131,11 +131,11 @@ const RessourcesHumainesPage: React.FC = () => {
       <PageHero
         image={HERO_IMAGE}
         imageAlt="Équipe ESSG"
-        title="Ressources Humaines"
+        title="Équipes Pédagogiques"
         description="Découvrez les hommes et femmes qui font de l'ESSG une institution d'excellence en sciences géomatiques."
       />
 
-      <Breadcrumb items={[{ label: 'Ressources Humaines' }]} />
+      <Breadcrumb items={[{ label: 'Équipes Pédagogiques' }]} />
 
       {isEmptyFromDB ? (
         <section className="section-y-tight">

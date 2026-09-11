@@ -13,9 +13,7 @@ import {
   Wrench,
 } from 'lucide-react';
 import React, { useEffect, useMemo } from 'react';
-import { CompatButton as Button } from '@/components';
-import { Link as RouterLink, useParams } from 'react-router-dom';
-import {
+import { CompatButton as Button ,
   Breadcrumb,
   DetailHero,
   EmptyState,
@@ -25,6 +23,7 @@ import {
   TagCloud,
   Timeline,
 } from '@/components';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useRessourceHumaineBySlug, useTitle } from '@/hooks';
 import { getImageUrl, formatFullName, getPersonInitials } from '@/utils';
 
@@ -186,7 +185,7 @@ const RessourceHumaineDetailPage: React.FC = () => {
       />
 
       <Breadcrumb
-        items={[{ label: 'Ressources Humaines', to: '/ressources-humaines' }, { label: fullName }]}
+        items={[{ label: 'Équipes Pédagogiques', to: '/ressources-humaines' }, { label: fullName }]}
       />
 
       <div className="section-shell section-y-tight">
