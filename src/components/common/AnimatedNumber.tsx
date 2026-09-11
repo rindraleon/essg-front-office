@@ -9,17 +9,20 @@ interface NumericParts {
 
 function parseNumericValue(value: string): NumericParts | null {
   const trimmed = value.trim();
+  if (/^-\s*\d/.test(trimmed)) return null;
   const firstDigit = trimmed.search(/\d/);
   if (firstDigit < 0) return null;
 
   const prefix = trimmed.slice(0, firstDigit);
+  if (prefix.includes('-')) return null;
   const numericPart = trimmed.slice(firstDigit);
   const match = /^\d+(?:[.,]\d+)?/.exec(numericPart);
   if (!match) return null;
 
   const rawNumber = match[0].replace(',', '.');
   const numericValue = Number.parseFloat(rawNumber);
-  if (!Number.isFinite(numericValue)) return null;
+  if (!Number.isFinite(numericValue) || numericValue < 0) return null;
+  if (numericValue > 1_000_000) return null;
 
   return {
     prefix,

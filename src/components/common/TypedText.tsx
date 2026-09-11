@@ -2,7 +2,6 @@ import { useTyped } from '@/hooks';
 import { cn } from '@/lib';
 
 export type TypedTextProps = {
-
   words: readonly string[];
   className?: string;
   cursorClassName?: string;

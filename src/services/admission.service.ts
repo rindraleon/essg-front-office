@@ -44,7 +44,11 @@ const admissionService = {
         let payload: unknown = null;
         try {
           payload = xhr.responseText ? JSON.parse(xhr.responseText) : null;
-        } catch {
+        } catch (error) {
+          console.warn(
+            'Échec dans callback — poursuite en mode dégradé',
+            error instanceof Error ? error.message : error
+          );
           payload = xhr.responseText;
         }
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -90,6 +94,13 @@ const admissionService = {
     telephone?: string;
   }): Promise<AdmissionDuplicateCheck> {
     return apiClient.get<AdmissionDuplicateCheck>(endpoints.admissionsCheckDuplicate, params);
+  },
+
+  async checkBordereauUnique(numeroBordereau: string): Promise<boolean> {
+    const res = await apiClient.get<AdmissionDuplicateCheck>(endpoints.admissionsCheckDuplicate, {
+      numeroBordereau,
+    });
+    return res.numeroBordereauDisponible !== false;
   },
 };
 

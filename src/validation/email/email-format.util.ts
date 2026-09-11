@@ -14,7 +14,8 @@ export const EMAIL_ERROR_MESSAGES = {
   required: 'Adresse e-mail obligatoire.',
   invalid: 'Adresse e-mail invalide.',
   tooLong: `L'adresse e-mail ne peut pas dépasser ${EMAIL_MAX_LENGTH} caractères.`,
-  disposable: 'Le domaine de cette adresse est introuvable ou jetable. Utilisez une adresse e-mail valide.',
+  disposable:
+    'Le domaine de cette adresse est introuvable ou jetable. Utilisez une adresse e-mail valide.',
   undeliverable: 'Cette adresse e-mail ne semble pas pouvoir recevoir de messages.',
 } as const;
 
@@ -41,7 +42,7 @@ export function isValidEmail(email: string): boolean {
 
   const labels = domain.split('.');
   if (labels.length < 2) return false;
-  if (!EMAIL_TLD_REGEX.test(labels[labels.length - 1])) return false;
+  if (!EMAIL_TLD_REGEX.test(labels.at(-1) ?? '')) return false;
   return labels.every((label) => label.length <= 63 && EMAIL_DOMAIN_LABEL_REGEX.test(label));
 }
 

@@ -8,7 +8,7 @@ import {
   FormationsDomainSection,
   DeferredSection,
 } from '@/components';
-import { useTitle } from '@/hooks';
+import { useTitle, useFeaturedFormations } from '@/hooks';
 
 const FormationsSection = lazy(() => import('@/components/HomeComponents/FormationSection'));
 const ActualitesSection = lazy(() => import('@/components/HomeComponents/ActualitesSection'));
@@ -23,6 +23,10 @@ const AdmissionSection = lazy(() => import('@/components/HomeComponents/Admissio
 
 const Home = () => {
   useTitle('Accueil | École Supérieure des Sciences Géomatiques (ESSG)');
+  // La section statique « domaines » sert de repli : elle ne s'affiche que si
+  // aucune formation gérée dans le back-office n'est disponible.
+  const featuredQuery = useFeaturedFormations(6);
+  const showFormationsDomain = !featuredQuery.loading && featuredQuery.formations.length === 0;
   return (
     <div className="flex flex-col">
       <HeroSection />
@@ -30,7 +34,7 @@ const Home = () => {
 
       <ValuesSection />
       <WhyChooseSection />
-      <FormationsDomainSection />
+      {showFormationsDomain && <FormationsDomainSection />}
 
       <DeferredSection minHeight={720}>
         <FormationsSection />

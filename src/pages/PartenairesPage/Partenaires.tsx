@@ -1,13 +1,7 @@
 import { cn } from '@/lib';
 import { usePaginatedPartenaires, useTitle } from '@/hooks';
-import {
-  Pagination,
-  EmptyState,
-  FilterToolbar,
-  PageHero,
-  Breadcrumb,
-  PartenaireCard,
-} from '@/components';
+import { Pagination, FilterToolbar, PageHero, Breadcrumb, PartenaireCard } from '@/components';
+import HonestEmptyState from '@/components/common/HonestEmptyState';
 import {
   FormControl,
   IconButton,
@@ -19,7 +13,7 @@ import {
   TextField,
   type SelectChangeEvent,
 } from '@/components';
-import { Handshake, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { generateSlug } from '@/utils';
 import type { PartenairesPageProps, PartenaireItem } from '@/types';
@@ -34,6 +28,17 @@ const TYPES = [
   { value: 'Institution', label: 'Institution' },
   { value: 'Organisation', label: 'Organisation' },
   { value: 'Autre', label: 'Autre' },
+];
+
+const SKELETON_IDS = [
+  'part-sk-1',
+  'part-sk-2',
+  'part-sk-3',
+  'part-sk-4',
+  'part-sk-5',
+  'part-sk-6',
+  'part-sk-7',
+  'part-sk-8',
 ];
 
 const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<PartenairesPageProps>) => {
@@ -114,6 +119,8 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
     setPage(1);
   }, [searchTerm, typeFilter]);
 
+  const isEmptyFromDB = !loading && !error && (data?.meta.total ?? 0) === 0;
+
   return (
     <div className="min-h-screen bg-ink-50">
       <PageHero
@@ -125,133 +132,150 @@ const PartenairesPage: React.FC<PartenairesPageProps> = (props: Readonly<Partena
 
       <Breadcrumb items={[{ label: 'Partenaires' }]} />
 
-      <FilterToolbar
-        resultText={resultText}
-        showFilters={showFilters}
-        activeFilterCount={activeFilterCount}
-        hasActiveFilters={hasActiveFilters}
-        onToggleFilters={() => setShowFilters((prev) => !prev)}
-        onResetFilters={handleResetFilters}
-        activeFilterChips={activeFilterChips}
-        searchEnabled
-        showSearch={showSearch}
-        searchIsActive={searchTerm !== ''}
-        onToggleSearch={handleToggleSearch}
-        searchContent={
-          <TextField
-            inputRef={searchInputRef}
-            fullWidth
-            size="small"
-            placeholder="Rechercher un partenaire par nom, secteur ou description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-                endAdornment: searchTerm && (
-                  <InputAdornment position="end">
-                    <IconButton size="small" onClick={() => setSearchTerm('')}>
-                      <X />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-        }
-      >
-        <div className="max-w-xs">
-          <FormControl fullWidth size="small">
-            <InputLabel id="type-label">Type de partenaire</InputLabel>
-            <Select
-              labelId="type-label"
-              label="Type de partenaire"
-              value={typeFilter}
-              onChange={handleTypeChange}
-            >
-              {TYPES.map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-      </FilterToolbar>
-
-      {loading && (
+      {isEmptyFromDB ? (
         <section className="section-y-tight">
           <div className="section-shell">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card">
-                  <div className="mb-4 flex justify-center">
-                    <Skeleton variant="circular" width={80} height={80} />
-                  </div>
-                  <Skeleton variant="text" width="70%" className="mx-auto" />
-                  <Skeleton variant="text" width="40%" className="mx-auto" />
-                  <Skeleton variant="text" width="90%" className="mx-auto mt-4" />
-                </div>
-              ))}
-            </div>
+            <HonestEmptyState variant="partenaires" />
           </div>
         </section>
-      )}
-
-      {error && (
-        <section className="section-y-tight">
-          <div className="section-shell">
-            <div className="text-center">
-              <p className="text-danger-600">{error}</p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {!loading && !error && (
-        <section className="section-y-tight">
-          <div className="section-shell">
-            {resultCount === 0 ? (
-              <EmptyState
-                icon={<Handshake />}
-                title="Aucun partenaire trouvé"
-                description="Essayez de modifier vos critères de filtrage."
-                onAction={handleResetFilters}
+      ) : (
+        <>
+          <FilterToolbar
+            resultText={resultText}
+            showFilters={showFilters}
+            activeFilterCount={activeFilterCount}
+            hasActiveFilters={hasActiveFilters}
+            activeFilterChips={activeFilterChips}
+            onToggleFilters={() => setShowFilters((prev) => !prev)}
+            onResetFilters={handleResetFilters}
+            searchEnabled
+            showSearch={showSearch}
+            searchIsActive={searchTerm !== ''}
+            onToggleSearch={handleToggleSearch}
+            searchContent={
+              <TextField
+                inputRef={searchInputRef}
+                fullWidth
+                size="small"
+                placeholder="Rechercher un partenaire par nom, secteur ou description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                    endAdornment: searchTerm && (
+                      <InputAdornment position="end">
+                        <IconButton size="small" onClick={() => setSearchTerm('')}>
+                          <X />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
               />
-            ) : (
-              <div className="scroll-mt-24">
-                <div
-                  className={cn(
-                    'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
-                    'transition-opacity duration-(--duration-hover) motion-reduce:transition-none'
-                  )}
+            }
+          >
+            <div className="max-w-xs">
+              <FormControl fullWidth size="small">
+                <InputLabel id="type-label">Type de partenaire</InputLabel>
+                <Select
+                  labelId="type-label"
+                  label="Type de partenaire"
+                  value={typeFilter}
+                  onChange={handleTypeChange}
                 >
-                  {allPartenaires.map((partenaire) => (
-                    <PartenaireCard
-                      key={partenaire.slug || partenaire.id}
-                      partenaire={partenaire}
-                    />
+                  {TYPES.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          </FilterToolbar>
+
+          {loading && (
+            <section className="section-y-tight">
+              <div className="section-shell">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {SKELETON_IDS.map((id) => (
+                    <div
+                      key={id}
+                      className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card"
+                    >
+                      <div className="mb-4 flex justify-center">
+                        <Skeleton variant="circular" width={80} height={80} />
+                      </div>
+                      <Skeleton variant="text" width="70%" className="mx-auto" />
+                      <Skeleton variant="text" width="40%" className="mx-auto" />
+                      <Skeleton variant="text" width="90%" className="mx-auto mt-4" />
+                    </div>
                   ))}
                 </div>
-
-                <Pagination
-                  page={page}
-                  totalPages={data?.meta.totalPages ?? 1}
-                  onChange={(nextPage) => {
-                    setPage(nextPage);
-                    window.scrollTo({ top: 420, behavior: 'smooth' });
-                  }}
-                  ariaLabel="Pagination des partenaires"
-                  className="mt-12"
-                />
               </div>
-            )}
-          </div>
-        </section>
+            </section>
+          )}
+
+          {error && (
+            <section className="section-y-tight">
+              <div className="section-shell">
+                <div className="text-center">
+                  <p className="text-danger-600">{error}</p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {!loading && !error && (
+            <section className="section-y-tight">
+              <div className="section-shell">
+                {allPartenaires.length === 0 ? (
+                  <div className="py-10 text-center text-ink-500">
+                    Aucun partenaire ne correspond à vos critères.{' '}
+                    <button
+                      type="button"
+                      onClick={handleResetFilters}
+                      className="font-medium text-brand-700 underline underline-offset-4 hover:text-brand-800"
+                    >
+                      Réinitialiser les filtres
+                    </button>
+                  </div>
+                ) : (
+                  <div className="scroll-mt-24">
+                    <div
+                      className={cn(
+                        'grid gap-6 sm:grid-cols-2 lg:grid-cols-3',
+                        'transition-opacity duration-(--duration-hover) motion-reduce:transition-none'
+                      )}
+                    >
+                      {allPartenaires.map((partenaire) => (
+                        <PartenaireCard
+                          key={partenaire.slug || partenaire.id}
+                          partenaire={partenaire}
+                        />
+                      ))}
+                    </div>
+
+                    <Pagination
+                      page={page}
+                      totalPages={data?.meta.totalPages ?? 1}
+                      onChange={(nextPage) => {
+                        setPage(nextPage);
+                        window.scrollTo({ top: 420, behavior: 'smooth' });
+                      }}
+                      ariaLabel="Pagination des partenaires"
+                      className="mt-12"
+                    />
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

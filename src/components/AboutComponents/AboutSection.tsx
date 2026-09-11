@@ -3,7 +3,6 @@ import { cn } from '@/lib';
 import RevealOnScroll from '../common/RevealOnScroll';
 
 export type AboutSectionProps = {
-
   eyebrow?: string;
   title?: string;
   description?: string;

@@ -44,13 +44,13 @@ const ContactPage: React.FC<ContactPageProps> = (props: Readonly<ContactPageProp
       id: 'telephone',
       icon: <Phone />,
       title: 'Téléphone',
-      lines: ['+261 xx xx xxx xx'],
+      lines: ['+261 38 18 282 49'],
     },
     {
       id: 'email',
       icon: <Mail />,
       title: 'Email',
-      lines: ['essg@unif-fianarantsoa.mg'],
+      lines: ['essg@univ-fianarantsoa.mg'],
     },
     {
       id: 'horaires',

@@ -29,7 +29,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Comment contacter l'ESSG ?",
     reponse:
-      'Vous pouvez nous contacter par email à contact@essg.mg, par téléphone au +261 34 28 085 30, ou en vous rendant directement à notre campus situé à Andrainjato, Fianarantsoa.',
+      'Vous pouvez nous contacter par email à essg@univ-fianarantsoa.mg, par téléphone au +261 38 18 282 49, ou en vous rendant directement à notre campus situé à Andrainjato, Fianarantsoa.',
   },
 ];
 

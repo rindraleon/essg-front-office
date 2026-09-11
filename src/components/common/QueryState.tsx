@@ -54,12 +54,14 @@ export default function QueryState({
   skeleton,
   children,
 }: Readonly<QueryStateProps>) {
+  const skeletonIds = ['qs-1', 'qs-2', 'qs-3', 'qs-4', 'qs-5', 'qs-6'];
+
   if (loading) {
     return (
       skeleton ?? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="rounded-2xl border border-ink-100 bg-white p-4 shadow-card">
+          {skeletonIds.map((id) => (
+            <div key={id} className="rounded-2xl border border-ink-100 bg-white p-4 shadow-card">
               <Skeleton className="mb-4 h-40 w-full rounded-xl" />
               <Skeleton className="mb-2 h-4 w-1/3" />
               <Skeleton className="mb-2 h-5 w-2/3" />

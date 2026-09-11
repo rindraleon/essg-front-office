@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react';
 
 export const useTitle = (title?: string) => {
   const setTitle = useCallback((newTitle: string) => {
-    document.title = `${newTitle} - Template ITDC Mada`;
+    document.title = `${newTitle} | ESSG`;
   }, []);
 
   useEffect(() => {

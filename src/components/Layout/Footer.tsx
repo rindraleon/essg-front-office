@@ -41,7 +41,7 @@ const DEFAULT_PROPS = {
   },
 
   socials: [
-    { href: 'https://www.essg.sn', kind: 'web' as const, ariaLabel: 'Site officiel ESSG' },
+    { href: 'https://essg.itdcmada.com', kind: 'web' as const, ariaLabel: 'Site officiel ESSG' },
     {
       href: 'https://www.linkedin.com/company/essg',
       kind: 'linkedin' as const,

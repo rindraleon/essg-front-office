@@ -90,8 +90,11 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
             ? result.raison || validationMessages.emailUnverified
             : undefined,
       }));
-    } catch {
-      // Indisponibilité du service de vérification : on ne bloque pas la saisie.
+    } catch (error) {
+      console.warn(
+        'Vérification du domaine email indisponible — la saisie n’est pas bloquée',
+        error instanceof Error ? error.message : error
+      );
     }
   }, []);
 
@@ -146,7 +149,10 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
       });
       setSubmitted(true);
     } catch (error) {
-
+      console.warn(
+        'Échec dans handleSubmit — poursuite en mode dégradé',
+        error instanceof Error ? error.message : error
+      );
       const { fieldErrors: mapped, globalMessage } = mapApiErrorToFormErrors(error, FORM_FIELDS);
       if (Object.keys(mapped).length > 0) {
         setServerErrors((previous) => ({ ...previous, ...mapped }));
@@ -237,7 +243,7 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
               </div>
               <FormFieldError id="nom-error" error={errorOf('nom')} />
             </div>
-            
+
             <div className="space-y-1.5">
               <Label htmlFor="prenom">Prénom</Label>
               <div className="relative">
@@ -255,7 +261,7 @@ const ContactForm = ({ sujets = DEFAULT_SUJETS, onSubmit }: ContactFormProps) =>
               </div>
               <FormFieldError id="prenom-error" error={errorOf('prenom')} />
             </div>
-            
+
             <div className="space-y-1.5">
               <Label htmlFor="email">Email *</Label>
               <div className="relative">
