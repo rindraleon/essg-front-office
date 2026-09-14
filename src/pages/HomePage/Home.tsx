@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 import {
   HeroSection,
-  WhoWeAreSection,
-  //DirectorMessageSection,
+  //WhoWeAreSection,
+  DirectorMessageSection,
   ValuesSection,
   WhyChooseSection,
   FormationsDomainSection,
@@ -30,8 +30,8 @@ const Home = () => {
   return (
     <div className="flex flex-col">
       <HeroSection />
-      <WhoWeAreSection />
-
+      {/* <WhoWeAreSection /> */}
+      <DirectorMessageSection />
       <ValuesSection />
       <WhyChooseSection />
       {showFormationsDomain && <FormationsDomainSection />}
