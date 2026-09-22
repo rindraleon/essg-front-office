@@ -40,7 +40,7 @@ const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
               </button>
               {isOpen && (
                 <div id={`${panelId}-content`} className="px-4 py-3 animate-fade-in">
-                  <p className="leading-7 text-ink-500">{faq.reponse}</p>
+                  <p className="text-justify leading-7 text-ink-500">{faq.reponse}</p>
                 </div>
               )}
             </div>

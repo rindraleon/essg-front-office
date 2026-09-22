@@ -95,7 +95,7 @@ const FormationsSection = ({
             title={formation.titre}
             imageUrl={formation.image ? getImageUrl(formation.image) : FALLBACK_IMAGE}
             badge={formation.niveau || 'Formation'}
-            subtitle={formation.duree}
+            subtitle={formation.mention || formation.domaine?.[0] || undefined}
             description={formation.description || "Découvrez cette formation d'excellence."}
             meta={[
               ...(formation.mention

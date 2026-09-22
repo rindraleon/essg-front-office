@@ -16,7 +16,7 @@ const AboutMission = () => (
       <div className="grid gap-5 lg:grid-cols-2">
         {ABOUT_MISSION.items.map((item, index) => (
           <RevealOnScroll key={item.id} delay={index * 100}>
-            <article className="h-full rounded-3xl border border-brand-100 bg-brand-50 p-7 transition-[transform,box-shadow] duration-(--duration-hover) hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transform-none sm:p-9">
+            <article className="h-full rounded-3xl border border-brand-100 bg-brand-50 p-7 transition-[transform,box-shadow] duration-(--duration-hover) hover:shadow-card-hover motion-reduce:transform-none sm:p-9">
               <span className="grid size-10 place-items-center rounded-full bg-brand-700 font-tech text-small font-bold text-white">
                 0{index + 1}
               </span>

@@ -15,7 +15,6 @@ const ProjetCard: React.FC<ProjetCardProps> = ({ projet, detailLinkBase = '/proj
       to={`${detailLinkBase}/${slug}`}
       title={projet.titre}
       imageUrl={projet.image ? getImageUrl(projet.image) : FALLBACK_IMAGE}
-      ratio="landscape"
       badge={projet.type}
       subtitle={projet.statut}
       description={projet.description}

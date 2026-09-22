@@ -14,7 +14,6 @@ const PartenaireCard: React.FC<PartenaireCardProps> = ({ partenaire }) => (
     imageUrl={partenaire.logo ? getImageUrl(partenaire.logo) : FALLBACK_IMAGE}
     imageAlt={`Logo de ${partenaire.nom}`}
     imageFit="contain"
-    ratio="landscape"
     badge={partenaire.type}
     subtitle={partenaire.secteur}
     description={partenaire.description}

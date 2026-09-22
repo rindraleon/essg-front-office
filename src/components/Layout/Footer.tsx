@@ -117,7 +117,7 @@ const Footer = ({
                 {companyName}
               </p>
               <p className="text-caption leading-5 text-ink-400">
-                École Supérieure de Sciences Géomatiques
+                École Supérieure des Sciences Géomatiques
               </p>
             </div>
           </div>

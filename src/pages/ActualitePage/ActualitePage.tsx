@@ -9,7 +9,7 @@ import {
   Pagination,
   Input,
   Select,
-  Skeleton,
+  MediaCardSkeleton,
 } from '@/components';
 import HonestEmptyState from '@/components/common/HonestEmptyState';
 import { cn } from '@/lib';
@@ -161,17 +161,7 @@ const ActualitesPage = () => {
                 skeleton={
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {SKELETON_IDS.map((id) => (
-                      <div
-                        key={id}
-                        className="overflow-hidden rounded-2xl border border-ink-100 shadow-card"
-                      >
-                        <Skeleton className="h-48 w-full rounded-none" />
-                        <div className="space-y-3 p-5">
-                          <Skeleton className="h-4 w-1/3" />
-                          <Skeleton className="h-5 w-4/5" />
-                          <Skeleton className="h-4 w-full" />
-                        </div>
-                      </div>
+                      <MediaCardSkeleton key={id} />
                     ))}
                   </div>
                 }

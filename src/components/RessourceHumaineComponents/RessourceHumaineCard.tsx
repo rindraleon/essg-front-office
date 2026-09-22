@@ -18,7 +18,6 @@ const RessourceHumaineCard: React.FC<{ ressourceHumaine: RessourceHumaine }> = (
       title={fullName}
       imageUrl={ressourceHumaine.photo ? getImageUrl(ressourceHumaine.photo) : FALLBACK_IMAGE}
       imageAlt={fullName}
-      ratio="landscape"
       subtitle={ressourceHumaine.poste}
       description={ressourceHumaine.description}
       meta={[

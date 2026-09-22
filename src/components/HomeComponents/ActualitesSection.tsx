@@ -1,4 +1,4 @@
-import { Calendar } from 'lucide-react';
+import { Calendar, User } from 'lucide-react';
 import { useRecentActualites } from '@/hooks';
 import useSectionFilters, { type FilterDefinition } from '@/hooks/useSectionFilters';
 import FilterButton from '../common/FilterButton';
@@ -81,7 +81,10 @@ const ActualitesSection = () => {
             imageUrl={actu.image ? getImageUrl(actu.image) : FALLBACK_IMAGE}
             badge={actu.categorie || 'Actualité'}
             description={actu.resume}
-            meta={[{ icon: <Calendar className="size-3.5" />, label: formatDate(actu.date) }]}
+            meta={[
+              { icon: <Calendar className="size-3.5" />, label: formatDate(actu.date) },
+              ...(actu.auteur ? [{ icon: <User className="size-3.5" />, label: actu.auteur }] : []),
+            ]}
             actionLabel="Lire l'article"
           />
         ))}

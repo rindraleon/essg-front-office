@@ -19,4 +19,4 @@ export {
   HERO_OVERLAYS,
 } from './media';
 export type { CampusImage } from './media';
-export { HOVER_CARD, HOVER_IMAGE_ZOOM } from './motion';
+export { HOVER_CARD, HOVER_IMAGE_ZOOM, MEDIA_CARD_BORDER_STYLE } from './motion';

@@ -13,7 +13,8 @@ import {
   Wrench,
 } from 'lucide-react';
 import React, { useEffect, useMemo } from 'react';
-import { CompatButton as Button ,
+import {
+  CompatButton as Button,
   Breadcrumb,
   DetailHero,
   EmptyState,
@@ -196,7 +197,7 @@ const RessourceHumaineDetailPage: React.FC = () => {
               icon={<User className="size-5" />}
               delay={nextDelay()}
             >
-              <p className="whitespace-pre-wrap text-body leading-7 text-ink-600">
+              <p className="whitespace-pre-wrap text-justify text-body leading-7 text-ink-600">
                 {ressourceHumaine.description ||
                   `${fullName} occupe le poste de ${ressourceHumaine.poste} à l'ESSG, contribuant à l'excellence académique et à la réussite des étudiants en sciences géomatiques.`}
               </p>

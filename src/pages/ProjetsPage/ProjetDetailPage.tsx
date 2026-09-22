@@ -99,7 +99,7 @@ const ProjetDetailPage: React.FC = () => {
                   Le projet
                 </span>
                 <h2 className="mt-3 text-h2 text-ink-950">Contexte et ambition</h2>
-                <p className="mt-5 whitespace-pre-wrap text-body-lg leading-8 text-ink-600">
+                <p className="mt-5 whitespace-pre-wrap text-justify text-body-lg leading-8 text-ink-600">
                   {projet.description}
                 </p>
               </section>
@@ -121,7 +121,9 @@ const ProjetDetailPage: React.FC = () => {
                         <span className="grid size-7 shrink-0 place-items-center rounded-full bg-brand-700 font-tech text-caption text-white">
                           {index + 1}
                         </span>
-                        <span className="text-small leading-6 text-ink-700">{objectif}</span>
+                        <span className="text-justify text-small leading-6 text-ink-700">
+                          {objectif}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -246,7 +248,7 @@ const ProjetDetailPage: React.FC = () => {
                 Documentation visuelle
               </span>
               <h2 className="mt-3 text-h2 text-ink-950">Galerie du projet</h2>
-              <p className="mt-3 text-ink-500">
+              <p className="mt-3 text-justify text-ink-500">
                 Les images de la galerie restent distinctes de l’image de couverture.
               </p>
             </RevealOnScroll>

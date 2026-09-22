@@ -73,7 +73,9 @@ const DetailHero = ({
           {title}
         </h1>
         {description && (
-          <p className="mt-6 max-w-3xl text-body-lg leading-8 text-white/70">{description}</p>
+          <p className="mt-6 max-w-3xl text-justify text-body-lg leading-8 text-white/70">
+            {description}
+          </p>
         )}
         {meta.length > 0 && (
           <ul className="mt-8 flex flex-wrap gap-2.5">

@@ -704,24 +704,7 @@
 }
 
 
-@media (hover: none) {
-  .media-card [data-card-details] {
-    opacity: 1;
-    transform: none;
-  }
 
-  .media-card [data-card-veil] {
-    opacity: 1;
-  }
-
-  /* Le bloc est ancré au-dessus du titre et la carte masque son
-     débordement : on limite le texte à deux lignes pour qu'il tienne
-     entièrement dans le cadre, même sur les plus petits écrans. */
-  .media-card [data-card-details] p {
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-  }
-}
 
 
 
@@ -971,20 +954,15 @@
 }
 
 /* ------------------------------------------------------------------
-   Texte justifié institutionnel (page À propos notamment).
-   La justification n'est appliquée qu'à partir du breakpoint tablette :
-   sur mobile elle créerait des espaces excessifs entre les mots.
+   Texte justifié institutionnel (contenus éditoriaux et descriptifs).
+   La justification reste active sur tous les écrans — desktop, tablette
+   et mobile. La césure automatique évite les espaces excessifs entre
+   les mots sur les petites largeurs.
    ------------------------------------------------------------------ */
 .text-justified {
-  text-align: left;
+  text-align: justify;
+  text-justify: inter-word;
   hyphens: auto;
   -webkit-hyphens: auto;
   text-wrap: pretty;
-}
-
-@media (min-width: 640px) {
-  .text-justified {
-    text-align: justify;
-    text-justify: inter-word;
-  }
 }

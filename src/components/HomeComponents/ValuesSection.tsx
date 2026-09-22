@@ -1,36 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Award, Briefcase, Globe2, Lightbulb, Network } from 'lucide-react';
+import {
+  Award,
+  Briefcase,
+  ChevronLeft,
+  ChevronRight,
+  Globe2,
+  Lightbulb,
+  Network,
+} from 'lucide-react';
 import campusHero from '@/assets/files/images/background/Hero.webp';
 import SectionHeader from '../common/SectionHeader';
 import { RevealOnScroll } from '../common/RevealOnScroll';
-
-const ChevronLeftIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2.5}
-    aria-hidden="true"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-  </svg>
-);
-
-const ChevronRightIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={2.5}
-    aria-hidden="true"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-  </svg>
-);
 
 interface ValueItem {
   icon: React.ReactNode;
@@ -97,36 +77,36 @@ function getCoverFlowStyle(offset: number, total: number): CoverFlowStyle {
   if (offset === 1) {
     return {
       transform: 'translateX(285px) scale(0.84) rotateY(-24deg)',
-      opacity: 0.72,
+      opacity: 0.75,
       zIndex: 20,
-      filter: 'brightness(0.96) saturate(0.9)',
+      filter: 'brightness(0.98)',
       isCenter: false,
     };
   }
   if (offset === total - 1) {
     return {
       transform: 'translateX(-285px) scale(0.84) rotateY(24deg)',
-      opacity: 0.72,
+      opacity: 0.75,
       zIndex: 20,
-      filter: 'brightness(0.96) saturate(0.9)',
+      filter: 'brightness(0.98)',
       isCenter: false,
     };
   }
   if (offset === 2) {
     return {
       transform: 'translateX(510px) scale(0.68) rotateY(-38deg)',
-      opacity: 0.38,
+      opacity: 0.5,
       zIndex: 10,
-      filter: 'brightness(0.9) blur(0.6px)',
+      filter: 'brightness(0.96) blur(1px)',
       isCenter: false,
     };
   }
   if (offset === total - 2) {
     return {
       transform: 'translateX(-510px) scale(0.68) rotateY(38deg)',
-      opacity: 0.38,
+      opacity: 0.5,
       zIndex: 10,
-      filter: 'brightness(0.9) blur(0.6px)',
+      filter: 'brightness(0.96) blur(1px)',
       isCenter: false,
     };
   }
@@ -309,9 +289,11 @@ const ValuesSection: React.FC = () => {
                       justifyContent: 'space-between',
                       textAlign: 'center',
                       zIndex: 2,
-                      opacity: isCenter ? 1 : 0,
-                      transform: isCenter ? 'translateY(0px)' : 'translateY(10px)',
-                      transition: 'opacity 520ms ease, transform 520ms ease',
+                      /* Inactive : contenu toujours perceptible (opacité + flou
+                         subtil), sans déplacement ni changement de géométrie. */
+                      opacity: isCenter ? 1 : 0.6,
+                      filter: isCenter ? 'none' : 'blur(1.5px)',
+                      transition: 'opacity 300ms ease-out, filter 300ms ease-out',
                       pointerEvents: isCenter ? 'auto' : 'none',
                     }}
                   >
@@ -507,7 +489,7 @@ const ValuesSection: React.FC = () => {
             transition: 'all 200ms ease',
           }}
         >
-          <ChevronLeftIcon />
+          <ChevronLeft aria-hidden="true" className="size-5" />
         </button>
 
         <button
@@ -535,7 +517,7 @@ const ValuesSection: React.FC = () => {
             transition: 'all 200ms ease',
           }}
         >
-          <ChevronRightIcon />
+          <ChevronRight aria-hidden="true" className="size-5" />
         </button>
       </div>
     </section>
