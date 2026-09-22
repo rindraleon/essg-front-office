@@ -30,7 +30,7 @@ const MentionsLegalesPage: React.FC = () => {
       icon: <Building2 className="size-6 text-brand-600" />,
       title: '1. Éditeur de la Plateforme',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             Le site officiel de l’<strong>École Supérieure de Sciences Géomatiques (ESSG)</strong>{' '}
             est édité par l’établissement d'enseignement supérieur ESSG, rattaché à l’Université de
@@ -77,7 +77,7 @@ const MentionsLegalesPage: React.FC = () => {
       icon: <UserCheck className="size-6 text-brand-600" />,
       title: '2. Direction de la Publication & Rédaction',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             <strong>Directeur de la publication :</strong> La Direction Générale de l’École
             Supérieure de Sciences Géomatiques.
@@ -105,7 +105,7 @@ const MentionsLegalesPage: React.FC = () => {
       icon: <Server className="size-6 text-brand-600" />,
       title: '3. Hébergement & Infrastructure Technique',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             La plateforme web, l'API et les bases de données de l’ESSG sont hébergées sur une
             infrastructure cloud sécurisée conforme aux standards de haute disponibilité et de
@@ -133,7 +133,7 @@ const MentionsLegalesPage: React.FC = () => {
       icon: <Scale className="size-6 text-brand-600" />,
       title: '4. Propriété Intellectuelle & Droits d’Auteur',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             L’ensemble des éléments constituant ce site (textes, graphismes, logos, photographies,
             vidéos, icônes, animations, architecture logicielle et code source) est la propriété
@@ -145,7 +145,7 @@ const MentionsLegalesPage: React.FC = () => {
             partielle des éléments du site, quel que soit le moyen ou le procédé utilisé, est
             strictement interdite sans l'accord préalable écrit de la direction de l'ESSG.
           </p>
-          <p className="rounded-lg bg-amber-50 p-3 text-caption text-amber-800 border border-amber-200">
+          <p className="rounded-lg bg-amber-50 p-3 text-justify text-caption text-amber-800 border border-amber-200">
             Toute exploitation non autorisée du site ou de l’un quelconque de ses éléments sera
             considérée comme constitutive d’une contrefaçon et poursuivie conformément aux
             dispositions légales en vigueur.
@@ -158,7 +158,7 @@ const MentionsLegalesPage: React.FC = () => {
       icon: <ShieldCheck className="size-6 text-brand-600" />,
       title: '5. Protection des Données Personnelles',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             L’ESSG accorde une importance primordiale à la confidentialité et à la sécurité de vos
             données personnelles. Les informations collectées dans le cadre des formulaires
@@ -185,7 +185,7 @@ const MentionsLegalesPage: React.FC = () => {
       icon: <FileText className="size-6 text-brand-600" />,
       title: '6. Limitation de Responsabilité & Liens Hypertextes',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             L'ESSG s'efforce de fournir des informations aussi précises que possible concernant ses
             programmes, cursus et actualités. Toutefois, elle ne saurait être tenue responsable des

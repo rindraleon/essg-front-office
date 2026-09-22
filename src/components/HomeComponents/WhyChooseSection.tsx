@@ -105,15 +105,15 @@ const WhyChooseSection: React.FC = () => {
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="grid size-12 place-items-center rounded-2xl bg-brand-50 text-brand-700 transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-600 group-hover:text-white">
+                    <div className="grid size-12 place-items-center rounded-2xl bg-brand-50 text-brand-700 transition-all duration-300 group-hover:scale-110  ">
                       <Icon className="size-6" />
                     </div>
-                    <span className="rounded-full bg-ink-100/70 px-3 py-1 font-tech text-[0.65rem] font-bold text-ink-700 transition-colors group-hover:bg-brand-100 group-hover:text-brand-800">
+                    <span className="rounded-full bg-ink-100/70 px-3 py-1 font-tech text-[0.65rem] font-bold text-brand-800 transition-colors group-hover:bg-brand-100 group-hover:text-brand-800">
                       {adv.highlight}
                     </span>
                   </div>
 
-                  <h3 className="mt-6 font-display text-h4 font-bold text-ink-900 group-hover:text-brand-700 transition-colors">
+                  <h3 className="mt-6 font-display text-h4 font-bold text-brand-700 group-hover:text-brand-700 transition-colors">
                     {adv.title}
                   </h3>
                   <p className="mt-3 text-justify text-body text-ink-600 leading-relaxed">
@@ -141,7 +141,7 @@ const WhyChooseSection: React.FC = () => {
                 <h3 className="mt-1 font-display text-h3 font-bold text-ink-900">
                   Des débouchés variés et porteurs
                 </h3>
-                <p className="mt-1 text-body text-ink-600">
+                <p className="mt-1 text-justify text-body text-ink-600">
                   Les compétences acquises à l'ESSG peuvent être directement mobilisées dans de
                   nombreux secteurs stratégiques :
                 </p>

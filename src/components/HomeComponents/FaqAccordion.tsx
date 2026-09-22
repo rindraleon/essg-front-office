@@ -49,7 +49,7 @@ const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
                 )}
               >
                 <div className="min-h-0 overflow-hidden">
-                  <p className="px-4 py-3 leading-7 text-ink-500">{faq.reponse}</p>
+                  <p className="px-4 py-3 text-justify leading-7 text-ink-500">{faq.reponse}</p>
                 </div>
               </div>
             </div>

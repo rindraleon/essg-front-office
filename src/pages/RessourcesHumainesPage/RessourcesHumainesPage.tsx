@@ -6,6 +6,7 @@ import {
   PageHero,
   Breadcrumb,
   RessourceHumaineCard,
+  MediaCardSkeleton,
 } from '@/components';
 import HonestEmptyState from '@/components/common/HonestEmptyState';
 import {
@@ -15,7 +16,6 @@ import {
   InputLabel,
   MenuItem,
   CompatSelect as Select,
-  CompatSkeleton as Skeleton,
   TextField,
   type SelectChangeEvent,
 } from '@/components';
@@ -208,17 +208,7 @@ const RessourcesHumainesPage: React.FC = () => {
               <div className="section-shell">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {SKELETON_IDS.map((id) => (
-                    <div
-                      key={id}
-                      className="rounded-2xl border border-ink-100 bg-white p-6 shadow-card"
-                    >
-                      <div className="mb-4 flex justify-center">
-                        <Skeleton variant="circular" width={80} height={80} />
-                      </div>
-                      <Skeleton variant="text" width="70%" className="mx-auto" />
-                      <Skeleton variant="text" width="40%" className="mx-auto" />
-                      <Skeleton variant="text" width="90%" className="mx-auto mt-4" />
-                    </div>
+                    <MediaCardSkeleton key={id} />
                   ))}
                 </div>
               </div>

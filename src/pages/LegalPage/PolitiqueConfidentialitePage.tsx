@@ -51,7 +51,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       icon: <UserCheck className="size-6 text-brand-600" />,
       title: '1. Responsable du Traitement des Données',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             Le responsable du traitement des données personnelles collectées sur le site est l’
             <strong>École Supérieure de Sciences Géomatiques (ESSG)</strong>, située au Campus
@@ -76,7 +76,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       icon: <Database className="size-6 text-brand-600" />,
       title: '2. Données Personnelles Collectées',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             Dans le cadre de l'utilisation de nos services en ligne, nous collectons les données
             suivantes :
@@ -117,7 +117,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       icon: <Eye className="size-6 text-brand-600" />,
       title: '3. Finalités du Traitement',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>Les données personnelles collectées sont exclusivement traitées pour :</p>
           <ul className="space-y-2">
             <li className="flex items-start gap-2">
@@ -157,7 +157,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       icon: <Clock className="size-6 text-brand-600" />,
       title: '4. Durée de Conservation des Données',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             L’ESSG conserve les données personnelles pour les durées strictement nécessaires aux
             finalités poursuivies :
@@ -203,7 +203,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       icon: <Lock className="size-6 text-brand-600" />,
       title: '5. Mesures de Sécurité & Confidentialité',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             Nous mettons en œuvre un ensemble rigoureux de mesures techniques et organisationnelles
             pour protéger vos données contre toute destruction, perte, altération ou accès non
@@ -246,7 +246,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       icon: <ShieldAlert className="size-6 text-brand-600" />,
       title: '6. Vos Droits & Modalités d’Exercice',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             Conformément à la réglementation sur la protection des données, vous disposez des droits
             suivants :
@@ -270,7 +270,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
             </li>
           </ul>
           <div className="mt-3 rounded-xl border border-brand-200 bg-brand-50/80 p-4">
-            <p className="text-caption text-brand-900 font-medium">
+            <p className="text-justify text-caption text-brand-900 font-medium">
               Pour exercer l'un de ces droits, adressez votre demande accompagnée d'un justificatif
               d'identité à :{' '}
               <a
@@ -290,7 +290,7 @@ const PolitiqueConfidentialitePage: React.FC = () => {
       icon: <Cookie className="size-6 text-brand-600" />,
       title: '7. Cookies & Traceurs',
       content: (
-        <div className="space-y-3 text-small text-ink-700">
+        <div className="space-y-3 text-justify text-small text-ink-700">
           <p>
             Le site de l’ESSG utilise uniquement des cookies et traceurs strictement techniques
             nécessaires au bon fonctionnement de la plateforme (gestion de session

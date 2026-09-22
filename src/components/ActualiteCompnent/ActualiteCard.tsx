@@ -15,7 +15,6 @@ const ActualiteCard = ({ actualite }: Props) => (
     to={`/actualites/${actualite.slug}`}
     title={actualite.titre}
     imageUrl={actualite.image ? getImageUrl(actualite.image) : FALLBACK_IMAGE}
-    ratio="landscape"
     badge={actualite.categorie}
     description={actualite.resume}
     meta={[

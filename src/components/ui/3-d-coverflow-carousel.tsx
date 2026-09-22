@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { defaultDishes } from './3-d-coverflow-carousel.data';
 
 const ChevronLeftIcon = () => (
   <svg
@@ -125,7 +124,7 @@ function getCarouselCardStyle(offset: number, total: number): CoverFlowCardStyle
 }
 
 export function CoverFlowCarousel({
-  items = defaultDishes,
+  items = [],
   sectionLabel = 'BEST SELLERS',
   autoplay = true,
   autoplayDelay = 5000,

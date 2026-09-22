@@ -1,3 +1,4 @@
+import { Mail, Phone } from 'lucide-react';
 import { CAMPUS_GALLERY, CARD_WIDTH_CLASS, SITE_HERO_IMAGE } from '@/constants';
 import { useActiveRessourcesHumaines } from '@/hooks';
 import { formatFullName, getImageUrl } from '@/utils';
@@ -46,6 +47,14 @@ const AboutTeam = () => {
               imageAlt={fullName}
               subtitle={membre.poste}
               description={membre.description}
+              meta={[
+                ...(membre.email
+                  ? [{ icon: <Mail className="size-3.5" />, label: membre.email }]
+                  : []),
+                ...(membre.telephone
+                  ? [{ icon: <Phone className="size-3.5" />, label: membre.telephone }]
+                  : []),
+              ]}
               actionLabel="Voir le profil"
             />
           );

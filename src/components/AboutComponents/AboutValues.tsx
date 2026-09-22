@@ -26,7 +26,7 @@ const AboutValues = () => (
           const Icon = VALUE_ICONS[id] ?? Sparkles;
           return (
             <RevealOnScroll key={id} delay={index * 80}>
-              <article className="group h-full rounded-2xl border border-brand-100 bg-white p-6 transition-[transform,box-shadow,border-color] duration-(--duration-hover) hover:-translate-y-1.5 hover:border-brand-300 hover:shadow-card-hover motion-reduce:transform-none">
+              <article className="group h-full rounded-2xl border border-brand-100 bg-white p-6 transition-[transform,box-shadow,border-color] duration-(--duration-hover) hover:border-brand-300 hover:shadow-card-hover motion-reduce:transform-none">
                 <div className="grid size-12 place-items-center rounded-2xl bg-brand-50 text-brand-700 ring-1 ring-brand-100 transition-transform duration-(--duration-hover) group-hover:rotate-3 group-hover:scale-105 motion-reduce:transform-none">
                   <Icon className="size-5" />
                 </div>

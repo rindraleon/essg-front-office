@@ -211,7 +211,7 @@ const PartenaireDetailPage: React.FC = () => {
               icon={<Info className="size-5" />}
               delay={nextDelay()}
             >
-              <p className="whitespace-pre-wrap text-body leading-7 text-ink-600">
+              <p className="whitespace-pre-wrap text-justify text-body leading-7 text-ink-600">
                 {partenaire.description ||
                   `${partenaire.nom} accompagne l'ESSG dans sa mission de formation et de recherche en sciences géomatiques.`}
               </p>

@@ -1,6 +1,13 @@
 import { cn } from '@/lib';
 import { usePaginatedProjets, useTitle } from '@/hooks';
-import { Pagination, FilterToolbar, PageHero, Breadcrumb, ProjetCard } from '@/components';
+import {
+  Pagination,
+  FilterToolbar,
+  PageHero,
+  Breadcrumb,
+  ProjetCard,
+  MediaCardSkeleton,
+} from '@/components';
 import HonestEmptyState from '@/components/common/HonestEmptyState';
 import {
   FormControl,
@@ -9,7 +16,6 @@ import {
   InputLabel,
   MenuItem,
   CompatSelect as Select,
-  CompatSkeleton as Skeleton,
   TextField,
   type SelectChangeEvent,
 } from '@/components';
@@ -227,19 +233,9 @@ const ProjetsPage: React.FC<ProjetsPageProps> = (props: Readonly<ProjetsPageProp
           {loading && (
             <section className="section-y-tight">
               <div className="section-shell">
-                <div className="grid gap-8 md:grid-cols-2">
+                <div className="grid gap-8 md:grid-cols-3">
                   {SKELETON_IDS.map((id) => (
-                    <div
-                      key={id}
-                      className="overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-card"
-                    >
-                      <Skeleton variant="rectangular" height={200} />
-                      <div className="space-y-3 p-5">
-                        <Skeleton variant="text" width="40%" />
-                        <Skeleton variant="text" width="80%" />
-                        <Skeleton variant="text" width="60%" />
-                      </div>
-                    </div>
+                    <MediaCardSkeleton key={id} />
                   ))}
                 </div>
               </div>

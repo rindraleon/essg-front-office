@@ -51,7 +51,7 @@ const FormationDetailContent: React.FC<FormationDetailContentProps> = (
         <div className="col-span-4 space-y-8 md:col-span-8">
           <div className="rounded-xl border border-ink-100 bg-white p-6 md:p-8">
             <h2 className="mb-4 text-h3 text-ink-900">À propos de cette formation</h2>
-            <div className="space-y-4 text-body leading-6 text-ink-500">
+            <div className="space-y-4 text-justify text-body leading-6 text-ink-500">
               <p>{formation.description}</p>
             </div>
 
@@ -64,7 +64,7 @@ const FormationDetailContent: React.FC<FormationDetailContentProps> = (
                   {formation.objectifs.map((obj) => (
                     <li key={obj} className="flex items-start gap-3">
                       <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
-                      <span className="text-small leading-5 text-ink-500">{obj}</span>
+                      <span className="text-justify text-small leading-5 text-ink-500">{obj}</span>
                     </li>
                   ))}
                 </ul>
@@ -79,7 +79,9 @@ const FormationDetailContent: React.FC<FormationDetailContentProps> = (
                 {formation.competences.map((competence) => (
                   <li key={competence} className="flex items-start gap-3">
                     <Star className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
-                    <span className="text-small leading-5 text-ink-500">{competence}</span>
+                    <span className="text-justify text-small leading-5 text-ink-500">
+                      {competence}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -190,7 +192,9 @@ const FormationDetailContent: React.FC<FormationDetailContentProps> = (
                 {formation.debouches.map((debouche) => (
                   <li key={debouche} className="flex items-start gap-3">
                     <ArrowRight className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
-                    <span className="text-small leading-5 text-ink-500">{debouche}</span>
+                    <span className="text-justify text-small leading-5 text-ink-500">
+                      {debouche}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -206,7 +210,9 @@ const FormationDetailContent: React.FC<FormationDetailContentProps> = (
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 text-small font-bold text-white">
                       {index + 1}
                     </div>
-                    <span className="pt-1 text-small leading-5 text-ink-500">{objectif}</span>
+                    <span className="pt-1 text-justify text-small leading-5 text-ink-500">
+                      {objectif}
+                    </span>
                   </li>
                 ))}
               </ul>

@@ -32,7 +32,7 @@ const DirectorMessageSection = () => {
                 decoding="async"
                 width={720}
                 height={960}
-                className="aspect-[3/4] w-full object-cover object-top transition-transform duration-(--duration-section) group-hover:scale-[1.04] motion-reduce:transform-none"
+                className="aspect-[3/4] w-full object-cover object-top transition-transform duration-(--duration-section) motion-reduce:transform-none"
               />
               <div
                 aria-hidden="true"

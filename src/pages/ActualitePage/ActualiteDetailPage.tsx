@@ -121,17 +121,17 @@ const ActualiteDetailPage: React.FC = () => {
                 </span>
               </div>
               {actualite.resume && (
-                <p className="mb-8 border-l-4 border-brand-400 pl-5 text-h5 leading-8 text-ink-800">
+                <p className="mb-8 border-l-4 border-brand-400 pl-5 text-justify text-h5 leading-8 text-ink-800">
                   {actualite.resume}
                 </p>
               )}
               {actualite.contenu ? (
                 <div
-                  className="prose prose-lg max-w-none text-ink-700 prose-headings:text-ink-950 prose-a:text-brand-700"
+                  className="prose prose-lg max-w-none text-justify text-ink-700 prose-headings:text-ink-950 prose-a:text-brand-700"
                   dangerouslySetInnerHTML={{ __html: actualite.contenu }}
                 />
               ) : (
-                <p className="leading-8 text-ink-600">
+                <p className="text-justify leading-8 text-ink-600">
                   Pour plus d’informations, contactez l’ESSG ou consultez nos autres actualités.
                 </p>
               )}
@@ -178,7 +178,7 @@ const ActualiteDetailPage: React.FC = () => {
                 En images
               </span>
               <h2 className="mt-3 text-h2 text-ink-950">Galerie de l’événement</h2>
-              <p className="mt-3 text-ink-500">
+              <p className="mt-3 text-justify text-ink-500">
                 La galerie est présentée séparément de l’image de couverture.
               </p>
             </RevealOnScroll>
