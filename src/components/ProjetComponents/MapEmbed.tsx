@@ -11,7 +11,7 @@ const ZOOM_DELTAS: Record<string, number> = {
 };
 
 const MapEmbed: React.FC<MapEmbedProps> = (props: Readonly<MapEmbedProps>) => {
-  const { lat, lng, label, adresse, zoom = 'city', height = 400 } = props;
+  const { lat, lng, label, adresse, zoom = 'city', height = 400, showDetails = false } = props;
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -55,7 +55,7 @@ const MapEmbed: React.FC<MapEmbedProps> = (props: Readonly<MapEmbedProps>) => {
             referrerPolicy="no-referrer"
           />
 
-          <Fade in={isHovered}>
+          <Fade in={showDetails || isHovered}>
             <div
               className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-start gap-3 rounded-xl p-4 text-center shadow-lg backdrop-blur-sm"
               style={{
