@@ -46,6 +46,7 @@ export type MapEmbedProps = {
   adresse?: string;
   zoom?: 'close' | 'city' | 'region';
   height?: number;
+  showDetails?: boolean;
 };
 
 export type ProjetsPageProps = {

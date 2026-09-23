@@ -1,4 +1,6 @@
 import { DISPOSABLE_EMAIL_DOMAINS } from './disposable-domains.constant';
+import disposableList from 'disposable-email-domains';
+import wildcardList from 'disposable-email-domains/wildcard.json';
 
 export const EMAIL_MAX_LENGTH = 50;
 export const EMAIL_LOCAL_MAX_LENGTH = 64;
@@ -46,7 +48,11 @@ export function isValidEmail(email: string): boolean {
   return labels.every((label) => label.length <= 63 && EMAIL_DOMAIN_LABEL_REGEX.test(label));
 }
 
-const DISPOSABLE_DOMAIN_SET = new Set(DISPOSABLE_EMAIL_DOMAINS);
+const DISPOSABLE_DOMAIN_SET = new Set([
+  ...DISPOSABLE_EMAIL_DOMAINS,
+  ...disposableList.map((domain) => domain.toLowerCase()),
+]);
+const DISPOSABLE_WILDCARD_DOMAINS = wildcardList.map((domain) => domain.toLowerCase());
 
 export interface DisposableDomainSource {
   isExactMatch(domain: string): boolean;
@@ -67,6 +73,11 @@ export function isDisposableEmail(email: string): boolean {
   const domain = getEmailDomain(email);
   if (!domain) return false;
   if (isKnownDisposableDomain(domain)) return true;
+  if (
+    DISPOSABLE_WILDCARD_DOMAINS.some((suffix) => domain === suffix || domain.endsWith(`.${suffix}`))
+  ) {
+    return true;
+  }
   if (extraSource?.isWildcardMatch(domain)) return true;
 
   const labels = domain.split('.');

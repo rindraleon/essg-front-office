@@ -10,8 +10,8 @@ import { useTitle } from '@/hooks';
 const HERO_IMAGE = SITE_HERO_IMAGE;
 
 const UNIV_FIANAR = {
-  lat: -21.4413,
-  lng: 47.0879,
+  lat: -21.463419,
+  lng: 47.107397,
   label: 'Université de Fianarantsoa — Campus Andrainjato',
   adresse: 'Andrainjato, BP 1264, Fianarantsoa 301, Madagascar',
 };
@@ -93,7 +93,14 @@ const ContactPage: React.FC<ContactPageProps> = (props: Readonly<ContactPageProp
       <section className="bg-white section-y-tight">
         <div className="section-shell">
           <h2 className="mb-6 text-h3 text-ink-900">Localisation</h2>
-          <MapEmbed lat={mapLat} lng={mapLng} label={mapLabel} adresse={mapAdresse} zoom="city" />
+          <MapEmbed
+            lat={mapLat}
+            lng={mapLng}
+            label={mapLabel}
+            adresse={mapAdresse}
+            zoom="close"
+            showDetails
+          />
         </div>
       </section>
     </div>
