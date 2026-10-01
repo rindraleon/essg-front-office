@@ -24,6 +24,7 @@ export {
 export { default as useReveal } from './useReveal';
 export type { RevealOptions } from './useReveal';
 export { default as useScrollAnimation } from './useScrollAnimation';
+export { default as useScrollLock } from './useScrollLock';
 export { default as useScrollToTop } from './useScrollToTop';
 export { ALL, useSectionFilters } from './useSectionFilters';
 export type { FilterDefinition } from './useSectionFilters';

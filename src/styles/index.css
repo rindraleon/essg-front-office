@@ -561,27 +561,55 @@
   display: none;
 }
 
+/* ---------- Hauteur du header ----------
+   Valeur fluide (56px → 72px) au lieu de paliers `h-16` / `sm:h-[4.5rem]` :
+   le franchissement d'un breakpoint ne provoque plus de saut de hauteur du
+   document, donc plus de décalage du contenu situé sous le header.
+   Les surfaces dérivées du header (drawer, backdrop) consomment la même
+   variable au lieu de la recoder en dur (4rem / 4.5rem), ce qui supprimait
+   deux sources de désynchronisation. */
+:root {
+  --header-height: clamp(3.5rem, 3.15rem + 1.1vw, 4.5rem);
+}
+
 /* ---------- Conteneur et rythme de page ----------
-   `section-shell` est LE conteneur unique du site : toutes les
-   sections s'alignent sur la même grille (max 1280px + gouttières
-   progressives). Il remplace les 46 répétitions de
-   « mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 » relevées à l'audit. */
+   `section-shell` est LE conteneur unique du site : header, sections et
+   grilles défilantes s'alignent sur la même grille, donc partagent les
+   mêmes lignes verticales. Il remplace les 46 répétitions de
+   « mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 » relevées à l'audit.
+
+   Les valeurs vivent dans des tokens pour qu'il n'existe qu'une seule
+   source de vérité : la largeur de référence et les trois paliers de
+   gouttières. Toute divergence entre deux zones se voit immédiatement,
+   parce qu'elle se traduit forcément par une copie littérale de ces
+   nombres.
+
+   Interdit pour conserver l'alignement : envelopper une zone avec
+   `max-w-none` ou un `padding-inline` maison, annuler un décalage par une
+   marge négative, un `translateX` ou un `100vw`. */
+:root {
+  --container-max: 80rem; /* 1280px */
+  --container-gutter: 1rem; /* mobile */
+  --container-gutter-md: 1.5rem; /* tablet, >= 640px */
+  --container-gutter-lg: 2rem; /* laptop et desktop, >= 1024px */
+}
+
 .section-shell {
   margin-inline: auto;
   width: 100%;
-  max-width: 80rem;
-  padding-inline: 1rem;
+  max-width: var(--container-max);
+  padding-inline: var(--container-gutter);
 }
 
 @media (min-width: 640px) {
   .section-shell {
-    padding-inline: 1.5rem;
+    padding-inline: var(--container-gutter-md);
   }
 }
 
 @media (min-width: 1024px) {
   .section-shell {
-    padding-inline: 2rem;
+    padding-inline: var(--container-gutter-lg);
   }
 }
 

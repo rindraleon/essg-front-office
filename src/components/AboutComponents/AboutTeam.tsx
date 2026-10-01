@@ -32,7 +32,6 @@ const AboutTeam = () => {
       }
       loadingSkeletons={<MediaCardSkeletonGrid />}
       sectionClassName="bg-white section-y"
-      containerClassName="w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12"
     >
       <ScrollableCardGrid className="mt-2 w-full" ariaLabel="Équipe pédagogique">
         {ressourcesHumaines.map((membre) => {

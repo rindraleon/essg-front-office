@@ -14,6 +14,9 @@ const DUREE_LIGNE_2 = 38;
 
 const ONDULATION_PX = 3;
 
+
+const COPIES = 4;
+
 interface MarqueeRowProps {
   partenaires: PartenaireItem[];
   direction: -1 | 1;
@@ -23,8 +26,6 @@ interface MarqueeRowProps {
 const MarqueeRow = ({ partenaires, direction, durationSeconds }: MarqueeRowProps) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
 
-  const boucle = useMemo(() => [...partenaires, ...partenaires, ...partenaires], [partenaires]);
-
   useEffect(() => {
     const track = trackRef.current;
     if (!track || partenaires.length === 0) return;
@@ -33,8 +34,8 @@ const MarqueeRow = ({ partenaires, direction, durationSeconds }: MarqueeRowProps
 
     registerGsap();
 
-    const depart = direction === 1 ? -33.333 : 0;
-    const arrivee = direction === 1 ? 0 : -33.333;
+    const depart = direction === 1 ? -100 / COPIES : 0;
+    const arrivee = direction === 1 ? 0 : -100 / COPIES;
 
     gsap.set(track, { xPercent: depart });
 
@@ -77,10 +78,19 @@ const MarqueeRow = ({ partenaires, direction, durationSeconds }: MarqueeRowProps
   }, [partenaires.length, direction, durationSeconds]);
 
   return (
-    <div ref={trackRef} className="flex w-max gap-4 will-change-transform">
-      {boucle.map((partenaire, index) => (
-        <PartnerChipCard key={`${partenaire.id}-${index}`} partenaire={partenaire} />
-      ))}
+    <div className="w-full overflow-hidden">
+      <div className="section-shell">
+        <div ref={trackRef} className="flex w-max will-change-transform">
+          {Array.from({ length: COPIES }, (_, copie) => (
+            
+            <div key={copie} className="flex shrink-0 gap-4 pr-4">
+              {partenaires.map((partenaire) => (
+                <PartnerChipCard key={partenaire.id} partenaire={partenaire} />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
@@ -114,14 +124,16 @@ const PartenairesSection = ({
   const renderContenu = () => {
     if (loading) {
       return (
-        <div className="section-shell">
-          <div className="flex gap-4 overflow-hidden">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={`skeleton-${index}`}
-                className="skeleton-shimmer h-[4.75rem] w-[17rem] shrink-0 rounded-2xl sm:w-[19rem]"
-              />
-            ))}
+        <div className="w-full overflow-hidden">
+          <div className="section-shell">
+            <div className="flex w-max gap-4">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={`skeleton-${index}`}
+                  className="skeleton-shimmer h-[4.75rem] w-[17rem] shrink-0 rounded-2xl sm:w-[19rem]"
+                />
+              ))}
+            </div>
           </div>
         </div>
       );

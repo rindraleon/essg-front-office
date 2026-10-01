@@ -147,7 +147,6 @@ const ScrollableCardGrid: React.FC<ScrollableCardGridProps> = ({
             'snap-x snap-proximity',
             '[-webkit-overflow-scrolling:touch]',
             'gap-4 sm:gap-5 lg:gap-6',
-            'px-4 scroll-px-4 sm:px-0 sm:scroll-px-0',
             'scrollbar-hide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2',
             '[&>*]:shrink-0'
           )}

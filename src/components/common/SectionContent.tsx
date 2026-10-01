@@ -15,8 +15,6 @@ interface SectionContentProps {
   headerContent?: React.ReactNode;
   loadingSkeletons?: React.ReactNode;
   sectionClassName?: string;
-  containerClassName?: string;
-  fluid?: boolean;
 }
 
 const SectionContent: React.FC<SectionContentProps> = ({
@@ -31,13 +29,8 @@ const SectionContent: React.FC<SectionContentProps> = ({
   loadingSkeletons,
   backgroundContent,
   sectionClassName = '',
-  containerClassName = '',
-  fluid = false,
 }) => {
   const revealRef = useReveal<HTMLElement>();
-  const wrapperClass = fluid
-    ? 'w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12'
-    : 'section-shell';
 
   if (!loading && !error && isEmpty && hideWhenEmpty) {
     return null;
@@ -65,7 +58,7 @@ const SectionContent: React.FC<SectionContentProps> = ({
       className={`reveal-section ${backgroundContent ? 'relative overflow-hidden' : ''} ${sectionClassName}`}
     >
       {backgroundContent}
-      <div className={`${wrapperClass} ${containerClassName}`}>
+      <div className="section-shell">
         {headerContent}
         {content}
       </div>

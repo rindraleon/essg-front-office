@@ -61,7 +61,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Slogan statique */}
         <Reveal animation="fade-up" duration={700} delay={320} className="w-full">
           <p className="mx-auto mt-6 max-w-3xl text-h2 font-medium text-ink-100">
-            Ensemble, Formons les experts de demain!
+            Ensemble, Formons les experts de demain.
           </p>
         </Reveal>
 

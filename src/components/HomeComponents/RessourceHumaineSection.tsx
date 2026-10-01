@@ -32,8 +32,6 @@ const RessourceHumaineSection = () => {
       }
       loadingSkeletons={<MediaCardSkeletonGrid layout="home" />}
       sectionClassName="bg-gradient-to-br from-brand-50/55 via-white to-brand-50/40 section-y"
-      fluid
-      containerClassName="max-w-none"
     >
       <ScrollableCardGrid className="mt-2 w-full" ariaLabel="Membres de l'équipe">
         {ressourcesHumaines.map((membre) => {

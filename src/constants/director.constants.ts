@@ -1,5 +1,5 @@
 export const DIRECTOR_MESSAGE = {
-  name: 'La Directrice',
+  name: 'Dr FANJANIAINA Marie Lucia',
   role: 'Directrice de l’ESSG',
   photo: '/images/directrice.webp',
   photoAlt: 'Portrait de la Directrice de l’ESSG',

@@ -76,8 +76,6 @@ const FormationsSection = ({
       }
       loadingSkeletons={<MediaCardSkeletonGrid count={3} layout="home" />}
       sectionClassName="bg-gradient-to-b from-brand-50/65 via-white to-white section-y"
-      fluid
-      containerClassName="max-w-none"
     >
       <ScrollableCardGrid
         className="w-full"

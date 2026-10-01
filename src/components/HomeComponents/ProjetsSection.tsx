@@ -52,8 +52,6 @@ const ProjetsSection = ({
       }
       loadingSkeletons={<MediaCardSkeletonGrid layout="home" />}
       sectionClassName="bg-gradient-to-b from-brand-50/45 via-ink-50 to-white section-y"
-      fluid
-      containerClassName="max-w-none"
     >
       <ScrollableCardGrid
         className="w-full"

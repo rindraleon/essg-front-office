@@ -37,6 +37,8 @@ export { default as DetailHero } from './common/DetailHero';
 export type { DetailHeroMeta } from './common/DetailHero';
 export { default as DetailPageSkeleton } from './common/DetailPageSkeleton';
 export { default as EmptyState } from './common/EmptyState';
+export { default as ExpandingCards } from './common/ExpandingCards';
+export type { ExpandingCardItem } from './common/ExpandingCards';
 export { default as FilterButton } from './common/FilterButton';
 export type { FilterGroup } from './common/FilterButton';
 export { default as FilterToolbar } from './common/FilterToolbar';

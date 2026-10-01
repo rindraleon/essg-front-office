@@ -160,12 +160,12 @@ const FILE_CONFIG: Record<AdmissionDocumentKind, { label: string; hint: string; 
       accept: ACCEPT_PDF_IMG,
     },
     releveBac: {
-      label: 'Relevé de notes BAC ou extrait de liste',
+      label: 'Relevé de notes BACC',
       hint: HINT_PDF_IMG,
       accept: ACCEPT_PDF_IMG,
     },
     diplomeBac: {
-      label: 'Diplôme BAC (facultatif)',
+      label: 'Diplôme BACC',
       hint: HINT_PDF_IMG,
       accept: ACCEPT_PDF_IMG,
     },
