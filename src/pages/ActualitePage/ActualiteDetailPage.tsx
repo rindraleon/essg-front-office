@@ -1,5 +1,5 @@
 import { ArrowLeft, Calendar, Clock3, Newspaper, Share2, User } from 'lucide-react';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { Link, useParams } from 'react-router-dom';
 import {
@@ -11,7 +11,7 @@ import {
   DetailPageSkeleton,
   RevealOnScroll,
 } from '@/components';
-import { useActualiteBySlug, useRecentActualites, useTitle } from '@/hooks';
+import { useActualiteBySlug, useRecentActualites, useSeo } from '@/hooks';
 import { formatDate, getImageUrl } from '@/utils';
 
 const ACTUALITE_IMAGES: Record<string, string> = {
@@ -32,11 +32,28 @@ const ActualiteDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { actualite, loading, error } = useActualiteBySlug(slug || '');
   const { actualites: related } = useRecentActualites(6);
-  const { setTitle } = useTitle();
 
-  useEffect(() => {
-    if (actualite) setTitle(actualite.titre);
-  }, [actualite, setTitle]);
+  useSeo({
+    title: actualite ? actualite.titre : undefined,
+    description: actualite?.resume,
+    image: actualite ? getActualiteImage(actualite.image, String(actualite.id)) : undefined,
+    ogType: 'article',
+    pageSchema: actualite
+      ? {
+          '@type': 'NewsArticle',
+          headline: actualite.titre,
+          description: actualite.resume,
+          datePublished: actualite.date || actualite.creeLe,
+          dateModified: actualite.misAJourLe || actualite.date || actualite.creeLe,
+          inLanguage: 'fr',
+          ...(actualite.auteur ? { author: { '@type': 'Person', name: actualite.auteur } } : {}),
+          publisher: {
+            '@type': 'Organization',
+            name: 'École Supérieure des Sciences Géomatiques (ESSG)',
+          },
+        }
+      : null,
+  });
 
   const galleryImages = useMemo(() => {
     if (!actualite?.galerie) return [];

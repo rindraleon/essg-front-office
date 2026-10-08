@@ -42,9 +42,9 @@ export const ADMISSION_CONFIG = {
   },
 
   series: {
-    scientifiqueTechnique: ['c', 'd', 's', 'tgc', 'tgi'],
+    scientifiqueTechnique: ['c', 'd', 's', 'tgc', 'tgi', 'ose'],
 
-    scientifiqueAgricole: ['c', 'd', 's', 'taef'],
+    scientifiqueAgricole: ['c', 'd', 's', 'taef', 'ose'],
 
     toutesSeries: ['a1', 'a2', 'c', 'd', 'l', 's', 'ose', 'tgc', 'tgi', 'taef', 'tter'],
   },
@@ -187,17 +187,20 @@ export function getOptionalDocumentIds(): string[] {
 }
 
 export const ADMISSION_SOURCES = [
-  { value: 'soifee', label: 'SOIFEE' },
   { value: 'evenement-universite', label: 'Évènement université' },
-  { value: 'radio', label: 'Radio' },
-  { value: 'salon-tana', label: 'Salon Tana' },
+  { value: 'porte-ouverte', label: 'Journée Porte Ouverte' },
+  { value: 'facebook', label: 'Page Facebook ESSG' },
+  { value: 'radio-ambalavao', label: 'Hai Radio Ambalavao' },
+  { value: 'radio-rofia', label: 'Radio Rofia' },
   { value: 'recommandation', label: 'Recommandation' },
+  { value: 'salon-tana', label: 'Salon Tana' },
+  { value: 'soifee', label: 'SOIFEE' },
 ] as const;
 
 export type AdmissionSourceId = (typeof ADMISSION_SOURCES)[number]['value'];
 
 export const ADMISSION_DOCUMENT = {
-  url: '/files/fiche-renseignement-recu-2026-essg.pdf',
+  url: '/files/fiche-renseignement-2026.pdf',
   fileName: 'FICHE-RENSEIGNEMENT-RECU-2026-ESSG.pdf',
-  label: "Télécharger le document d'admission",
+  label: "Télécharger le fiche de renseignement",
 } as const;

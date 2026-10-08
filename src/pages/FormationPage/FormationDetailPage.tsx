@@ -1,5 +1,5 @@
 import { Award, BookOpen, Clock, GraduationCap } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Breadcrumb,
@@ -8,17 +8,33 @@ import {
   FormationDetailContent,
   DetailPageSkeleton,
 } from '@/components';
-import { useFormationBySlug, useTitle } from '@/hooks';
+import { useFormationBySlug, useSeo } from '@/hooks';
 import { getFormationImage } from '@/utils';
 
 const FormationDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { formation, loading, error } = useFormationBySlug(slug || '');
-  const { setTitle } = useTitle();
 
-  useEffect(() => {
-    if (formation) setTitle(formation.titre);
-  }, [formation, setTitle]);
+  useSeo({
+    title: formation ? formation.titre : undefined,
+    description: formation?.description,
+    image: formation ? getFormationImage(formation.image, formation.slug) : undefined,
+    pageSchema: formation
+      ? {
+          '@type': 'Course',
+          name: formation.titre,
+          description: formation.description,
+          educationalLevel: formation.niveau,
+          ...(formation.credits ? { credits: formation.credits } : {}),
+          isAccessibleForFree: false,
+          inLanguage: 'fr',
+          provider: {
+            '@type': 'EducationalOrganization',
+            name: 'École Supérieure des Sciences Géomatiques (ESSG)',
+          },
+        }
+      : null,
+  });
 
   if (loading) return <DetailPageSkeleton label="Chargement de la formation…" layout="split" />;
 

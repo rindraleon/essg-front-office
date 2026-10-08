@@ -27,7 +27,7 @@ const SOCIAL_ITEMS = [
   },
   {
     name: 'LinkedIn',
-    href: 'https://www.linkedin.com/company/essg',
+    href: 'https://www.linkedin.com',
     label: 'LinkedIn ESSG',
     color: '#0A66C2',
     icon: (size: number) => (

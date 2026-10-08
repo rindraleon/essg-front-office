@@ -140,7 +140,7 @@ const ACCEPT_IMG = '.jpg,.jpeg,.png';
 const FILE_CONFIG: Record<AdmissionDocumentKind, { label: string; hint: string; accept: string }> =
   {
     demandeInscription: {
-      label: "Demande d'inscription",
+      label: "Demande d'inscription(Manuscrite)",
       hint: HINT_PDF_IMG,
       accept: ACCEPT_PDF_IMG,
     },
