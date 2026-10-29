@@ -11,7 +11,7 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
+export const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
   return (
     <nav aria-label="Fil d'Ariane" className="border-ink-100">
       <div className="section-shell flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-3">

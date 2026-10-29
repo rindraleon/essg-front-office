@@ -2,6 +2,7 @@ import { apiClient, endpoints } from '@/api';
 
 export interface AdmissionSettings {
   admissionsOuvertes: boolean;
+  navigationPrincipale: 'admission' | 'resultats' | 'aucun';
 }
 
 export const getAdmissionSettings = (signal?: AbortSignal): Promise<AdmissionSettings> =>

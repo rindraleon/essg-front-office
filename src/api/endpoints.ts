@@ -24,5 +24,7 @@ export const endpoints = {
   admissions: '/admissions',
   admissionsCheckDuplicate: '/admissions/check-duplicate',
   settingsPublic: '/settings/public',
+  resultatsConsultation: '/resultats/consultation',
+  resultatsPublic: '/resultats/public',
   health: '/health',
 } as const;

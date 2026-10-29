@@ -15,3 +15,15 @@ export { default as projetService } from './projet.service';
 export { default as ressourceHumaineService } from './ressource-humaine.service';
 export { getAdmissionSettings, default as settingsService } from './settings.service';
 export type { AdmissionSettings } from './settings.service';
+export { consulterResultat, type ConsultationResultat } from './resultat-consultation.service';
+export {
+  getResultatsPublics,
+  getResultatPublic,
+  getResultatsIndividuelsPublics,
+  type ResultatPublication,
+  type ResultatIndividuelPublic,
+  type ResultatsIndividuelsPublicQuery,
+  type ResultatsIndividuelsPublicResponse,
+  type ResultatsPublicQuery,
+  type ResultatsPublicResponse,
+} from './resultats-public.service';

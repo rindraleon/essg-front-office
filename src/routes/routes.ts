@@ -13,6 +13,8 @@ const routesStatic = {
   projetDetail: '/projets/:slug',
   faq: '/faq',
   admission: '/admission',
+  resultat: '/resultat',
+  resultats: '/resultats',
   contact: '/contact',
   mentionsLegales: '/mentions-legales',
   politiqueConfidentialite: '/politique-confidentialite',

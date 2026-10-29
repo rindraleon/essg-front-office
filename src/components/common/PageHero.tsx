@@ -5,7 +5,7 @@ import SplitTitle from './SplitTitle';
 import AnimatedNumber from './AnimatedNumber';
 import type { PageHeroProps } from '@/types';
 
-const PageHero = ({
+export const PageHero = ({
   image = SITE_HERO_IMAGE,
   imageAlt = SITE_HERO_ALT,
   title,

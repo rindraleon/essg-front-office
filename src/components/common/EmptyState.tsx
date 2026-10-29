@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import type { EmptyStateProps } from '@/types';
 import { cn } from '@/lib';
 
-const EmptyState = ({
+export const EmptyState = ({
   icon,
   title = 'Aucun résultat trouvé',
   description = 'Essayez de modifier vos critères de recherche.',

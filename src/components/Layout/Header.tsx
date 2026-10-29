@@ -6,7 +6,7 @@ import { buttonVariants } from '../ui/button-variants';
 import { cn } from '@/lib';
 import useHeaderScroll from '@/hooks/useHeaderScroll';
 import useScrollLock from '@/hooks/useScrollLock';
-import { useAdmissionsOuvertes } from '@/hooks';
+import { useAdmissionsSettings } from '@/hooks';
 
 const NAVIGATION = [
   { name: 'Accueil', href: '/' },
@@ -29,7 +29,12 @@ const MOBILE_NAV_LINK_CLASS =
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const admissionsOuvertes = useAdmissionsOuvertes();
+  const { data: settings } = useAdmissionsSettings();
+  const navigationPrincipale = settings?.navigationPrincipale ?? 'AUCUN';
+  const admissionsOuvertes = settings?.admissionsOuvertes ?? true;
+  const showResultats = navigationPrincipale === 'resultats';
+  const showAdmission =
+    navigationPrincipale === 'admission' && admissionsOuvertes;
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const scrolled = useHeaderScroll(16);
@@ -135,6 +140,18 @@ const Header = () => {
                 {item.name}
               </NavLink>
             ))}
+            {showResultats && (
+              <NavLink
+                to="/resultats"
+                className={({ isActive }) =>
+                  cn(
+                    NAV_LINK_CLASS,
+                    isActive && 'text-brand-700 after:scale-x-100',
+                  )}
+              >
+                Résultats
+              </NavLink>
+            )}
           </div>
 
           <div className="hidden shrink-0 lg:flex lg:items-center lg:gap-2 xl:gap-3">
@@ -150,16 +167,28 @@ const Header = () => {
             >
               Contact
             </NavLink>
-            {admissionsOuvertes && (
+            {showResultats && (
+              <NavLink
+                to="/resultats"
+                className={({ isActive }) =>
+                  cn(
+                    buttonVariants({ variant: 'default' }),
+                    'h-9 px-3 text-caption xl:h-10 xl:px-4 xl:text-small',
+                    isActive && 'bg-brand-700',
+                  )}
+              >
+                Résultats
+              </NavLink>
+            )}
+            {showAdmission && (
               <NavLink
                 to="/admission"
                 className={({ isActive }) =>
                   cn(
                     buttonVariants({ variant: 'default' }),
                     'h-9 px-3 text-caption xl:h-10 xl:px-4 xl:text-small',
-                    isActive && 'bg-brand-700'
-                  )
-                }
+                    isActive && 'bg-brand-700',
+                  )}
               >
                 Admission
               </NavLink>
@@ -242,6 +271,16 @@ const Header = () => {
                 {item.name}
               </NavLink>
             ))}
+            {showResultats && (
+              <NavLink
+                to="/resultats"
+                onClick={closeMobileMenu}
+                className={({ isActive }) =>
+                  cn(buttonVariants({ variant: 'default' }), 'w-full', isActive && 'bg-brand-700')}
+              >
+                Résultats
+              </NavLink>
+            )}
             <div
               className={cn(
                 'mt-[clamp(0.25rem,1vh,0.75rem)] space-y-2 border-t border-ink-100 pt-[clamp(0.5rem,1.5vh,1rem)] transition-[opacity,transform] duration-(--duration-hover) ease-out motion-reduce:transition-none',
@@ -258,7 +297,7 @@ const Header = () => {
               >
                 Contact
               </NavLink>
-              {admissionsOuvertes && (
+              {showAdmission && (
                 <NavLink
                   to="/admission"
                   onClick={closeMobileMenu}

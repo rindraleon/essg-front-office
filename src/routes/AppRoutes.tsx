@@ -20,6 +20,9 @@ const ProjetsPage = lazy(() => import('@/pages/ProjetsPage/ProjetsPage'));
 const ProjetDetailPage = lazy(() => import('@/pages/ProjetsPage/ProjetDetailPage'));
 const FaqPage = lazy(() => import('@/pages/FaqPage/FaqPage'));
 const AdmissionPage = lazy(() => import('@/pages/AdmissionPage/AdmissionPage'));
+const ResultatConsultationPage = lazy(() => import('@/pages/ResultatConsultationPage/ResultatConsultationPage'));
+const ResultatsGlobauxPage = lazy(() => import('@/pages/ResultatsGlobauxPage/ResultatsGlobauxPage'));
+const ResultatDetailPage = lazy(() => import('@/pages/ResultatDetailPage/ResultatDetailPage'));
 const ContactPage = lazy(() => import('@/pages/ContactPage/ContactPage'));
 const MentionsLegalesPage = lazy(() => import('@/pages/LegalPage/MentionsLegalesPage'));
 const PolitiqueConfidentialitePage = lazy(
@@ -55,6 +58,9 @@ const AppRoutes = () => (
       <Route path={routesStatic.projetDetail} element={<ProjetDetailPage />} />
       <Route path={routesStatic.faq} element={<FaqPage />} />
       <Route path={routesStatic.admission} element={<AdmissionPage />} />
+      <Route path={routesStatic.resultat} element={<ResultatConsultationPage />} />
+      <Route path={routesStatic.resultats} element={<ResultatsGlobauxPage />} />
+      <Route path={`${routesStatic.resultats}/:id`} element={<ResultatDetailPage />} />
       <Route path={routesStatic.contact} element={<ContactPage />} />
       <Route path={routesStatic.mentionsLegales} element={<MentionsLegalesPage />} />
       <Route
